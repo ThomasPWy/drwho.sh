@@ -727,6 +727,7 @@ echo ''
 f_geoIP
 f_removeDir
 f_solidLong
+f_geoOptions
 ;;
 52)
 #******************* 52) geolocation data for "first" MX record (first in either priority or alphabetical order) **********************
