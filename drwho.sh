@@ -532,6 +532,7 @@ f_menuIP
 5)
 #************** 5) AS Information ********************
 f_solidLong
+f_makePermDir
 echo -e "   Set Target ${B}AS${D} - e.g. AS8068 - or ${B}IP${D}\n"
 echo -e -n "  ${B}>>${D}  "
 read target_as
