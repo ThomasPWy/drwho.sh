@@ -2,15 +2,10 @@
 A humble bash script, designed to remove the clutter from the output of dig, openssl, whois, etc. 
 
 Dependencies:
-
 curl, dnsutils, lynx, iputils-tracepath (tracepath in Termux), openssl (openssl & openssl-tool in Termux), whois (any whois client should work)
 
- ____                _           
-|  _ \ _ ____      _| |__   ___  
-| | | | '__\ \ /\ / / '_ \ / _ \ 
-| |_| | |   \ V  V /| | | | (_) |
-|____/|_|    \_/\_/ |_| |_|\___/ 
 
+       Global Menu
 
    1)  SET TARGET DOMAIN
    2)  SET TARGET IP
@@ -18,6 +13,7 @@ curl, dnsutils, lynx, iputils-tracepath (tracepath in Termux), openssl (openssl 
    4)  IP OPTIONS
    5)  ASN QUERY (ext. API)
    0)  QUIT
+   
 
 	Options for Domains
 
