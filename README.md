@@ -7,7 +7,7 @@ curl, dnsutils, lynx, iputils-tracepath (tracepath in Termux), openssl (openssl 
 This script has no relation to either the British Broadcasting Company or their beloved TV series, Dr Who. 
 Feel free to use, change or share the script. Any suggestions, esp. regarding bash syntax, are highly appreciated.
 
-For commercial usage please check the terms & \nconditions of the external APIs."
+For commercial usage please check the terms & conditions of the external APIs.
 For more information visit:
 ### https://ipapi.co ### https://hackertarget.com ### https://crt.sh ###
 
