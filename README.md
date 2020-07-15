@@ -4,6 +4,14 @@ A humble bash script, designed to remove the clutter from the output of dig, ope
 Dependencies:
 curl, dnsutils, lynx, iputils-tracepath (tracepath in Termux), openssl (openssl & openssl-tool in Termux), whois (any whois client should work)
 
+This script has no relation to either the British Broadcasting Company or their beloved TV series, Dr Who. 
+Feel free to use, change or share the script. Any suggestions, esp. regarding bash syntax, are highly appreciated.
+
+For commercial usage please check the terms & \nconditions of the external APIs."
+For more information visit:
+https://ipapi.co
+https://hackertarget.com
+
 
        Global Menu
 
@@ -17,29 +25,33 @@ curl, dnsutils, lynx, iputils-tracepath (tracepath in Termux), openssl (openssl 
 
 	Options for Domains
 
-  11)   Website Overview
-        (headers summary, host IP, CMS, title- & content tags, social media links)      
-  12)   A,AAAA,MX,NS,PTR,SOA,SRV & TXT records
-  13)   certificate information & -file
-  14)   whois lookup options 	   
-               41)  host whois & reverse whois summary
-               42)  'First' MX record reverse whois summary*
-               43)  SOA record reverse whois summary
+  11)   website overview
+        (headers summary, IP, CMS, title- & content tags, social media links)
+  12)   A,AAAA,MX,NS,PTR,SOA & TXT records
+  13)   certificate information
+  14)   whois lookup options
+  		41)  host whois & reverse whois summary
+  		42)  'First' MX* record reverse whois summary
+  		43)  SOA record reverse whois summary
   15)   geolocation options (ext.API)
-               51)  host geolocation
-               52)  'First' MX record geolocation*
-               53)  SOA record geolocation           
-  16)   server response times & tracepath
-  17)   HTTP headers
-  18)   robots.txt / link dump
-               61)  robots.txt
-               62)  linkdump         
-  19)   zone transfer check
-  20)   address block reverse host search - options
-               71)  host address block reverse host search
-               72)  custom- address block reverse host search	         
-  21)   subdomain enumeration (ext.API)
-  22)   reverse IP lookup (ext.API)
+  		51)  host geolocation
+  		52)  'First' MX* record geolocation
+  		53)  SOA record geolocation
+  16)   HTTP headers / robots.txt / link dump
+  		61)  HTTP headers
+  		62)  robots.txt
+  		63)  linkdump
+  17)   subdomain enumeration - options (ext.APIs)
+		71)  search with hackertarget.io
+		72)  search with crt.sh
+  18)   address block reverse host search - options
+  		81)  domain host address block reverse host search
+  		82)  MX* record- address block reverse host search - 
+  		83)  SOA- record address block reverse host search - 202.12.27
+  		84)  custom- address block reverse host search
+  19)   reverse IP lookup (ext.API)
+  20)   zone transfer check
+  21)   server response times & tracepath
 
 *Results are given for the MX record that comes first in either priority or alphabetical order
 
