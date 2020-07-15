@@ -9,8 +9,7 @@ Feel free to use, change or share the script. Any suggestions, esp. regarding ba
 
 For commercial usage please check the terms & \nconditions of the external APIs."
 For more information visit:
-https://ipapi.co
-https://hackertarget.com
+### https://ipapi.co ### https://hackertarget.com ### https://crt.sh ###
 
 
        Global Menu
@@ -42,7 +41,7 @@ https://hackertarget.com
   		62)  robots.txt
   		63)  linkdump
   17)   subdomain enumeration - options (ext.APIs)
-		71)  search with hackertarget.io
+		71)  search with hackertarget.com
 		72)  search with crt.sh
   18)   address block reverse host search - options
   		81)  domain host address block reverse host search
