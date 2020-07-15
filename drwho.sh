@@ -539,8 +539,8 @@ function f_optionsHostSearch {
     soa_prefix=`echo $soa_ip | rev | cut -d '.' -f 2- | rev`
     host_prefix=`echo $host_ip | rev | cut -d '.' -f 2- | rev`
         echo -e "${B}address block reverse host search - options\n"
-        echo "  81)  $target address block reverse host search ($host_prefix.x" 
-        echo "  82)  MX record- address block reverse host search ($mx_prefix.x)"
+        echo "  81)  $target address block reverse host search     ($host_prefix.x)" 
+        echo "  82)  MX record- address block reverse host search  ($mx_prefix.x)"
         echo "  83)  SOA- record address block reverse host search ($soa_prefix.x)"
         echo "  84)  custom- address block reverse host search"  
     f_solidShort
