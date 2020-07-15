@@ -672,8 +672,8 @@ f_solidLong
 #********** 12) DNS Records - A, AAAA, MX, NS, PTR, SOA, TXT **********
 f_solidLong
 f_textfileSeparator
-echo -e "      DNS Records"          >> $permdir/$file.txt
-echo -e "   ------------------\n"    >> $permdir/$file.txt
+echo -e "      A, AA, NS, MX, PTR & SOA Records"          >> $permdir/$file.txt
+echo -e "   --------------------------------------\n"    >> $permdir/$file.txt
 dig a  +noall +answer  +nottlid $target     >> $permdir/$file.txt
 dig aaaa +noall +answer  +nottlid $target   >> $permdir/$file.txt
 echo ''                                     >> $permdir/$file.txt
