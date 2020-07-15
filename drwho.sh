@@ -913,9 +913,9 @@ echo -e "\n      Subdomains (hackertarget.com)"      >> $permdir/$file.subdomain
 echo -e "   ------------------------------------\n"  >> $permdir/$file.subdomains.txt
 echo -e "    $target - $host_ip\n"                  >> $permdir/$file.subdomains.txt
 date                                                >> $permdir/$file.subdomains.txt
-echo -e "\n\n"                                      >> $permdir/$file.subdomains.txt
+echo ''                                             >> $permdir/$file.subdomains.txt
 curl -s https://api.hackertarget.com/hostsearch/?q=$target | sed 's/,/ -  /g' | tee -a $permdir/$file.subdomains.txt
-echo -e "\n"
+echo ''
 f_solidLong
 f_subEnumOptions
 ;;
@@ -929,7 +929,7 @@ echo -e "\n      Subdomains (crt.sh)"        >> $permdir/$file.subdomains.txt
 echo -e "   ----------------------------\n"  >> $permdir/$file.subdomains.txt
 echo -e "    $target - $host_ip\n"           >> $permdir/$file.subdomains.txt
 date                                         >> $permdir/$file.subdomains.txt
-echo -e "\n\n"                               >> $permdir/$file.subdomains.txt
+echo ''                                      >> $permdir/$file.subdomains.txt
 echo -e "${B}$target crt.sh Query${D}\n\n"
 curl -s https://crt.sh/?q=$target > $tempdir/crt.txt
 cat $tempdir/crt.txt | grep $target | sed 's/<TD>//' | sed 's/<\/TD>//' | sed 's/<BR>/\n/g' | sed 's/^ *//' | 
@@ -967,7 +967,6 @@ mx_url=`dig mx +short $target | rev | cut -c 2- | rev | cut -d " " -f 2-`
 mx_first_url=`echo "$mx_url" | sort | head -1`
 mx_first_ip=`host -t A $mx_first_url | cut -d ' ' -f 4- | sort | head -1`
 prefx=`echo $mx_first_ip | rev | cut -d '.' -f 2- | rev`
-echo -e "\n TARGET: $prefix" >> $permdir/$file.txt
 f_hostSearch | tee -a  $permdir/$file.txt
 echo '' | tee -a  $permdir/$file.txt
 f_solidLong
@@ -983,7 +982,6 @@ echo -e "   ---------------------------------------------------\n"      >> $perm
 soa_url=`dig soa +short $target | cut -d ' ' -f 1 | rev | cut -c 2- | rev`
 soa_ip=`host -t A $soa_url | cut -d ' ' -f 4-`
 prefx=`echo $soa_ip | rev | cut -d '.' -f 2- | rev`
-echo -e "\n TARGET: $prefix" >> $permdir/$file.txt
 f_hostSearch | tee -a  $permdir/$file.txt
 echo '' | tee -a  $permdir/$file.txt
 f_solidLong
@@ -1007,7 +1005,6 @@ echo -e "\nPlease enter a network prefix:\n "
 echo -e -n "  ${B}>>${D}  "
 read prefx
 echo ''
-echo -e "\nTARGET: $prefx" >> tee -a $permdir/$file.txt
 f_hostSearch | tee -a  $permdir/$file.txt
 echo '' | tee -a  $permdir/$file.txt
 f_removeDir
