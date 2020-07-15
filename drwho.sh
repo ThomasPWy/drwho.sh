@@ -908,11 +908,12 @@ f_subEnumOptions
 #*******************  71) subdomain enumeration via hackertarget.com - API **********************
 f_solidLong
 echo -e "${B}$target Subdomains (via hackertarget.com)${D}\n\n"
-echo -e "\n\n      Subdomains (hackertarget.com)"      >> $permdir/$file.subdomains.txt
+echo -e "\n"                                 >> $permdir/$file.subdomains.txt
+echo -e "\n      Subdomains (hackertarget.com)"      >> $permdir/$file.subdomains.txt
 echo -e "   ------------------------------------\n"  >> $permdir/$file.subdomains.txt
-echo -e "    $target - $host_ip\n"                  >> $permdir/$file.subdomains.txt
-date                                                >> $permdir/$file.subdomains.txt
-echo ''                                             >> $permdir/$file.subdomains.txt
+echo -e "$target - $host_ip"                         >> $permdir/$file.subdomains.txt
+date                                                 >> $permdir/$file.subdomains.txt
+echo -e "\n"                                         >> $permdir/$file.subdomains.txt
 curl -s https://api.hackertarget.com/hostsearch/?q=$target | sed 's/,/ -  /g' | tee -a $permdir/$file.subdomains.txt
 echo ''
 f_solidLong
@@ -923,11 +924,12 @@ f_subEnumOptions
 f_makeNewDir
 f_solidLong
 echo -e "${B}$target Subdomains (via crt.sh)${D}\n\n"
-echo -e "\n\n      Subdomains (crt.sh)"        >> $permdir/$file.subdomains.txt
+echo -e "\n"                                 >> $permdir/$file.subdomains.txt
+echo -e "\n      Subdomains (crt.sh)"        >> $permdir/$file.subdomains.txt
 echo -e "   ----------------------------\n"  >> $permdir/$file.subdomains.txt
-echo -e "    $target - $host_ip\n"           >> $permdir/$file.subdomains.txt
+echo -e "$target - $host_ip"                 >> $permdir/$file.subdomains.txt
 date                                         >> $permdir/$file.subdomains.txt
-echo ''                                      >> $permdir/$file.subdomains.txt
+echo -e "\n"                                 >> $permdir/$file.subdomains.txt
 curl -s https://crt.sh/?q=$target > $tempdir/crt.txt
 cat $tempdir/crt.txt | grep $target | sed 's/<TD>//' | sed 's/<\/TD>//' | sed 's/<BR>/\n/g' | sed 's/^ *//' | 
 sed '/<TD/d' | sed '/<\/A>/d' | sed '/<TITLE>/d' | sed '/<TH/d' | sort | uniq | tee -a $permdir/$file.subdomains.txt
