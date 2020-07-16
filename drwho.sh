@@ -1169,7 +1169,7 @@ echo -e "${B}Reverse IP Lookup${D}\n"
 echo -e " ${BDim}Target: $target${D}\n\n"
 echo -e "\n      Reverse IP Lookup"        >> $permdir/$file.txt
 echo -e "   ------------------------\n"    >> $permdir/$file.txt
-echo -e "      TARGET: $target\n\n"        >> $permdir/$fileft
+echo -e "      TARGET: $target\n\n"        >> $permdir/$file.txt
 curl -s https://api.hackertarget.com/reverseiplookup/?q=$target | tee -a $permdir/$file.txt
 echo -e "\n" | tee -a $permdir/$file.txt
 f_solidLong
