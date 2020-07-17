@@ -645,8 +645,6 @@ f_textfileSeparator
 echo -e "${B}social media & contact links ${D}\n"
 echo -e "social media & contact links \n" >> $permdir/$file.txt
 lynx -accept_all_cookies -dump -listonly -nonumbers www.$target > $tempdir/socialmedia.txt
-lynx -accept_all_cookies -dump -listonly -nonumbers www.$target/contact >> $tempdir/socialmedia.txt
-lynx -accept_all_cookies -dump -listonly -nonumbers www.$target/kontakt >> $tempdir/socialmedia.txt
 cat $tempdir/socialmedia.txt | grep -F -econtact -ediscord -ekontakt -econtatto -eimpressum -eetsy -efacebook -egithub -einstagram -elinkedin -epinterest -ereddit -etwitter -exing -eyoutube -emailto | sed '/sport/d' |  sed '/program/d' | 
 sed 's/mailto:/\nmailto:/' | sed 's/mailto://' | sort | uniq | tee -a $permdir/$file.txt
 f_solidLong
