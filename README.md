@@ -24,35 +24,67 @@ For more information visit:
 
 	Options for Domains
 
+   
+
   11)   website overview
         (headers summary, IP, CMS, title- & content tags, social media links)
-  12)   A,AAAA,MX,NS,PTR,SOA & TXT records
+  12)   A,AAAA,MX,NS,PTR,SOA,SRV & TXT records
   13)   certificate information
   14)   whois lookup options
-  		41)  host whois & reverse whois summary
-  		42)  'First' MX* record reverse whois summary
-  		43)  SOA record reverse whois summary
   15)   geolocation options (ext.API)
-  		51)  host geolocation
-  		52)  'First' MX* record geolocation
-  		53)  SOA record geolocation
   16)   HTTP headers / robots.txt / link dump
-  		61)  HTTP headers
-  		62)  robots.txt
-  		63)  linkdump
   17)   subdomain enumeration - options (ext.APIs)
-		71)  search with hackertarget.com
-		72)  search with crt.sh
   18)   address block reverse host search - options
-  		81)  domain host address block reverse host search
-  		82)  MX* record- address block reverse host search - 
-  		83)  SOA- record address block reverse host search - 202.12.27
-  		84)  custom- address block reverse host search
   19)   reverse IP lookup (ext.API)
   20)   zone transfer check
   21)   server response times & tracepath
+      ____
+
+
+  14) whois lookup options
+
+    41)  host whois & reverse whois summary
+    42)  'first'* MX record reverse whois summary
+    43)  primary name server reverse whois summary
+    44)  custom whois request (domain)
+    45)  custom reverse whois request (IP)
+        ____
+
+
+  15) IP geolocation options
+
+    51)  host geolocation
+    52)  'first'* MX record geolocation
+    53)  primary name server geolocation
+    54)  custom IP geolocation
+        ____
+
+
+  16) dump to screen / file: 
+
+    61)  HTTP headers
+    62)  robots.txt
+    63)  linkdump
+        ____
+
+ 
+  17) subdomain enumeration options
+
+    71)  search via hackertarget.com
+    72)  search via crt.sh
+        ____
+
+
+  18) address block reverse host search - options
+
+    81)  A record address block reverse host search            (140.82.118.x)
+    82)  MX* record- address block reverse host search         (142.250.4.x)
+    83)  primary name server address block reverse host search (205.251.198.x)
+    84)  custom- address block reverse host search
+       ____
 
 *Results are given for the MX record that comes first in either priority or alphabetical order
+
 
 	Options for IPv4 Addresses
 
