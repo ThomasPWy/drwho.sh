@@ -715,9 +715,10 @@ echo ''
 f_Dashes_long
 echo -e -n "${B}Display certificates & public key? yes [y] | no [any key]${D}   "
 read answer
+f_Dashes_long
+echo ''
 if [ $answer = "y" ]
 then
-    f_Dashes_long
     f_showCerts | tee -a $permdir/$file.certificates.txt
 fi
 f_removeDir
