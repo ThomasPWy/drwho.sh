@@ -244,7 +244,7 @@ function f_guessCMS {
 
 #************************** website title *********************************
 function f_website_Title {
-         echo -e "\nwebsite title\n" >> $permdir/$file.txt
+         echo -e "website title\n" >> $permdir/$file.txt
          if ! type lynx &> /dev/null; then
               cat $tempdir/target_src.txt | grep -o "<title>[^<]*" | tail -c +8 | fmt -w 90 -s | tee -a $permdir/$file.txt
          else
@@ -1040,12 +1040,12 @@ f_getPrefixes
 f_solidLong
 f_textfileSeparator
 echo -e "       custom reverse host search"           >> $permdir/$file.txt
-echo -e "   -------..-------------------------\n"      >> $permdir/$file.txt
+echo -e "   ----------------------------------\n"      >> $permdir/$file.txt
 echo -e "${B}reverse host search - custom input${D}\n"
 echo -e "For further enumeration you may want to pick one of the following IPv4-prefixes:" 
 echo -e "\nIPv4 Prefixes (MX- Records):\n" | tee -a  $permdir/$file.txt
 cat $tempdir/mx_prefixes.txt | sort | uniq | tee -a  $permdir/$file.txt
-echo -e "\nIPv4 Prefix (NS- Records):\n" | tee -a  $permdir/$file.txt
+echo -e "\nIPv4 Prefixes (NS- Records):\n" | tee -a  $permdir/$file.txt
 cat $tempdir/ns_prefixes.txt | sort | uniq | tee -a  $permdir/$file.txt
 echo -e "\nPlease enter a network prefix:\n "
 echo -e -n "  ${B}>>${D}  "
@@ -1144,6 +1144,7 @@ echo -e "\n${B}$target PTR record${D}\n"
 echo -e "\n\n$target PTR Record\n" >> $permdir/$file.txt
 host -t A $target | cut -d ' ' -f 3- | rev | cut -d '.' -f 2- | rev
 echo ''
+curl -s -L --max-time 4 $target > $tempdir/target_src.txt
 f_website_Title
 f_removeDir
 f_solidLong
