@@ -255,16 +255,15 @@ function f_website_Title {
 
 #*************************** content of <meta name=description...> tag *********************************
 function f_targetDescription {
-    echo -e "\n\ndescription\n" >> $permdir/$file.txt
-    cat $tempdir/meta.txt | tr -d '"' | tr -d '<' | tr -d '>' | tr -d '/' | sed '/meta name=description content=/!d' |
+    echo -e "\n\nDescription\n" >> $permdir/$file.txt
+    cat $tempdir/meta.txt | tr -d '"' | tr -d '<' | tr -d '>' | tr -d '/' |sed '/meta name=description content=/!d' |
     sed 's/meta/\nmeta/g' > $tempdir/content.txt
-    cat $tempdir/content.txt | sed 's/meta name=description content=//' | sed 's/&#039;s/s/' | sed 's/link//' | 
-    sed 's/meta name=twitter:card//' | sed 's/rel=canonical//' | sed 's/href/\nhref/' | sed 's/meta property=og:type//' | 
-    sed 's/\!--/\n\!--/' | sed '/\!--/d' | sed '$!N; /^\(.*\)\n\1$/!P; D' | sed 's/^ *//' | sed 's/title/\ntitle/' | 
-    sed '/name=theme-color/d' | sed '/href=*/d' | sed 's/&amp;/\&/' | fmt -w 70 -s  | 
+    cat $tempdir/content.txt | sed '/meta name=description content=/!d' | sed 's/meta name=description content=//' |
+    sed 's/&#039;s/s/' | sed 's/link//' | sed 's/meta name=twitter:card//' | sed 's/rel=canonical//' | sed 's/href/\nhref/' |
+    sed 's/meta property=og:type//' | sed 's/\!--/\n\!--/' | sed '/\!--/d' | sed '$!N; /^\(.*\)\n\1$/!P; D' | sed 's/^ *//' |
+    sed 's/title/\ntitle/' | sed '/name=theme-color/d' | sed '/href=*/d' | sed 's/&amp;/\&/' | fmt -w 70 -s  | 
     tee -a $permdir/$file.txt
 }
-
 
 #************************* geolocation data *********************************
 function f_geoIP {
