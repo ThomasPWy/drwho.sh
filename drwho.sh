@@ -22,8 +22,9 @@ echo -e "${B}\n
 |____/|_|    \_/\_/ |_| |_|\___/ 
 
 ${D}"
+echo -e "\033[3;39m \"whois the Doctor? Who? Dr who?\" ${D}\n"
 
-#**************** Functions ***************
+#*************** Functions ***************
 
 #************ create temporary working directory *************
 function f_makeNewDir {
