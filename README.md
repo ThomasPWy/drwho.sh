@@ -56,32 +56,4 @@ For more information visit:
 
 
 
-   12)  AS Info
-  122)  github.com AS Information (whois.pwhois.org lookup)
-  123)  custom IP AS Information (whois.pwhois.org lookup)
   
-  
-  13)  IP geolocation (ext.API)
-  31)  github.com geolocation
-  32)  custom IP/domain geolocation
-  
-  
-  14)  whois
-  41)  github.com whois & reverse whois lookup
-  42)  custom IP/domain whois & reverse whois lookup
-  
-
-  15)  IP address block host search  
-  51)  github.com IPv4 address block host search
-  52)  custom IPv4 address block host search
-
-
-  17)  headers, robots.txt, link dump
-  71)  HTTP headers
-  72)  robots.txt
-  73)  link dump
-
-
-
-
-
