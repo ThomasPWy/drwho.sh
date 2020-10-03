@@ -21,7 +21,6 @@ For more information visit:
    p)  PORT SCAN & PING SWEEP
    q)  QUIT
 
-   ?  a
 ----------------------------------------------------------------------
 
  Set Target DOMAIN or IP
