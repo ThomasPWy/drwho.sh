@@ -566,18 +566,20 @@ f_solidLong ; f_solidLineText >> $out/$target.txt
 echo -e "${B}\nWebsite Title${D}\n"
 echo -e "\n == WEBSITE TITLE ==\n" >> $out/$target.txt
 f_website_Title 
-echo -e "\n\n${B}Description${D}\n"
-echo -e "\n\n == DESCRIPTION ==\n" >> $out/$target.txt
-f_targetDescription
-echo -e "\n\n${B}Social Media & Contact Links ${D}\n"
-echo -e "\n\n == SOCIAL MEDIA & CONTACT LINKS ==\n" >> $out/$target.txt
-f_socialLinks
 echo ''
 f_solidLong ; f_solidLineText  >> $out/$target.txt
 echo -e "\n${B}$target Geolocation (ip-api.co)${D}\n"
 echo -e " == $target IP GEOLOCATION (via ip-api.co) ==\n\n"  >> $out/$target.txt
 address=`echo $target_ip`
 f_geoIP | tee -a $out/$target.txt
+f_solidLong ; f_solidLineText >> $out/$target.txt
+whois -h whois.pwhois.org $target_ip > $tempdir/pwhois.txt
+whois $target_ip > $tempdir/rev-whois.txt
+echo -e "\n${B}AS Information ${D}\n\n"
+echo -e " == $target AS INFORMATION  ==\n\n" >> $out/$target.txt
+f_pwhois | tee -a $out/$target.txt
+echo '' | tee -a $out/$target.txt
+f_asContact | tee -a $out/$target.txt
 f_solidLong ; f_solidLineText >> $out/$target.txt
 timeout 3 openssl s_client -connect $target:443 -brief 2>$tempdir/ssl_sum2.txt
 echo | timeout 3 openssl s_client -connect $target:443 2>>$tempdir/status.txt -status >> $tempdir/status.txt
@@ -587,6 +589,13 @@ sed 's/^ *//' > $tempdir/ssl.txt
 echo -e "\n${B}Certificate Status${D}\n"
 echo -e " == CERTIFICATE STATUS ==\n\n" >> $out/$target.txt
 f_certSummary | tee -a $out/$target.txt
+f_solidLong ; f_solidLineText >> $out/$target.txt
+echo -e "\n\n${B}Description${D}\n"
+echo -e "\n\n == DESCRIPTION ==\n" >> $out/$target.txt
+f_targetDescription
+echo -e "\n\n${B}Social Media & Contact Links ${D}\n"
+echo -e "\n\n == SOCIAL MEDIA & CONTACT LINKS ==\n" >> $out/$target.txt
+f_socialLinks
 f_solidLineText >> $out/$target.txt
 echo '' ;  f_menuDomain ; f_removeDir
 ;;
