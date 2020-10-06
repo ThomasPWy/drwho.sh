@@ -276,6 +276,7 @@ echo ''
 function f_geoIP {
     curl -s https://ipapi.co/$address/json | tr -d '{' | tr -d '}' | tr -d ',' | tr -d ' "' | sed -r '/^\s*$/d' |
     fmt -w 70 -s > $tempdir/geo.txt
+    ip=`cat $tempdir/geo.txt | head -1 | cut -d ':' -f 2 | sed 's/^ *//'`
     asn=`cat $tempdir/geo.txt | tail -2 | head -1 | cut -d ':' -f 2 | sed 's/^ *//'`
     org=`cat $tempdir/geo.txt | tail -1 | cut -d ':' -f 2 | sed 's/^ *//'`
     country=`cat $tempdir/geo.txt | grep -w 'country_name' | cut -d ':' -f 2 | sed 's/^ *//'`
@@ -289,6 +290,8 @@ function f_geoIP {
     offset=`cat $tempdir/geo.txt | grep -w 'utc_offset' | cut -d ':' -f 2 | sed 's/^ *//'`
     tld=`cat $tempdir/geo.txt | grep -w 'country_tld' | cut -d ':' -f 2 | sed 's/^ *//'`
     callcode=`cat $tempdir/geo.txt | grep -w 'country_calling_code' | cut -d ':' -f 2 | sed 's/^ *//'`
+        echo "IP:             $ip"
+        echo ''
         echo "ASN:            $asn"
         echo "ORG:            $org"
         echo ''
@@ -471,8 +474,8 @@ function f_optionsAS {
     echo -e "  ${B}123)${D}  custom IP AS Information (whois.pwhois.org lookup)"  
 }
 function f_geoOptions { 
-    echo -e "\n  ${B}31)${D}  $target geolocation"    
-    echo -e "  ${B}32)${D}  custom IP/domain geolocation"                       
+    echo -e "\n  ${B}31)${D}  $target geolocation (via ipapi.co)"    
+    echo -e "  ${B}32)${D}  custom IP/domain geolocation (via ipapi.co)"                       
 }
 function f_optionsWhois {                           
     echo -e "\n  ${B}41)${D}  $target whois & reverse whois lookup"        
