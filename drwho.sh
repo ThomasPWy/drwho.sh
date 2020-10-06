@@ -573,8 +573,8 @@ echo -e "\n == WEBSITE TITLE ==\n" >> $out/$target.txt
 f_website_Title 
 echo ''
 f_solidLong ; f_solidLineText  >> $out/$target.txt
-echo -e "\n${B}$target Geolocation (ip-api.co)${D}\n"
-echo -e " == $target IP GEOLOCATION (via ip-api.co) ==\n\n"  >> $out/$target.txt
+echo -e "\n${B}$target Geolocation (ipapi.co)${D}\n"
+echo -e " == $target IP GEOLOCATION (via ipapi.co) ==\n\n"  >> $out/$target.txt
 address=`echo $target_ip`
 f_geoIP | tee -a $out/$target.txt
 f_solidLong ; f_solidLineText >> $out/$target.txt
@@ -803,8 +803,8 @@ f_solidLineText  >> $out/$target.txt ; echo '' ; f_menuIP ; f_removeDir
 ;;
 31)
 f_makeNewDir ; f_dashedGrey 
-echo -e "\n${B}$target_ip Geolocation${D}\n\n"
-echo -e "\n == $target_ip IP GEOLOCATION ==\n\n"  >> $out/$target.txt
+echo -e "\n${B}$target_ip Geolocation ${D}\n\n"
+echo -e "\n == $target_ip IP GEOLOCATION (via ipapi.co) ==\n\n"  >> $out/$target.txt
 address=`echo $target_ip`
 f_geoIP | tee -a $out/$target.txt
 f_solidLineText  >> $out/$target.txt ; echo '' ; f_Menu ; f_removeDir 
@@ -823,7 +823,7 @@ echo -e "\n "
         f_geoIP | tee -a $out/$target.txt; else
         address=`host -t A $geo_target | head -1 | cut -d " " -f 4`
         echo -e "\n${B}$address Geolocation${D}\n\n"
-        echo -e " == $geo_target IP GEOLOCATION ==\n\n"  >> $out/$target.txt
+        echo -e " == $geo_target IP GEOLOCATION (via ipapi.co) ==\n\n"  >> $out/$target.txt
         f_geoIP | tee -a $out/$target.txt
 fi
 f_solidLineText  >> $out/$target.txt ; echo '' ; f_Menu ; f_removeDir
