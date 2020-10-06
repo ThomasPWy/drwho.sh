@@ -1,6 +1,7 @@
 
 # drwho.sh
-A humble bash script, designed to remove the clutter from the output of dig, openssl, whois, etc. 
+A humble bash script, designed to remove the clutter from the output of dig, openssl & whois and provide information
+about domains, IPv4 addresses and address blocks. 
 
 Dependencies:
 curl, dnsutils, lynx, iputils-tracepath (or 'tracepath', e.g. in Termux), nmap, openssl (openssl & openssl-tool in Termux), a whois client 
@@ -58,7 +59,7 @@ OPTIONS (DOMAINS)
        123)  custom IP AS Information (whois.pwhois.org lookup)
        Uses whois lookup at pwhois.whois.org to retrieve information about given AS 
        
-  13)  IP geolocation (via ip-api.co)
+  13)  IP geolocation (via ipapi.co)
        31)  current target geolocation
        32)  custom IP/domain geolocation
        
