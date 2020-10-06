@@ -16,9 +16,13 @@ For more information visit:
 
 
    a)  SET TARGET
+   
    s)  OPTIONS (IPv4)
+   
    d)  OPTIONS (DOMAINS)
+   
    p)  PORT SCAN & PING SWEEP
+   
    q)  QUIT
 
 ----------------------------------------------------------------------
@@ -33,25 +37,25 @@ For more information visit:
 
    >> Target: github.com - 140.82.121.3 
 
-   1)  website overview          11)  certificates
-   2)  DNS records               12)  AS Info
-   3)  resp.times,tracepath      13)  IP geolocation (ext.API)
-   4)  shared NS (ext.API)       14)  whois
-   5)  subdomains (ext.API)      15)  IP address block host search
-   6)  zone transfer             16)  reverse IP lookup (ext.API)
-   0)  MAIN MENU                 17)  headers, robots.txt, link dump
+   1)  website overview             11)  certificates
+   2)  DNS records                  12)  AS Info
+   3)  resp.times,tracepath         13)  IP geolocation (ext.API)
+   4)  shared NS (ext.API)          14)  whois
+   5)  subdomains (ext.API)         15)  IP address block host search
+   6)  zone transfer                16)  reverse IP lookup (ext.API)
+   0)  MAIN MENU                    17)  headers, robots.txt, link dump
 
 
 ----------------------------------------------------------------------
 
    >> Target: 140.82.121.3
 
-  11)  certificates              15)  IP address block host search
-  12)  AS Info                   16)  reverse IP lookup (ext.API)
-  13)  IP geolocation (ext.API)  17)  headers, robots.txt, link dump
-  14)  whois options             21)  resolve ip
-   0)  MAIN MENU                 22)  website overview
-   q)  QUIT                      23)  resp.times,tracepath
+  11)  certificates                 15)  IP address block host search
+  12)  AS Info                      16)  reverse IP lookup (ext.API)
+  13)  IP geolocation (ext.API)     17)  headers, robots.txt, link dump
+  14)  whois options                21)  resolve ip
+   0)  MAIN MENU                    22)  website overview
+   q)  QUIT                         23)  resp.times,tracepath
 
 
 
