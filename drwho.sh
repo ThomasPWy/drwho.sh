@@ -357,20 +357,20 @@ sed 's/OrgTechHandle:/\nOrgTechHandle:/' | tee -a $out/$target.txt
 function f_resTime {
   curl $target -s -L -o /dev/null -w \
 "
-TOTAL:           %{time_total}
+TOTAL:            %{time_total}
 
-connect:         %{time_connect}
-appconnect:      %{time_appconnect}
-start_transfer:  %{time_starttransfer}
-pretransfer:     %{time_pretransfer}
+connect:          %{time_connect}
+appconnect:       %{time_appconnect}
+start_transfer:   %{time_starttransfer}
+pretransfer:      %{time_pretransfer}
 
-dns_lookup:      %{time_namelookup}
-redirects:       %{time_redirect}
+dns_lookup:       %{time_namelookup}
+redirects:        %{time_redirect}
 
-IP:              %{remote_ip}
-URL:             %{url_effective}
-HTTP Code:       %{response_code}
-Redirects:       %{num_redirects}
+IP:               %{remote_ip}
+URL:              %{url_effective}
+HTTP Code:        %{response_code}
+Redirects:        %{num_redirects}
 "
 }
 #**************************** optionally run trace path *********************************
