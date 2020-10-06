@@ -751,7 +751,7 @@ echo "$ptr_ipv6"
 f_solidLineText  >> $out/$target.txt ; echo '' ; f_menuIP ; f_removeDir
 ;;
 22)
-#******************* 21) website overview (submenu IP)  **********************
+#******************* 22) website overview (submenu IP)  **********************
 f_makeNewDir ; f_dashedGrey 
 f_connCheck
 echo -e "\n" | tee -a $out/$target.txt
@@ -767,6 +767,14 @@ echo -e "\n${B}$target_ip IP Geolocation (via ip-api.co)${D}\n"
 echo -e " == $target_ip IP GEOLOCATION (via ip-api.co) ==\n"  >> $out/$target.txt
 f_geoIP | tee -a $out/$target.txt
 f_solidLong ; f_solidLineText  >> $out/$target.txt
+whois -h whois.pwhois.org $target_ip > $tempdir/pwhois.txt
+whois $target_ip > $tempdir/rev-whois.txt
+echo -e "\n${B}AS Information ${D}\n\n"
+echo -e " == $target AS INFORMATION  ==\n\n" >> $out/$target.txt
+f_pwhois | tee -a $out/$target.txt
+echo '' | tee -a $out/$target.txt
+f_asContact | tee -a $out/$target.txt
+f_solidLong ; f_solidLineText >> $out/$target.txt
 timeout 3 openssl s_client -connect $target:443 -brief 2>$tempdir/ssl_sum2.txt
 echo | timeout 3 openssl s_client -connect $target:443 2>>$tempdir/status.txt -status >> $tempdir/status.txt
 echo | timeout 3 openssl s_client -connect $target:443 2>>$tempdir/ssl_sum2.txt | openssl x509 -text -enddate >> $tempdir/ssl_sum2.txt
