@@ -366,6 +366,8 @@ redirects:       %{time_redirect}
 
 IP:              %{remote_ip}
 URL:             %{url_effective}
+HTTP Code:       %{response_code}
+Redirects:       %{num_redirects}
 "
 }
 #**************************** optionally run trace path *********************************
