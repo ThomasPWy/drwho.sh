@@ -7,12 +7,9 @@ bgpview.io, hackertarget.com IP Tools, ip-api.com, ipapi.co, pwhois.org, RIPEsta
 
 Dependencies
 
-Necessary:
+Necessary: curl, dnsutils, lynx, jq, ncat, nmap, openssl, testssl, ipcalc, mtr, sipcalc, thc-ipv6, whois-client
 
-curl, dnsutils, lynx, jq, ncat, nmap, openssl, testssl, ipcalc, mtr, sipcalc, thc-ipv6, whois-client
-
-Recommended:
-dublin-traceroute, tracepath (iputils-tracepath, bzw. inetutils-tracepath), whatweb 
+Recommended: dublin-traceroute, tracepath (iputils-tracepath, bzw. inetutils-tracepath), whatweb 
 
 Features
 
