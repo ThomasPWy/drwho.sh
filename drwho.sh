@@ -155,7 +155,7 @@ function f_Menu {
 
 #*********** banner for output file *************
 function f_textfileBanner {
-    echo -e " ---------------"
+    echo -e "\n\n ---------------"
     echo -e "  drwho.sh"
     echo -e " ---------------"
     echo -e "\nAuthor - Thomas Wy, Feb 2021\n"
@@ -1102,10 +1102,9 @@ f_BOX_BANNER "${ip4}" ; echo ''
 cat $tempdir/response.txt | tee -a $out/${x}.txt
 f_solidShorter | tee -a $out/${x}.txt
 f_headers "${x}" | tee -a $out/${x}.txt
-curl -s https://api.hackertarget.com/whatweb/?q=${x}${api_key_ht} > $tempdir/ww.txt
 f_solidShort | tee -a $out/${x}.txt
 echo -e "${B}Website${D}\n" ; echo -e " == WEBSITE ==\n\n" >> $out/${x}.txt
-#f_WHATWEB "${x}"
+f_WHATWEB "${x}"
 f_WEBSITE | tee -a $out/${x}.txt
 f_socialLinks "${x}"  | tee -a $out/${x}.txt
 f_solidShort | tee -a $out/${x}.txt ; echo -e "${B}Web- Technologies${D}\n\n"
