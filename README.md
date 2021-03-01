@@ -1,12 +1,16 @@
 # drwho.sh
 
 APIs & whois Servers used by drwho.sh
+
 bgpview.io, hackertarget.com IP Tools, ip-api.com, ipapi.co, pwhois.org, RIPEstat Data API, SANS Internet Storm Center IP- API 
 (https://isc.sans.edu/api/ip/), shadowserver.org, whois.cymru.com, registry whois servers
 
 Dependencies
+
 Necessary:
+
 curl, dnsutils, lynx, jq, ncat, nmap, openssl, testssl, ipcalc, mtr, sipcalc, thc-ipv6, whois-client
+
 Recommended:
 dublin-traceroute, tracepath (iputils-tracepath, bzw. inetutils-tracepath), whatweb 
 
