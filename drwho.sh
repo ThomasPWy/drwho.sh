@@ -1775,7 +1775,7 @@ as_country=`cut -d '|' -f 2  $tempdir/cymru_asn.txt | tr -d ' '`
 echo '' ; f_BOX " AS ${as} - ${as_country} " ; echo ''
 f_OUTPUT_BANNER "AS $as"
 f_AS_Description "${as}" | tee -a ${output} ; done
-f_solidLong >> ${output} ; done 
+f_solidLong >> ${output}
 echo'' ; f_removeDir ; f_Menu
 ;;
 36)
