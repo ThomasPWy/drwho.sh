@@ -741,7 +741,7 @@ if [ $option_banners = "y" ] ; then
 f_BANNERS "${s}"
 if cat $tempdir/banners.txt | grep -q -E "http*"  &&  [ $option_ww = "y" ] ; then
 curl -s https://api.hackertarget.com/whatweb/?q=${s}${api_key_ht} > $tempdir/ww.txt
-f_solidShortest ; f_WHATWEB_REDIR ; f_WHATWEB_CODE ; f_WHATWEB_PAGE
+f_solidShortest ; f_WHATWEB_REDIR ; f_WHATWEB_CODE
 echo -e "\n\n[+] Title\n" ; grep -oP '(Title\[).*?(?=\])' $tempdir/ww.txt | sort -u | sed 's/Title\[//' |
 tr -d ']' | tail -1 | sed 's/^ *//'
 grep -oP '(Meta-Author\[).*?(?=,)' $tempdir/ww.txt | tr -d ']' | sed 's/Meta-Author\[/\n[+] Author\n\n/' | sed 's/^ *//'
