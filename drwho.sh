@@ -2274,7 +2274,7 @@ curl -s https://ipapi.co/${ip4}/json/ > $tempdir/timezone.json
 s_city=$(jq -r '.city' $tempdir/timezone.json)
 s_country=$(jq -r '.country_name' $tempdir/timezone.json)
 s_as=$(jq -r '.asn' $tempdir/timezone.json | sed 's/AS/AS /')
-echo '' ; f_BOX " ${x} ${s_country} ${s_as} " ; echo ''
+echo '' ; f_BOX " ${x} - ${s_country} - ${s_as} " ; echo ''
 f_solidShort >> ${output}
 if ! [ $option_mtr = "9" ] ; then
 echo -e "\n\n${B}Round Trip Times & MTR Traceroute (TCP, Port > $tport)${D}\n"
