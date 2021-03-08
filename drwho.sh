@@ -1870,7 +1870,7 @@ done ; fi ; echo '' ; f_Menu ; f_optionsIPV4 ; f_removeDir
 ;;
 45)
 f_makeNewDir ; f_dashedGrey ; type_net="true" ; option_details="1"
-option_connect="9" ; touch $tempdir/targets.list
+touch $tempdir/targets.list
 echo -e -n "\n${B}Target > [1]${D} Set target Network  ${B}| [2]${D} Target list  ${B}?${D}  " ; read option_target
 if [ $option_target = "1" ] ; then
 echo -e -n "\n${B}Target > ${D} Network (CIDR)  ${B}>>${D}   " ; read input
