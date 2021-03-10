@@ -851,8 +851,10 @@ echo -e " ${B}46)${D}  IPv4 Network Reverse DNS, Service Banners & VHosts"
 echo -e " ${B}47)${D}  NMAP Ping Sweep (IPv4)"
 }
 function f_optionsIPV6 {
-echo -e "\n ${B}66)${D}  IPv6 Address Information       ${B}68)${D}  IPv6 Subdomains"
-echo -e " ${B}67)${D}  MAC/IPv4 to IPv6               ${B}69)${D}  ICMPv6"
+echo -e "\n ${B}66)${D}  IPv6 Address / Network Information"       
+echo -e " ${B}67)${D}  MAC/IPv4 to IPv6 Conversion"               
+echo -e " ${B}68)${D}  Subdomains (IPv6)"
+echo -e " ${B}69)${D}  ICMPv6"
 }
 function f_optionsWEBSERVERS {
 echo -e "\n ${B}111)${D}  HTTP Headers                ${B}113)${D}  Web Server Status & Response Times"
@@ -1802,6 +1804,19 @@ echo -e "\n\n${B}IX $ixid Profile & Members${D}\n\n"
 echo -e "\n\n==IX $ixid BGPVIEW QUERY RESULT == \n" >> $out/IX.$ixid.txt
 f_BGPviewIX
 f_solidLong >> $out/IX.$ixid.txt ; echo '' ; f_Menu ; f_optionsWhois ; f_removeDir
+;;
+38)
+#************** 38) RIPESTAT API LOOKING GLASS *******************
+f_makeNewDir ; f_dashedGrey
+echo -e "\n${B}Looking Glass (RIPESTAT DATA API)\n"
+echo -e -n "Target > ${D}Network ${B}|${D} IP ${B}>>${D}  " ; read input
+echo -e "\n== LOOKING GLASS (RIPESTAT API)==\n" > $out/LookingGlass.$input.txt
+echo -e "Target > $input | Date > $(date)\n\n" >> $out/LookingGlass.$input.txt
+curl -s https://stat.ripe.net/data/looking-glass/data.json?resource=${input} > $tempdir/lg.json
+echo -e "\n"
+jq -r '.data.rrcs[] | .rrc, .location, .peers' $tempdir/lg.json | sed 's/\]/\n/' | sed 's/\[/\n/' |
+tr -d '{,;"}' | tee -a $out/LookingGlass.$input.txt
+f_solidLong >> $out/LookingGlass.$input.txt ; echo '' ; f_Menu ; f_optionsWhois ; f_removeDir
 ;;
 44)
 f_makeNewDir ; f_dashedGrey
