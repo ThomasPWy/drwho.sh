@@ -2307,10 +2307,10 @@ if ! [ $option_mtr = "9" ] ; then
 echo -e "\n\n${B}Round Trip Times & MTR Traceroute (TCP, Port > $tport)${D}\n\n"
 echo -e " == ROUND TRIP TIMES & MTR TRACEROUTE (TCP, PORT >  $tport) == \n\n" >> ${output}
 echo -e "[+] Mode > IPv4" | tee -a ${output}
-sudo mtr -4 -T -b -c4 -w -z -P 53 -o "  L  S D  A BW  X  M" ${x} | sed '/Start:/{x;p;x;}'  | sed '/HOST:/G' |
+sudo mtr -4 -T -b -c4 -w -z -P ${tport} -o "  L  S D  A BW  X  M" ${x} | sed '/Start:/{x;p;x;}'  | sed '/HOST:/G' |
 tee -a ${output}
 echo -e "\n\n[+] Mode > Auto" | tee -a ${output}
-sudo mtr -T -b -c2 -w -z -P 53 -o "  L  S D  A BW  X  M" ${x} | sed '/Start:/{x;p;x;}'  | sed '/HOST:/G' |
+sudo mtr -T -b -c2 -w -z -P ${tport} -o "  L  S D  A BW  X  M" ${x} | sed '/Start:/{x;p;x;}'  | sed '/HOST:/G' |
 tee -a ${output}
 echo '' | tee -a ${output}
 f_solidShort | tee -a ${output}
