@@ -1778,7 +1778,6 @@ f_BGPviewPREFIXES | tee -a $out/AS.$as.txt
 elif [ $option_as = "2" ] ; then 
 f_solidShort | tee -a $out/AS.$as.txt
 echo -e "[+] AS $as - Assigned IPV6 Address Blocks \n\n" | tee -a $out/AS.$as.txt
-echo -e "[+] IPv6 Netblocks\n"
 whois -h whois.pwhois.org "netblock6 source-as=${as}" | grep 'Net-Range:\|Net-Handle:' | cut -d ':' -f 2- | sed 's/^ *//' | sed 'n;G;' |
 tee -a $out/AS.$as.txt
 elif [ $option_as = "3" ] ; then
