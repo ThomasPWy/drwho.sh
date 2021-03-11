@@ -2069,8 +2069,8 @@ echo '' | tee -a ${output}
 grep -w 'Address ID' $tempdir/scalc.txt | tee -a ${output}
 echo '' | tee -a ${output} ; f_solidShorter | tee -a ${output} ; echo "$x" > $tempdir/list.txt
 echo -e "\nHost:      $(/usr/bin/atk6-extract_hosts6 $tempdir/list.txt)" | tee -a ${output}
-echo -e "\nNetwork:   $(/usr/bin/atk6-extract_networks6 $tempdir/list.txt)" | tee -a ${output}
-echo -e "\n\n [+] Encoded MAC Address\n"
+echo -e "\nNetwork:   $(/usr/bin/atk6-extract_networks $tempdir/list.txt)" | tee -a ${output}
+echo -e "\n[+] Encoded MAC / IPv4 Address\n"  | tee -a ${output}
 atk6-address6 ${x} | tee -a ${output} ; f_solidShort ${x} ; else
 echo -e "\n\n${B}$x Address Type & Netmask${D}\n\n" ; echo -e "\n\n == $x ADDRESS TYPE & NETMASK == \n" >> ${output}
 grep -w 'Address type'  $tempdir/scalc.txt | tee -a ${output}
@@ -2136,9 +2136,9 @@ doms="${input}" ; else
 echo -e "${R}ERROR!${D}" ; exit 0 ; fi 
 for x in $(cat $doms) ; do
 f_solidLong | tee $tempdir/subs.txt
-echo -e "\n === ${x} DNS RECORDS ===\n\n" >> $tempdir/subs.txt
+echo -e "\n === ${x} SUBDOMAINS (IPv6) ===\n\n" >> $tempdir/subs.txt
 echo -e "Date: $(date)\n" >> $tempdir/subs.txt
-f_BOX " ${x} " ; echo -e "\n${B}${x} DNS Records${D}\n\n"
+f_BOX " ${x} " ; echo -e "\n${B}${x} Subdomains (IPv6)${D}\n\n"
 atk6-dnsdict6 ${x} | tee -a $tempdir/subs.txt
 cat $tempdir/subs.txt | tee -a $out/${x}.txt >> $out/DNSrec_and_Subdomains.txt ; done
 #********
