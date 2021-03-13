@@ -710,23 +710,24 @@ echo -e "BGP Prefix:     $prefix"
 if [ $type_net = "false" ] ; then
 echo -e "\n\n_________\n" ; echo -e "[+] Owner\n"
 jq -r '.org' $tempdir/geo.json
-grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois.txt | grep 'abuse\|noc' ; else 
+echo -e "Branch:  $org_city $org_cc"
+grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois.txt | grep 'abuse\|noc' | sort -f -u  ; else 
 if [ $whois_registry = "arin" ] ; then
 echo -e "\n\n_________\n" ; echo -e "[+] Owner\n"
 grep -m 1 '^Organization:' $tempdir/whois.txt  | cut -d ':' -f 2- | sed 's/^ *//'
 echo ''
 grep -m 1 '^OrgAbuseEmail:' $tempdir/whois.txt  | cut -d ':' -f 2- | sed 's/^ *//'
 elif [ $whois_registry = "lacnic" ] ; then
-echo -e "\n_________\n" ; echo -e "[+] Owner\n"
+echo -e "\n\n_________\n" ; echo -e "[+] Owner\n"
 grep -m 1 '^owner:' $tempdir/whois.txt  | cut -d ':' -f 2- | sed 's/^ *//'
 echo ''
-grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois.txt | grep 'abuse\|noc'
+grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois.txt | grep 'abuse\|noc' | sort -f -u
 else
-echo -e "________________\n" 
+echo -e "\n\n________________\n" 
 echo -e "[+] Organisation\n"
 grep '^org-name:' $tempdir/whois.txt  | cut -d ':' -f 2- | sed 's/^ *//'
-echo -e "_______________\n" ; echo -e "[+] Description\n"
-grep '^descr:' $tempdir/whois.txt  | cut -d ':' -f 2- | sed 's/^ *//'
+grep '^org:' $tempdir/whois.txt  | cut -d ':' -f 2- | sed 's/^ *//'
+grep '^country:' $tempdir/whois.txt  | cut -d ':' -f 2- | sed 's/^ *//'
 echo ''
 grep -E -o -m 1 "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois.txt
 fi ; fi
@@ -780,7 +781,7 @@ sed 's/^ *//' | sed '/organisation/{x;p;x;}'
 sed -n 'H; /^role/h; ${g;p;}' $tempdir/whois.txt  | sed -n '/role/,/source/p' | grep 'role\|address' | sed '/role/{x;p;x}'  | cut -d ':' -f 2- | sed 's/^ *//'
 sed -n 'H; /^person/h; ${g;p;}' $tempdir/whois.txt  | sed -n '/person/,/source/p' | grep 'person\|address' | sed '/person/{x;p;x}' |
 cut -d ':' -f 2- | sed 's/^ *//' ; echo '' ; fi
-grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois.txt | sort -u
+grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois.txt | sort -f -u
 f_solidShorter
 echo -e "[+] Owner Handles\n"
 if [ $whois_registry = "arin" ] ; then
@@ -1195,7 +1196,7 @@ cat $tempdir/ip.list >> $tempdir/ips.txt
 echo "end" >> $tempdir/ips.txt
 netcat whois.pwhois.org 43 < $tempdir/ips.txt  > $tempdir/pwhois_cymru.txt
 echo -e "${B}Networks & AS${D}\n" ; echo -e "== NETWORKS & AS ==\n" | tee -a $out/${x}.txt >> $out/DNSrec_and_Subdomains.txt
-cat $tempdir/pwhois_cymru.txt | cut -d '|' -f 1,2,3,4,5 | sed '/Bulk mode; one IP/d' | sed '/ORG NAME/{x;p;x;G;}' > $tempdir/whois_table.txt
+cat $tempdir/pwhois_cymru.txt | cut -d '|' -f 1,2,3,4,6 | sed '/Bulk mode; one IP/d' | sed '/ORG NAME/{x;p;x;G;}' > $tempdir/whois_table.txt
 cat $tempdir/whois_table.txt | tee -a $out/${x}.txt ; cat $tempdir/whois_table.txt >> $out/DNSrec_and_Subdomains.txt
 echo '' | tee -a $out/${x}.txt ; echo '' >> $out/DNSrec_and_Subdomains.txt
 echo "begin" > $tempdir/ips.txt
