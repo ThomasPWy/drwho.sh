@@ -811,7 +811,7 @@ curl -s https://api.bgpview.io/prefix/${s} > $tempdir/pfx.json
 prefix_upstreams=`jq -r '.data.asns[].prefix_upstreams[] | {ASN: .asn, Name: .name, Loc: .country_code}' $tempdir/pfx.json | tr -d '}{\",' | sed 's/^ *//'`
 rir=`jq -r '.data.rir_allocation.rir_name' $tempdir/pfx.json`
 alloc=`jq -r '.data.rir_allocation.date_allocated' $tempdir/pfx.json`
-f_solidShort ; echo -e "[+] Prefix - $prefix\n\n"
+echo -e "[+] Prefix - $prefix\n\n"
 net=`echo "$s" | rev | cut -d '/' -f 2- | rev`
 if [[ ${s} =~ $REGEX_IP4 ]] || [[ ${net} =~ $REGEX_IP4 ]] ; then
 ipcalc -b -n ${s} | sed '/Address:/d' | sed '/Network:/d' | sed '/Broadcast/d'
@@ -1935,6 +1935,7 @@ echo -e "${B}Networks\n${D}" ; echo -e "\n\n== NETWORKS ==\n" >> ${output}
 jq -r '.data.prefixes.ipv4' $tempdir/dns.json | grep 'prefix' | tr -d ',\"' | cut -d ':' -f 2- | tr -d ' '
 if [ $option_blacklist = "y" ] ; then
 f_RIPE_BLACKLIST "${x}" | tee -a ${output} ; fi
+f_solidShort | tee -a ${output}
 f_PREFIX "${prefix}" | tee -a ${output}
 if ! [[ ${x} = ${prefix} ]] && [ $option_prefix = "y" ] ; then
 f_solidShort | tee -a ${output}
@@ -1952,19 +1953,6 @@ f_solidShorter | tee -a ${output}
 echo -e "[+] Networks \n\n" | tee -a ${output}
 jq -r '.data.prefixes.ipv4' $tempdir/dns.json | grep 'prefix' | tr -d ',\"' | cut -d ':' -f 2- | tr -d ' ' | tee -a ${output} ; fi
 done
-#echo -e "\n\n[+] Prefix Geographic Distribution \n\n" | tee -a ${output}
-#f_NETGEO "${prefix}" | tee -a ${output}
-#f_solidShorter | tee -a ${output}
-#echo -e "[+] Prefix Reverse DNS Consistency\n\n" | tee -a ${output}
-#curl -s https://stat.ripe.net/data/reverse-dns-consistency/data.json?resource=$prefix > $tempdir/dns.json
-#jq -r '.data.prefixes.ipv4' $tempdir/dns.json | grep 'complete' | tr -d ',\"' |
-#sed 's/^ *//' | sed '/complete/G' | tee -a ${output}
-#jq -r '.data.prefixes.ipv4' $tempdir/dns.json | grep 'prefix\|found' | tr -d ',\"' | cut -d ':' -f 2- | tr -d ' ' > $tempdir/prefixes.txt
-#cat $tempdir/prefixes.txt | tee -a ${output}
-#f_solidShorter | tee -a ${output}
-#echo -e "${B}Networks${D}\n" ;  echo -e "\n\n== NETWORKS ==\n" >> ${output}
-#jq -r '.data.prefixes.ipv4' $tempdir/dns.json | grep 'prefix' | tr -d ',\"' | cut -d ':' -f 2- | tr -d ' ' | tee -a ${output} ; fi
-#done
 f_solidLong >> ${output} ; echo '' ; f_Menu ; f_optionsIPV4 ; f_removeDir
 ;;
 46)
@@ -2258,7 +2246,8 @@ echo -e "\n\n__________________________________\n" | tee -a ${output}
 echo -e "[+] Network Geographic Distributon\n" | tee -a ${output}
 f_NETGEO "${x}" | tee -a ${output} ; fi
 if  [ $option_details = "2" ] ; then 
-f_PREFIX "${prefix}"
+f_solidShort 
+f_PREFIX "${prefix}" | tee -a ${output}
 if ! [ $x = $prefix ] ; then 
 f_solidShort | tee -a ${output}
 f_DELEGATION "${prefix}" | tee -a ${output}
