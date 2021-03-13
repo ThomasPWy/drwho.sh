@@ -2248,7 +2248,6 @@ echo -e "\n\n__________________________________\n" | tee -a ${output}
 echo -e "[+] Network Geographic Distributon\n" | tee -a ${output}
 f_NETGEO "${x}" | tee -a ${output} ; fi
 if  [ $option_details = "2" ] ; then 
-f_solidShort | tee -a ${output}
 f_PREFIX "${prefix}" | tee -a ${output}
 if ! [ $x = $prefix ] ; then 
 f_solidShort | tee -a ${output}
