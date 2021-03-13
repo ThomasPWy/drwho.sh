@@ -1864,6 +1864,7 @@ output="$out/${x}.txt" ; f_BOX_BANNER "${x}" ; f_OUTPUT_HEADER "${x}"
 f_DRWHO "${x}" | tee -a ${output}
 if [ $option_details = "2" ] ; then
 prefix=`cut -d '|' -f 3 $tempdir/cymru.txt | tr -d ' '`
+f_solidShort | tee -a ${output} 
 f_PREFIX "${prefix}" | tee -a ${output} ; fi 
 if [ $option_ipv4_2 = "1" ] || [ $option_ipv4_2 = "3" ] ; then
 f_BLACKLISTS "${x}" | tee -a ${output} ; f_RIPE_BLACKLIST "${x}" | tee -a ${output} ; fi
@@ -2247,7 +2248,7 @@ echo -e "\n\n__________________________________\n" | tee -a ${output}
 echo -e "[+] Network Geographic Distributon\n" | tee -a ${output}
 f_NETGEO "${x}" | tee -a ${output} ; fi
 if  [ $option_details = "2" ] ; then 
-f_solidShort 
+f_solidShort | tee -a ${output}
 f_PREFIX "${prefix}" | tee -a ${output}
 if ! [ $x = $prefix ] ; then 
 f_solidShort | tee -a ${output}
