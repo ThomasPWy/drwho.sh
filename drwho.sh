@@ -660,8 +660,8 @@ city="City:"
 cc="Country-Code:" ; fi
 org_cc=`grep -m1 -E "${cc}" $tempdir/p_full.txt | cut -d ':' -f 2- | sed 's/^ //'`
 org_city=`grep -m1 -E "${city}" $tempdir/p_full.txt | cut -d ':' -f 2- | sed 's/^ //'`
-if [ $whois_registry = "ripencc" ] ; then
 curl -s https://stat.ripe.net/data/abuse-contact-finder/data.json?resource=${s} > $tempdir/ac.json
+if [ $whois_registry = "ripencc" ] ; then
 less_sp=$(jq -r '.data.less_specifics[0]' $tempdir/ac.json)
 curl -s https://stat.ripe.net/data/maxmind-geo-lite/data.json?resource=${less_sp} > $tempdir/lsloc.json
 fi
@@ -694,7 +694,7 @@ echo -e "[+] ISP\n"
 jq -r '.isp' $tempdir/geo.json
 if [[ ${s} =~ $REGEX_IP4 ]] ; then
 echo '' ;  f_ISC_Feeds
-echo -e "\n[+] Network Blacklist Info\n"
+echo -e "\n\n[+] Network Blacklist Info\n"
 jq -r '.data.blacklist_info[] | .list, .entries' $tempdir/ac.json ; fi
 if ! [[ ${s} =~ $REGEX_IP4 ]] ; then
 f_RIPE_CHAIN "${s}" ; echo -e "\n______________\n" ; f_DELEGATION "${s}" ; fi 
