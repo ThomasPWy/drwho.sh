@@ -1159,6 +1159,7 @@ echo -e "${B} [3]${D} DNS records & subdomains (IPv4, IPv6)"
 echo -e -n "\n${B}  ?${D}  "  ; read option_subs
 echo -e -n "\n${B}Option >${D} Customize DNS Lookup  ${B}[y] | [n]  ?${D}  " ; read answer 
 if [ $answer = "n" ] ; then 
+option_transfer="n" ; option_zone="n"
 dig_array+=(+noall +answer +noclass +nottlid) ; else 
 echo -e "\n${B}Nameservers (System Defaults)${D}\n"
 cat /etc/resolv.conf | sed '/#/d' | grep 'nameserver' 
@@ -1183,23 +1184,23 @@ dig_array+=(+identify) ; fi
 echo -e -n "\n${B}Option  >${D} Check for unauthorized zone transfers?   ${B}[y] | [n] ?${D}  " ; read option_transfer
 echo -e -n "\n${B}Option  >${D} Check zone config for best practices (RFC 1912) ${B}[y] | [n] ?${D}  " ; read option_zone ; fi ; fi 
 for x in $(cat $hosts) ; do
-touch $tempdir/dnsrec.txt ; f_solidLong | tee -a $tempdir/dnsrec.txt
-echo -e "\n === ${x} DNS RECORDS ===\n" | tee -a $tempdir/dnsrec.txt
-echo -e " Date: $(date)\n" | tee -a $tempdir/dnsrec.txt ; f_solidShortest | tee -a $tempdir/dnsrec.txt
-if [ $option_connect = "9" ] ; then
+touch $tempdir/dnsrec.txt ; echo '' > $tempdir/dnsrec.txt
+f_solidLong | tee -a $tempdir/dnsrec.txt
+echo -e "\n === ${x} DNS RECORDS ===\n" >> $tempdir/dnsrec.txt
+echo -e " Date: $(date)\n" >> $tempdir/dnsrec.txt ; f_solidShortest >> $tempdir/dnsrec.txt
+f [ $option_connect = "9" ] ; then
 echo -e "\n\n${B}${x} DNS Records${D}\n"
 curl -s https://api.hackertarget.com/dnslookup/?q=${x}${api_key_ht} | tee -a $tempdir/dnsrec.txt
 egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $tempdir/dnsrec.txt > $tempdir/ip_1.list
-cat $tempdir/dnsrec.txt | tee -a $out/DNSrec_and_Subdomains.txt >> $out/${x}.txt
-echo -e "\n${B}Source >${D} hackertarget.com IP Tools API\n\n"
-echo -e "\nSource > hackertarget.com IP Tools API" | tee -a $out/DNSrec_and_Subdomains.txt >> $out/${x}.txt ; else 
-echo -e "\n[+] Domain Host A\n\n" | tee -a $tempdir/dnsrec.txt
+echo -e "\nSource > hackertarget.com IP Tools API" | tee -a $tempdir/dnsrec.txt
+cat $tempdir/dnsrec.txt | tee -a $out/DNSrec_and_Subdomains.txt >> $out/${x}.txt ; else 
+echo -e "\n[+] Domain Host A\n\n" >> $tempdir/dnsrec.txt
 echo -e "\n${B}Domain Host A & AAAA Records${D}\n\n"
 dig a ${dig_array[@]} ${x} | tee -a $tempdir/dnsrec.txt
 echo '' ; echo -e "\n[+] AAAA\n" >> $tempdir/dnsrec.txt
 dig aaaa ${dig_array[@]} ${x} | tee -a $tempdir/dnsrec.txt
 f_solidShort | tee -a $tempdir/dnsrec.txt
-echo -e "\n[+] A Record Lookup Delegation \n\n" | tee -a $tempdir/dnsrec.txt
+echo -e "\n[+] A Record Lookup Delegation \n\n" >> $tempdir/dnsrec.txt
 echo -e "\n${B}A Record Lookup Delegation${D}\n"
 dig ${nssrv_dig} +trace +nodnssec +ttlunits +noclass ${x} | grep 'A\|Received' | sed 's/;;//' | sed '/A/{x;p;x;G}' | sed 's/^ *//' |
 tee -a $tempdir/dnsrec.txt
