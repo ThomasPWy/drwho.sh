@@ -2296,8 +2296,8 @@ type_net="false" ; fi ; else
 echo -e "${R}ERROR!${D}" ; exit 0 ; fi
 echo -e "\n${B}Options >${D} (GLOBAL scope addresses only)\n"
 echo -e "${B} [1]${D} geolocation, whois info"
-echo -e "${B} [2]${D} geolocation, whois & BGP prefix details (network geographic distribution, DNS delegation)"
-echo -e "             (e.g. network geographic distribution, network DNS delegation & reverse DNS consistency)"         
+echo -e "${B} [2]${D} geolocation, whois & BGP prefix details"
+echo -e "   (e.g. network geographic distribution, network DNS delegation & reverse DNS consistency)"         
 echo -e "${B} [9]${D} SKIP "
 echo -e -n "\n${B}  ? ${D}  " ; read option_details
 for x in $(cat "$targets") ; do
