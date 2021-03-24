@@ -1100,8 +1100,7 @@ f_headers "${x}" | tee -a $out/${x}.txt ; f_solidShort | tee -a $out/${x}.txt
 echo '' ; echo -e "[+]  Domain Host A & AAAA Records\n\n" | tee -a $out/${x}.txt
 f_aRecord "${x}" | tee -a $out/${x}.txt ; f_solidLong | tee -a $out/${x}.txt
 echo -e "${B}Website & Server${D}\n" ; echo -e "[+] Website\n" >> $out/${x}.txt
-#f_WHATWEB "${x}"
-curl -s https://api.hackertarget.com/whatweb/?q=${x}${api_key_ht} > $tempdir/ww.txt
+f_WHATWEB "${x}"
 f_WHATWEB_PAGE | tee -a $out/${x}.txt
 f_socialLinks "${x}"  | tee -a $out/${x}.txt
 f_solidShort | tee -a $out/${x}.txt ; echo -e "[+] Web-Tech" | tee -a $out/${x}.txt ; f_WHATWEB_CODE | tee -a $out/${x}.txt
@@ -2297,7 +2296,8 @@ type_net="false" ; fi ; else
 echo -e "${R}ERROR!${D}" ; exit 0 ; fi
 echo -e "\n${B}Options >${D} (GLOBAL scope addresses only)\n"
 echo -e "${B} [1]${D} geolocation, whois info"
-echo -e "${B} [2]${D} geolocation, whois & BGP prefix details, IP Address/Network Blacklist Info"
+echo -e "${B} [2]${D} geolocation, whois & BGP prefix details (network geographic distribution, DNS delegation)"
+echo -e "             (e.g. network geographic distribution, network DNS delegation & reverse DNS consistency)"         
 echo -e "${B} [9]${D} SKIP "
 echo -e -n "\n${B}  ? ${D}  " ; read option_details
 for x in $(cat "$targets") ; do
