@@ -1807,7 +1807,6 @@ echo -e "\n${B}Options >\n"
 echo -e "${B} [1]${D} Search by AS- / Org-Name (bgpview.io)"
 echo -e "${B} [2]${D} Search by Organisation Common Name (Registry Servers)"
 echo -e "${B} [3]${D} RIPE whois Inverse Search"
-echo -e "${B} [4]${D} RIPEstat Search Suggestions"
 echo -e -n "\n${B}  ?${D}  " ; read option_whois_1
 if  [ $option_whois_1 = "1" ] ; then
 echo -e -n "\n${B}Target  >  ${D}Name  ${B}>>${D} " ; read input
@@ -1880,11 +1879,7 @@ jq -r '.data.less_specifics[1]' $tempdir/ac.json  | tee -a $out/WHOIS.txt; done
 echo -e "\n___________________\n" | tee -a $out/WHOIS.txt ; echo -e "[+] E-Mail Contacts\n" | tee -a $out/WHOIS.txt
 grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/inv.txt | sort -u | tee -a $out/WHOIS.txt
 echo '' | tee -a $out/WHOIS.txt ; cat $tempdir/inv.txt | tee -a $out/INVERSE_WHOIS.${query_object}.txt
-f_solidLong >> $out/WHOIS.txt ; f_solidLong >> $out/INVERSE_WHOIS.${query_object}.txt
-elif  [ $option_whois_1 = "4" ] ; then
-echo -e -n "\n${B}Target > ${D}SEARCHTERM ${B}>>${D}  " ; read st
-curl -s https://stat.ripe.net/data/searchcomplete/data.json?resource=${st} > $tempdir/sug.json
-echo '' ; jq -r '.data' $tempdir/sug.json | tee -a $out/SEARCH_SUGGESTIONS.txt ; else
+f_solidLong >> $out/WHOIS.txt ; f_solidLong >> $out/INVERSE_WHOIS.${query_object}.txt ; else 
 : ; fi
 echo '' ; f_Menu ; f_optionsWhois ; f_removeDir
 ;;
