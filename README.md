@@ -1,5 +1,10 @@
 # drwho.sh
 
+extensive rewrite of the drwho.sh script;
+bug fixes, improved output formatting, nmap-output in grepable format, 
+more features for RIPE inverse search, better IPv6 support;
+most options now allow input of individual targets or target lists for bulk queries
+
 APIs used in drwho.sh
 
 BGPview ASN, Prefix & IX APIs
@@ -58,6 +63,8 @@ Information about Networks, BGP Prefixes & Autonomous Systems
 (Owner, contacts, geographic distribution, reverse DNS consistency, blacklisting, network upstreams, 
 reverse DNS and reverse IP, network service banners, AS name, country, contact, announced prefixes, 
 IX-memberships, peering & transit)
+
+Enumeration of Networks & Address Ranges belonging to an organisation via RIPE inverse search, bgpview.io ORG-search & BGP prefixes 
 
 MX, NS & DNS Zone information (smtp & imap methods, blacklisting, DNS records, 
 DNS lookup delegation tracing, zone configs, zone transfers, soa record comparison, BIND version, shared name servers)
