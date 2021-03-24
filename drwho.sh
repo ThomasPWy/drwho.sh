@@ -1323,7 +1323,7 @@ echo -e "\n${B}Options > Webserver Enumeration & Security ${D}"
 echo -e -n "\n${B}Options >${D} Network, whois & geolocation info ${B} > [1]${D} Summary ${B}| [2]${D} Details ${B}| [9]${D} SKIP  ${B}?${D}  " ; read option_details
 echo -e -n "\n${B}Options > Nmap > [1]${D} Safe Mode ${B}| [2]${D} Intrusive Mode ${B}| [9]${D} SKIP  ${B}?${D}  " ; read option_nmap 
 if ! [ $option_nmap = "9" ] ; then
-declare -a nmap_array=() ; declare -a script_array=() ; declare -a port_array=() ; declare nmap_array+=(-sV -O -Pn)
+declare -a nmap_array=() ; declare -a script_array=() ; declare -a port_array=() ; nmap_array+=(-sV -O -Pn)
 if [ $option_nmap = "2" ] ; then
 script_array+=(banner,http-server-header,ajp-headers,http-chrono,https-redirect,http-php-version,http-affiliate-id,http-referer-checker,http-auth,http-auth-finder,http-csrf,http-phpself-xss,http-dombased-xss,http-unsafe-output-escaping,http-rfi-spider,mysql-info,mysql-empty-password,ftp-anon,rpcinfo,ssh-auth-methods,ssh2-enum-algos,sshv1,http-sql-injection,http-malware-host,http-open-proxy,http-enum,http-phpmyadmin-dir-traversal,http-slowloris-check,smtp-strangeport,ssl-poodle,ssl-heartbleed,sslv2,ssl-enum-ciphers,ssl-dh-params,tls-alpn,vulners,http-methods)
 else
