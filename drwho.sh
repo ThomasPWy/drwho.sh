@@ -1862,7 +1862,7 @@ echo -e "Type > $query_type   Object > $query_object\n" >> $out/WHOIS.txt
 whois -h whois.ripe.net -- " -B -i ${query_type} ${query_object}" | sed 's/% Information related/Information related /'  | sed 's/% Abuse contact/Abuse contact/' |
 sed '/%/d' | sed '/Information related/i \\n________________________________\n' > $tempdir/inv.txt
 echo -e "\n\n[+] $query_object Regular Search (whois.ripe.net)\n" | tee -a $out/WHOIS.txt
-whois -h whois.ripe.net -B $query_object | sed '/^%/d' | tee -a $out/WHOIS.txt
+whois -h whois.ripe.net -- "-B ${query_object}" | sed '/^%/d' | tee -a $out/WHOIS.txt
 f_solidShort | tee -a $out/WHOIS.txt ; echo -e "[+] $query_object Inverse Search Summary\n" | tee -a $out/WHOIS.txt
 echo -e "[+] Networks\n" | tee -a $out/WHOIS.txt
 grep -w -A 2 '^inetnum:' $tempdir/inv.txt | cut -d ':' -f 2- | tr -d ' ' | tee -a $out/WHOIS.txt
