@@ -2586,7 +2586,7 @@ else
 echo -e "\n ${R}Error! ${D} \n" ; exit 0 ; fi
 if [ $report = "true" ] ; then
 echo -e -n "\n${B}Set   > ${D}OUTPUT - FILE NAME  ${B}>>${D}  " ; read filename ; else
-filename="$tempdir/nmap" ; fi
+filename="nmap" ; fi 
 if [ $option_ipv = "2" ] ; then 
 nmap_array+=(-6) ; fi
 if [ $scan_type = "3" ] || [ $scan_type = "4" ] ; then
