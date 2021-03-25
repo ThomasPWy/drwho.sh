@@ -677,7 +677,7 @@ sort -f -u $tempdir/org.txt
 grep '^org:' $tempdir/whois.txt  | cut -d ':' -f 2- | sed 's/^ *//'
 grep -m 1 '^country:' $tempdir/whois.txt  | cut -d ':' -f 2- | sed 's/^ *//' ; fi ; fi 
 if [ $whois_registry = "arin" ] ; then
-echo "abuse_contact"
+echo "$abuse_contact"
 elif [ $whois_registry = "lacnic" ] ; then
 grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois.txt | grep 'abuse\|noc' | sort -f -u
 else 
