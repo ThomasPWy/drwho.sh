@@ -2584,6 +2584,9 @@ elif [ $option_extra = "3" ] ; then
      : ; fi
 else
 echo -e "\n ${R}Error! ${D} \n" ; exit 0 ; fi
+if [ $report = "true" ] ; then
+echo -e -n "\n${B}Set   > ${D}OUTPUT - FILE NAME  ${B}>>${D}  " ; read filename ; else
+filename="$tempdir/nmap" ; fi
 if [ $option_ipv = "2" ] ; then 
 nmap_array+=(-6) ; fi
 if [ $scan_type = "3" ] || [ $scan_type = "4" ] ; then
@@ -2614,10 +2617,10 @@ echo -e "Date : $(date), Type: $scan_type $scan_flag\n" >> $out/PORTSCANS.txt
 echo -e "Target: $scan_target\n\n" >> $out/PORTSCANS.txt ; echo ''
 f_solidShort
 if [ $scan_type = "1" ] ; then
-nmap ${nmap_array[@]} ${port_array[@]} ${scan_target} --script ${scripts_1} > $tempdir/nmap.txt 
+nmap ${nmap_array[@]} -oA ${out}/${filename} ${port_array[@]} ${scan_target} --script ${scripts_1} > $tempdir/nmap.txt 
 elif [ $scan_type = "4" ] ; then
-sudo nmap ${nmap_array[@]} -oA ${out}/${scan_target} ${port_array[@]} ${scan_target} > $tempdir/nmap.txt ; else 
-sudo nmap ${nmap_array[@]} ${port_array[@]} ${scan_target} -oA ${out}/${scan_target} --script ${scripts_1},${scripts_2} > $tempdir/nmap.txt ; fi
+sudo nmap ${nmap_array[@]} -oA ${out}/${filename} ${port_array[@]} ${scan_target} > $tempdir/nmap.txt ; else 
+sudo nmap ${nmap_array[@]} ${port_array[@]} ${scan_target} -oA ${out}/${filename} --script ${scripts_1},${scripts_2} > $tempdir/nmap.txt ; fi
 cat $tempdir/nmap.txt | sed '/PORT/{x;p;x;}' | sed '/\/tcp /{x;p;x;}' |
 sed '/Read data files/d' | sed '/NSE/d' | sed '/Initiating/d' | sed '/Completed/d' | sed '/Discovered/d' |
 sed '/Aggressive OS guesses:/{x;p;x;}' | sed '/Uptime guess:/{x;p;x;}' | sed '/Nmap scan report/{x;p;x;}' |
