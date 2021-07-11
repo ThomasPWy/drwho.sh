@@ -1588,7 +1588,7 @@ echo -e "\n${B} t) Tracerouting, MTU Discovery, RPKI Validation${D}" ; f_options
 echo -e "${B} Sources (APIs und whois Servers ${D}\n\n"
 echo -e "bgpview.io, censys.io, certspotter.com, crt.sh, hackertarget.com, ripeSTAT Data API, sublister.com, whois.cymru.com, whois.pwhois.org, RIR whois Servers"
 echo -e "\n\n${B} Dependencies ${D}\n\n"
-echo -e "curl, dig, dublin traceroute, host, MTR, Nmap, Openssl, Testssl, THC IPv6 Attack Suite\n"
+echo -e "curl, dig, dublin traceroute, host, ipcalc, MTR, Nmap, Openssl, sipcalc, Testssl, THC IPv6 Attack Suite, tracepath\n"
 ;;
 i)
 f_Long ; echo -e "\n ${B}Option > Target Connect > ${D}"
