@@ -5,44 +5,13 @@ bug fixes, improved output formatting, nmap-output in grepable format,
 more features for RIPE inverse search, better IPv6 support;
 most options now allow input of individual targets or target lists for bulk queries
 
-APIs used in drwho.sh
-
-BGPview ASN, Prefix & IX APIs
-https://bgpview.docs.apiary.io/#
-https://bgpview.io/contact
-
-https://dns.bufferover.run 
-(https://github.com/erbbysam/DNSGrep ; source of data: Rapid7 Labs,  https://opendata.rapid7.com/about/)
-
-hackertarget.com IP Tools (without membership, API calls are limited to 50/day)
-hackertarget.com 
-
-ip-api.com
-(https://ip-api.com/docs/legal)
-
-ipapi.co
-https://ipapi.co/
-
-RIPEstat Data API
-(https://stat.ripe.net/docs/data_api)
-
-SANS Internet Storm Center IP- API
-(https://isc.sans.edu/api/ip/)
-
-
-WHOIS SERVERS used in drwho.sh
-
-pwhois.org  
-shadowserver.org
-whois.cymru.com 
-registry whois servers (whois.afrinic.net, whois.apnic.net, whois.arin.net, whois.ripe.net)
 
 
 DEPENDENCIES
 
 Necessary: curl, dnsutils, lynx, jq, ncat, nmap, openssl, testssl, ipcalc, mtr, sipcalc, thc-ipv6, whois-client
 
-Recommended: dublin-traceroute, tracepath (iputils-tracepath, bzw. inetutils-tracepath), whatweb 
+Recommended: dublin-traceroute, tracepath (iputils-tracepath, bzw. inetutils-tracepath), wfuzz whatweb 
 
 FEATURES
 
@@ -75,5 +44,79 @@ ICMPv6 Ping, IPv4 Ping Sweep, ARP Broadcasts
 
 Most option support bulk queries (input via textfile) as well as individual targets
 
+Menu Structure
+
+1) Domain Enumeration
+
+    Domain Webhost, DNS Records, SSL Info & Certificates, Subdomains, Networks, Prefixes, Owners, Contacts
+
+ 2) Name Server & DNS Lookup Options 
+
+ 22)  DNS Records
+ 23)  dig Batch Mode (Bulk Lookup)
+ 24)  Shared Name Servers
+ 25)  Zone Walk & Zone Transfer
+
+ 3) Whois & BGP Related Options 
+
+ 31)  Domain whois Status
+ 32)  Bulk whois Lookup (pwhois.org)
+ 33)  Inverse Lookup & Object Search (RIPE, APNIC, AFRINIC)
+ 34)  Prefix Address Space Enumeration
+ 35)  ARIN Network & PoC Search
+ 36)  Org & NetBlock Searches (pwhois.org)
+ 37)  AS Information, BGP Prefixes, Peering & Transit
+ 38)  IX Information
+
+      LACNIC Whois Lookups are supported in Options 44), 45), 66), 67)
+      Use Options 33)-35) to search for address ranges & network owner contacts
+
+ 4) IPv4 Hosts & Networks 
+
+ 44)  IPv4 Hosts > Whois Geolocation, Blocklists, Banners, VHost
+ 45)  IPv4 Nets  > Whois, Geolocation, Routing Consistency
+ 46)  IPv4 Nets  > Reverse DNS, VHosts & Banners
+ 47)  IPv4 Nets  > Network Blocklists Check
+ p4)  IPv4 Nets  > NMAP Ping Sweep
+
+ 5) Reverse GoogleAnalytics Search
+
+ 6) IPv6 Addresses & Networks 
+
+ 66)  IPv6 Hosts > Whois, Geolocation, DNS Delegation
+ 67)  IPv6 Nets  > Whois, Geolocation, DNS Delegation
+ 68)  IPv6 Nets  > Reverse DNS Lookup
+ 69)  Subdomain Bruteforcing (IPv4 & IPv6)
+ p6)  thc-atk6 ICMPv6 Packets Builder
+ t6)  thc-atk6 IPv6 Traceroute (MTU- & Tunnel Discovery) & RPKI Validation
+
+ 7) Webservers 
+
+ 77)  Webserver Information & Diagnostics (Connectivity- & SSL-Issues, Vulnerabilities)
+ 78)  Dump Certificates, Hyperlinks, HTTP Headers, robots.txt
+
+ i) Manage target interaction
+
+    Allow direct target interaction (default) or 
+    avoid revealing your IP address by working with whois Lookups & API calls only
+
+ p) Port Scans & Ping
+
+ p1)  NMAP Port-, Version- & Vulnerability Scans
+ p2)  NMAP Port Scan (hackertarget.com API, IPv4) 
+ p3)  NPING (hackertarget.com API, IPv4)
+ p4)  NMAP Ping Sweep (IPv4)
+ p5)  NMAP Firewalk & Alternative Scanflags
+ p6)  thc-atk6 ICMP6 Packets Builder
+
+ t) Tracerouting, MTU Discovery, RPKI Validation
+
+ t1)  Path MTU Discovery (Nmap, ICMP/TCP)
+ t2)  Tracepath (IPv4 & v6, MTU Discovery, ICMP only, non-root)
+ t3)  MTR (Traceroute, RT-Times, Packet Loss; IPv4, IPv6, TCP,UDP,ICMP)
+ t4)  NMAP Geo Traceroute (ICMP, TCP)
+ t5)  Dublin Traceroute (NAT-aware, Multipath Tracerouting, ICMP only)
+ t6)  atk-trace6 ICMPv6 Traceroute (MTU- & Tunnel-Discovery)
+      Additional Option: 53), 54), 56) RPKI Validation, ISP, Contact, Geolocation & whois Summary for each Hop
 
 
