@@ -2,8 +2,8 @@
 function f_error_message {
 local s="$*"
 echo -e "\nERROR: $s is not installed on your system. Please make sure that at least the essential dependencies are satisfied."
-echo -e "\nDependencies (essential): curl, dnsutils (installs dig & host), jq, lynx, nmap, openssl, whois"
-echo -e "\nDependencies (recommended): dublin-traceroute, mtr, testssl, thc-ipv6, tracepath, wfuzz, whatweb\n"
+echo -e "\nDependencies (essential): curl, dnsutils (installs dig & host), jq, ipcalc, lynx, nmap, openssl, whois"
+echo -e "\nDependencies (recommended): dublin-traceroute, mtr, sipcalc, testssl, thc-ipv6, tracepath, wfuzz, whatweb\n"
 }
 if ! type curl &> /dev/null; then
 f_error_message "curl" ; exit 1 ; fi 
@@ -1570,8 +1570,8 @@ echo -e "\n${B} t) Tracerouting, MTU Discovery, RPKI Validation${D}" ; f_options
 echo -e "${B}Sources (APIs und whois Servers ${D}\n\n"
 echo -e "abusix.com, bgpview.io, censys.io, certspotter.com, crt.sh, hackertarget.com, ip-api.com, ripeSTAT Data API, sublister.com, \nwhois.cymru.com, whois.pwhois.org, RIR whois Servers"
 echo -e "\n\n${B}Dependencies ${D}"
-echo -e "\nEssential: curl, dnsutils (installs dig & host), jq, lynx, nmap, openssl, whois"
-echo -e "\nRecommended: dublin-traceroute, mtr, testssl, thc-ipv6, tracepath, wfuzz, whatweb\n"
+echo -e "\nDependencies (essential): curl, dnsutils (installs dig & host), jq, ipcalc, lynx, nmap, openssl, whois"
+echo -e "\nDependencies (recommended): dublin-traceroute, mtr, sipcalc, testssl, thc-ipv6, tracepath, wfuzz, whatweb\n"
 ;;
 i)
 f_Long ; echo -e "\n ${B}Option > Target Connect > ${D}"
