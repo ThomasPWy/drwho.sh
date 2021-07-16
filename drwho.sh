@@ -2943,7 +2943,7 @@ out="${outdir}/ROUTES.${x}.txt" ; echo '' | tee -a ${out}
 f_Long | tee -a ${out} ; echo -e "[+] ${x} [atk6-trace6] | $(date)" | tee -a ${out} ; f_Long | tee -a ${out}; echo '' | tee -a ${out}
 sudo atk6-trace6 -t -d ${interface} ${x} > $tempdir/trace6
 cat $tempdir/trace6 | sed '/Trace6 for/G' | tee -a ${out}
-hops=`awk -F' ' '{print $2}' $tempdir/trace6 | sed '1,2d' | sed '/!!!/d' | sed '/???/d' | sed 's/^ *//' | sed '/^$/d'` 
+hops=`awk -F' ' '{print $2}' $tempdir/trace6 | sed '1,1d' | sed '/!!!/d' | sed '/???/d' | sed 's/^ *//' | sed '/^$/d'` 
 for i in $hops ; do
 f_serverINFO "${i}" ; done | tee -a ${out} ; done  ; f_removeDir ; f_Menu; f_options_T
 ;;
