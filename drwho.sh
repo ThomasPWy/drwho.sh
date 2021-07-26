@@ -3001,10 +3001,9 @@ f_serverINFO "${i}" ; done | tee -a ${out} ; done  ; f_removeDir ; f_Menu; f_opt
 ;;
 p1)
 f_makeNewDir ; f_Long
-echo -e "\n${B}Nmap Firewall Enumeration"
 if ! [ $option_connect = "9" ] ; then
 declare -a nmap_array=()  ; declare -a port_array=() 
-echo -e "\n${B}Options >\n"
+echo -e "\n${B}Options > Nmap Port Scans >\n"
 echo -e "${B} [1]${D} TCP Connect Scan (non-root)" ; echo -e "${B} [2]${D} Basic SYN Scan"
 echo -e "${B} [3]${D} Service Version Scan (optional: vulners)" ; echo -e "${B} [4]${D} Service- & OS- Version Scan (optional: vulners)"
 echo -e -n "\n${B}  ?${D}  " ; read scan_type
