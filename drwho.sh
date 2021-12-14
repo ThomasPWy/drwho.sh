@@ -3090,7 +3090,7 @@ echo -e " ${B}[4]${D}  Virtual Hosts"
 echo -e " ${B}[b]${D}  Back to the Global ${G2}Options Menu${D}\n"
 }
 f_optionsHOSTNAME(){
-echo -e "\n ${B}Options > Look up Host Information by Host Naame  ${G2}(IPV4)\n"
+echo -e "\n ${B}Options > Look up Host Information by Host Name  ${G2}(IPV4)\n"
 echo -e " ${B}[1]${D}  Hostname/IP ${bold}Overview${D} (Geolocation, DNS, Prefix, Whois Summary)"
 echo -e " ${B}[2]${D}  ${bold}Customize${D} Options (e.g. Banners, WhatWeb, IP Reputation, Certificates (via certspotter), Whois Contact Details)"
 }
@@ -3100,6 +3100,17 @@ echo -e " ${B}[1]${D}  IP Address Info (Geolocation, RDNS, Prefix BGP Status, Wh
 echo -e " ${B}[2]${D}  IP Address Info, Whois Contact Details"
 echo -e " ${B}[3]${D}  THC-Ping6 ICMPv6/TCP Packet Builder $denied"
 echo -e " ${B}[b]${D}  Back to the Global ${G2}Options Menu${D}\n"
+}
+function f_optionsLAN {
+echo -e "\n ${B}Options > LOCAL NETWORK OPTIONS (TOOL: NMAP) ${D} $denied\n"
+echo -e " ${B}[1]${D}  Send ARP Broadcast (Host Discovery)" 
+echo -e " ${B}[2]${D}  Send DHCP Discover Broadcast  ${B}(IPv4)"
+echo -e " ${B}[3]${D}  Send RIP2 Discover Broadcast  ${B}(IPv4)"
+echo -e " ${B}[4]${D}  Send OSPF2 Discover Broadcast  ${B}(IPv4)"
+echo -e " ${B}[5]${D}  Discover Network & SCADA Services  ${B}(IPv4)"
+echo -e "\n ${B}Options > LOCAL NETWORKS ${B}(IPv6) ${D} $denied\n"
+echo -e " ${B}[6]${D}  IPv6 Router & DHCP Overview"
+echo -e "\n ${B}[b]${D}  Back to the Global ${G2}Options Menu${D}\n"
 }
 f_optionsNET(){
 echo -e "\n\n ${B}Options > NETWORKS\n"
