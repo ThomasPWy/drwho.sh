@@ -249,7 +249,7 @@ sed 's/ROUTES/ ROUTES /' ; fi ; echo ''
 #********************** OUTPUT - BASIC FORMATTING ***********************
 f_textfileBanner(){
 local s="$*";echo -e "\n ---------------" ; echo -e "  drwho.sh" ; echo -e " ---------------\n"
-echo -e "https://github.com/ThomasPWy/drwho.sh,  Author: Thomas Wy,  Version: 2.0 (Nov 2021)"; f_Long
+echo -e "https://github.com/ThomasPWy/drwho.sh,  Author: Thomas Wy,  Version: 2.0 (Dec 2021)"; f_Long
 echo -e "\nDate:    $(date)"; echo -e "\nTarget:  $s\n"
 }
 f_whoisFORMAT(){
@@ -3177,7 +3177,7 @@ h|help|all|about)
 #************** ABOUT / HELP  *******************
 echo -e "${B}" ; f_Long
 echo -e "\n ---------------" ; echo -e "  drwho.sh" ; echo -e " ---------------\n"
-echo -e "https://github.com/ThomasPWy/drwho.sh,  Author: Thomas Wy,  Version: 2.0 (Nov 2021)"; f_Long ; echo -e "${D}"
+echo -e "https://github.com/ThomasPWy/drwho.sh,  Author: Thomas Wy,  Version: 2.0 (Dec 2021)"; f_Long ; echo -e "${D}"
 echo -e "${G2}Dependencies ${D}"
 echo -e "\nDependencies (essential): \n\ncurl, dnsutils (installs dig & host), jq, ipcalc, lynx, nmap, openssl, whois"
 echo -e "\n\nDependencies (recommended): \n\ndublin-traceroute, lbd, mtr, sslscan, testssl, thc-ipv6, tracepath, wfuzz, whatweb"
