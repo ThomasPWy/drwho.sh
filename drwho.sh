@@ -1633,12 +1633,12 @@ f_TOR() {
 local s="$*" ; reverse=$(echo $s | awk -F'.' '{printf $4 "." $3 "." $2 "." $1}')
 is_tor=$(dig @9.9.9.9 +short -t a $(echo $s | awk -F'.' '{printf $4 "." $3 "." $2 "." $1}').tor.dan.me.uk.)
 if [[ $is_tor ]]; then
-if [ $target_type = "web" ] ; then
-echo "+ TOR Node:            true (${is_tor}) [$s]" ; else
-echo "TOR: true (${is_tor})" ; fi ; else
-if [ $target_type = "web" ] ; then
-echo "+ TOR Node:            false [$s]" ; else
-echo "TOR: false" ; fi ; fi
+if [ $target_type = "default" ] ; then
+echo "TOR: true (${is_tor})" ; else 
+echo "+ TOR Node:            true (${is_tor}) [$s]" ; fi ; else
+if [ $target_type = "default" ] ; then
+echo "TOR: false" ; else 
+echo "+ TOR Node:            false [$s]" ; fi ; fi 
 }
 f_SPAMHAUS(){
 local s="$*" ; reverse=$(echo $s | awk -F'.' '{printf $4 "." $3 "." $2 "." $1}')
@@ -1762,7 +1762,7 @@ if [ $target_type = "default" ] ; then
 f_threatSUMMARY "${s}" ; fi ; f_greyNOISE "${s}"
 }
 f_HOST_BL_CHECK(){
-local s="$*" ; echo  -e "________________________________________________\n"
+local s="$*" ; echo  -e "________________________________________________\n\n"
 f_bSCATTERER "${s}" ; f_TOR "${s}" ; f_projectHONEYPOT "${s}"; f_SPAMHAUS "${s}" ; f_forumSPAM "${s}"
 echo $s > $tempdir/bl_check; f_blocklistCHECK "$tempdir/bl_check" ; f_greyNOISE "${s}"
 }
@@ -1772,18 +1772,19 @@ f_abuse_cFINDER(){
 local s="$*" ; echo ''
 if echo $s | grep -q -i "as" ; then
 asn=$(echo $s | sed 's/[Aa][Ss]//' | sed 's/[Aa][Ss] //' | tr -d ' ')
-f_AS_ABUSEMAIL "${asn}" ; echo -e "\nAS $asn Abuse Contact:  $asabuse_c (AS $i)" ; else
+f_AS_ABUSEMAIL "${asn}" ; echo -e "\nAS $asn Abuse Contact:  $asabuse_c" ; else
 curl -m 5 -s "https://stat.ripe.net/data/abuse-contact-finder/data.json?resource=${s}" > $tempdir/ac.json
 rir=$(jq -r '.data.authoritative_rir' $tempdir/ac.json) ; abuse_mbox=$(jq -r '.data.abuse_contacts[]' $tempdir/ac.json | tr '[:space:]' ' ' ; echo '')
 if [ -n "$abuse_mbox" ] ; then
 echo -e "\n\n[@]:         $abuse_mbox (source: RipeStat)\n" ; else
 if [ $rir = "arin" ] || [ $rir = "lacnic" ] ; then
 whois -h whois.${rir}.net $s > $tempdir/whois ; else
-whois -h whois.${rir}.net -- "--no-personal $s" | sed 's/^ *//' > $tempdir/whois
-contacts=$(grep -E -o -m 2 "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois | sort -u -V | tr '[:space:]' ' ' ; echo '')
-echo -e "\n\n[@]:         $contacts  (source: whois.$rir.net)\n" ; fi ; fi ; f_Short ; f_PREFIX "${s}"
-for i in $autnums ; do
-f_AS_ABUSEMAIL "${i}"; echo -e "\n[@]:         $asabuse_c (AS $i)" ; done ; fi
+whois -h whois.${rir}.net -- "--no-personal $s" | sed 's/^ *//' > $tempdir/whois; fi 
+abuse_mbox=$(grep -E -a -s -m 1 "^OrgAbuseEmail:|^% Abuse|^abuse-mailbox:|^e-mail:|\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois |
+grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b")
+if [ -z "$abuse_mbox" ] ; then
+abuse_mbox=$(grep -E -o -m 2 "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois); fi
+echo -e "\n\n[@]:         $abuse_mbox (source: whois.$rir.net)\n" ; fi ; fi
 }
 
 #********************** DNS RECORDS & SUBDOMAINS ***********************
@@ -3348,11 +3349,8 @@ if [ $option_type = "1" ] ; then
 if [ $option_summary = "y" ] ; then
 f_Long | tee -a ${out} ; echo "$x" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' | tee -a ${out}
 f_hostSHORT "${x}" | tee -a ${out} ; else
-echo -e "\n________________________________________________\n" | tee -a ${out}; echo "[+] $x" ; fi
+echo -e "\n________________________________________________\n" | tee -a ${out}; echo "  $x" ; fi
 f_HOST_BL_CHECK "${x}" | tee -a ${out} ; fi ; done
-if [ $option_type = "1" ] ; then
-f_Long | tee -a ${out} ; echo -e "Blocklists\n" | tee -a ${out}
-echo -e "$blocklists_hosts" | sed '$!s/$/,/' | sed '1,1d' | tr '[:space:]' ' ' | fmt -s -w 90 | tee -a ${out} ; fi
 echo '' ; f_removeDir ; f_Menu
 ;;
 #************** DOMAIN RECON *******************
