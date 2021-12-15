@@ -322,7 +322,9 @@ echo -e "${B}   p)  ${D}Port Scanning"
 echo -e "${B}   t)  ${D}Tracerouting"
 echo -e "${B}   w)  ${D}Whois (inverse, organization- & bulk lookup options)"
 echo -e "${B} www)  ${D}Web Server"
-echo -e "\n${B}   m)  ${D}Main Menu"
+echo -e "\n${B}   c)  ${D}TOGGLE TARGET - CONNECT / NON-CONNECT MODES"
+echo -e "${B}   s)  ${D}SAVE RESULTS"
+echo -e "\n${B}   m)  ${D}MAIN MENU"
 echo -e "${B}   q)  ${D}Quit"
 }
 
@@ -2209,7 +2211,7 @@ sed 's/complete:/\n\n\ncomplete:/g' | sed '/complete:/a \____________________\n'
 
 #********************** NETWORK ENUMERATION - WHOIS  ***********************
 f_whoisNET(){
-local s="$*" ; net_ip=$(echo $s | cut -d '/' -f 1) ; echo '' ; f_getRIR "${s}"
+local s="$*" ; query="$s"; export query ; net_ip=$(echo $s | cut -d '/' -f 1) ; echo '' ; f_getRIR "${s}"
 if [ $rir = "lacnic" ] ; then
 whois -h whois.lacnic.net $s > $tempdir/whois
 elif [ $rir = "arin" ]; then
@@ -2220,12 +2222,12 @@ whois -h whois.${rir}.net -- "--no-personal $s" > $tempdir/whois; fi; fi
 if [ $rir = "lacnic" ] ; then
 f_Long ; echo "NET | $s" ; f_Long; f_lacnicWHOIS "${s}"; else
 netabuse=$(grep -E -a -s -m 1 "^OrgAbuseEmail:|^% Abuse|^abuse-mailbox:|^e-mail:|\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois |
-grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b") 
-if [ -z "$abx" ] ; then
+grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b")
+if [ -z "$netabuse" ] ; then
 netabuse=$(grep -E -o -m 2 "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois); fi
 net_name=$(grep -E -i -m 1 "^netname:|^na:|^net-name:" $tempdir/whois | cut -d ':' -f 2- | sed 's/^ *//')
 if [ -n "$net_name" ] ; then
-f_Long ; echo "NET |  $net_name  | Query: $s" ; f_Long; else
+f_Long ; echo "NET |  $net_name  |  Query:  $s" ; f_Long; else
 f_Long ; echo "NET | $s" ; f_Long; fi
 echo "[@]: $netabuse" | tr '[:space:]' ' ' ; echo -e "\n____\n"; f_netSUM "${s}"; fi
 }
@@ -2255,64 +2257,66 @@ org_whois=$(grep -E -i -m 1 "^organization:|^org-name:|^owner:|^og:|^oa:" $tempd
 net_status=$(grep -E -i -m 1 "^status:|^NetType:" $tempdir/whois | cut -d ':' -f 2- | sed 's/^ *//')
 cidr=$(grep -E -m 1 "^CIDR:" $tempdir/whois | cut -d ':' -f 2- | sed 's/^ *//')
 if ! [[ ${net_ip} =~ $REGEX_IP4 ]] ; then
-curl -s "https://stat.ripe.net/data/prefix-overview/data.json?resource=${s}" > $tempdir/pov.json
-net_resource="$net_range"; geo_target="$s"; announced=$(jq -r '.data.announced' $tempdir/pov.json); else
+if [ $rir = "arin" ] ; then
+target=$(echo "$cidr" | head -1) ; else
+net_resource="$net_range"; target="$net_range"; fi
+curl -s "https://stat.ripe.net/data/prefix-overview/data.json?resource=${target}" > $tempdir/pov.json; else
 curl -s "https://stat.ripe.net/data/prefix-overview/data.json?resource=${range_trimmed}" > $tempdir/pov.json
 converted=$(jq -r '.messages[]' $tempdir/pov.json | grep 'range' | egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}')
-announced=$(jq -r '.data.announced' $tempdir/pov.json)
-if [ $announced = "true" ] ; then
-as=$(jq -r '.data.asns[0].asn' $tempdir/pov.json); export as ; fi
-if [ $target_type = "default" ] ; then
 if [ -n "$converted" ] ; then
 geo_target="$converted"; net_resource="$converted"; else
-geo_target=$(echo $s | cut -d '-' -f 1 | tr -d ' '); net_resource=''; fi ; else 
-if [ -n "$converted" ] ; then
-geo_target="$converted"; net_resource="$converted"; else
-geo_target="$s"; net_resource="$s"; fi
-if [ $announced = "true" ] ; then
-prefix=$(jq -r '.data.resource' $tempdir/pov.json) ; else 
-whois -h whois.pwhois.org ${s} > $tempdir/pwhois_prefix
-as=$(grep -E "^Origin-AS:" $tempdir/pwhois_prefix | awk '{print $NF}' | sed 's/^ *//' | tr -d ' ')
-if [ -n "$as" ] ; then 
-export as ; prefix=$(grep -E "^Prefix:" $tempdir/pwhois_prefix | awk '{print $NF}' | sed 's/^ *//' | tr -d ' '); else
-curl -s "https://stat.ripe.net/data/network-info/data.json?resource=${net_ip}" > $tempdir/net.json
-as=$(jq -r '.data.asns[0]' $tempdir/net.json | sed '/null/d')
-if [ -n "$as" ] ; then
-export as ; prefix=$(jq -r '.data.prefix' $tempdir/net.json) ; fi ; fi ; fi ; fi ; fi 
+geo_target=$(echo $s | cut -d '-' -f 1 | tr -d ' '); net_resource=''; fi
+if [ $target_type = "net" ] && ! [ "converted" = "$s" ] ; then
+curl -s "https://stat.ripe.net/data/prefix-overview/data.json?resource=${s}" > $tempdir/pov2.json ; fi; fi
 resource=$(jq -r '.data.resource' $tempdir/pov.json); num_related=$(jq -r '.data.actual_num_related' $tempdir/pov.json)
-if [ -n "$net_resource" ] ; then
-echo -e "\nNet:         $net_name  | $net_resource | $created | $rir_caps" ; else
-echo -e "\nNet:         $net_name  | $created | $rir_caps" ; fi 
-if ! [[ ${net_ip} =~ $REGEX_IP4 ]] && [ $rir = "arin" ] ; then
-echo -e "\nRange:       $net_range\n" ; fi 
-if [[ ${net_ip} =~ $REGEX_IP4 ]] ; then
-echo -e "\nRange:       $net_range\n"
-if [ -z "$cidr" ] ; then
-f_ipCALC "${range_trimmed}"; fi ; fi 
-if [ -n "$cidr" ] && ! [ $cidr = "$net_resource" ] ; then
-echo -e "CIDR:        $cidr\n" ; fi 
-if [ -n "$net_status" ] ; then
-echo -e "\nStatus:      $net_status | $resource: related prefixes: $num_related | announced: $announced" ; fi
+announced=$(jq -r '.data.announced' $tempdir/pov.json); lp=$(jq -r '.data.is_less_specific' $tempdir/pov.json)
+if [ $announced = "true" ] ; then
+is_lp="| less specific: $lp" ; else
+is_lp=''; fi
 curl -s "https://stat.ripe.net/data/maxmind-geo-lite/data.json?resource=${geo_target}" > $tempdir/netgeo.json
 netgeo=$(jq -r '.data.located_resources[].locations[] | .country' $tempdir/netgeo.json | sort -u | tr '[:space:]' ' ' ; echo '')
+if [ -n "$net_resource" ] ; then
+if [ -n "$net_status" ] ; then
+echo -e "\nNet:         $net_name  | $net_resource | $rir_caps"
+echo -e "\n             $net_status | $created" ; else
+echo -e "\nNet:         $net_name  | $n_resource | $created | $rir_caps" ; fi ; else
+if [ -n "$net_status" ] ; then
+echo -e "\nNet:         $net_name  | $created | $net_status | $rir_caps"; else
+echo -e "\nNet:         $net_name  | $net_resource | $created | $rir_caps" ; fi ; fi
+if ! [[ ${net_ip} =~ $REGEX_IP4 ]] && [ $rir = "arin" ] ; then
+echo -e "\nRange:       $net_range\n" ; fi
+if [[ ${net_ip} =~ $REGEX_IP4 ]] ; then
+echo -e "\nRange:       $net_range\n"; f_ipCALC "${range_trimmed}"; fi
+if [ -n "$cidr" ] && ! [ $cidr = "$net_resource" ] ; then
+echo -e "CIDR:        $cidr\n" ; fi
 if [[ $(echo "$netgeo" | wc -w ) -lt 22 ]]; then
 echo -e "\nGeo:         $ctry (whois), $netgeo (maxmind)"; fi
 if [ -n "$descr" ] ; then
 echo -e "\nDescr:       $descr" ; fi
+if [ -f $tempdir/pov2.json ]; then
+echo ''; fi
+echo -e "\nPrefix:      $resource | announced: $announced | related prefixes: $num_related $is_lp"
+if [ -f $tempdir/pov2.json ]; then
+resource_qu=$(jq -r '.data.resource' $tempdir/pov.json); announced_qu=$(jq -r '.data.announced' $tempdir/pov2.json)
+lp_qu=$(jq -r '.data.is_less_specific' $tempdir/pov2.json); if [ $announced_qu = "true" ] ; then
+is_lp_qu=" | less specific: $lp_qu" ; else
+is_lp_qu=''; fi
+echo -e "\n             $resource_qu | announced: $announced_qu $is_lp_qu"; fi
 if [[ $(echo "$netgeo" | wc -w ) -gt 21 ]]; then
 echo ''; f_Long ; echo "LOCATION" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 echo -e "Country (whois):\n"; echo -e "$ctry"; echo -e "\nGeolocation (maxmind):\n"; echo "$netgeo" | fmt -w 60; fi
 if [ $option_detail = "2" ] ; then
 f_getORGNAME "$tempdir/whois"; fi
 if [ $target_type = "net" ] ; then
-if [ $option_netdetails1 = "0" ] || [ $option_netdetails1 = "2" ]  ; then
+query="$s"; export query
+if [ $option_detail = "1" ] || [ $option_detail = "3" ]; then
 echo '' ; f_ORG "$tempdir/whois"
 if ! [ $rir = "arin" ]; then
 ac=$(grep -E "^admin-c:" $tempdir/whois | cut -d ':' -f 2- | sed 's/^ *//' | head -1); f_Long; f_ADMIN_C "${ac}" ; fi ; else
 f_getWHOIS "${s}" ; f_POC "${s}" ; fi
-if [ -n "$prefix" ] ; then
-f_PREFIX "${prefix}"; else
-f_PREFIX "${s}"; fi ; f_netDETAILS "${s}" ; else
+f_PREFIX "$(jq -r '.data.resource' $tempdir/pov.json)"
+if [ $option_detail = "2" ] || [ $option_detail = "3" ]; then
+f_netDETAILS "${s}"; fi; else
 f_NETGEO "${s}" > $tempdir/network_maxmind.txt; fi
 }
 f_netDETAILS(){
@@ -2711,33 +2715,54 @@ echo -e "\nIPv6 Netblocks\n______________\n" ; echo -e "$v6_blocks\n" ; fi
 
 #********************** PREFIXES, BGP & RPKI STATUS ***********************
 f_PREFIX(){
-local s="$*" ; prfx="$s" ; curl -s "https://stat.ripe.net/data/routing-status/data.json?resource=$s" > $tempdir/bgp.json
-if [ $domain_enum = "true" ] ; then 
-as=$(jq -r '.data.origins[0].origin' $tempdir/bgp.json) ; fi 
-visibility_v4=$(jq -r '.data.visibility.v4.total_ris_peers' $tempdir/bgp.json)
-visibility_v6=$(jq -r '.data.visibility.v6.total_ris_peers' $tempdir/bgp.json)
-if ! [ $visibility_v4 = "0" ] || ! [ $visibility_v6 = "0" ]; then 
+local s="$*"; net_ip=$(echo $s | cut -s -d '/' -f 1)
+if [ -n "$net_ip" ]; then
+prfx="$s" ; curl -s "https://stat.ripe.net/data/routing-status/data.json?resource=$s" > $tempdir/bgp.json
+if [[ ${net_ip} =~ $REGEX_IP4 ]] ; then
+visibility=$(jq -r '.data.visibility.v4.ris_peers_seeing' $tempdir/bgp.json); else
+visibility=$(jq -r '.data.visibility.v6.ris_peers_seeing' $tempdir/bgp.json); fi
+if [[ $visibility -gt 0 ]] ; then
+if [ $domain_enum = "true" ] ; then
+as=$(jq -r '.data.origins[0].origin' $tempdir/bgp.json) ; fi
 curl -s -m 5 --location --request GET "https://stat.ripe.net/data/rpki-validation/data.json?resource=$as&prefix=$prfx" > $tempdir/rpki.json
-f_showROAS "${prfx}"; f_showORIGIN "${as}" ; else 
-echo '' ; f_Long; echo "PREFIX" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
-less_spec=$(jq -r '.data.less_specifics[0] | .prefix, .origin' $tempdir/bgp.json | sed '/null/d')
-more_spec=$(jq -r '.data.more_specifics[0] | .prefix, .origin' $tempdir/bgp.json | sed '/null/d')
-l_seen=$(jq -r '.data.last_seen.time' $tempdir/bgp.json | sed '/null/d' | grep -E -o "[0-9]{4}-[0-9]{2}-[0-9]{2}")
-l_seen_or=$(jq -r '.data.last_seen.origin' $tempdir/bgp.json)
-if [ -n "$l_seen" ] ; then
-echo -e "\nResource ($s) is not announced  (last seen: $l_seen_date, AS $l_seen_origin)"; else
-echo -e "\nResource ($s) is not announced." ; fi
-if [ -n "$less_spec" ] ; then
-echo -e "\nTrying a first level LESS specific resource...\n"
-prfx=$(echo "$less_spec" | head -1); autnum=$(echo "$less_spec" | tail -1)
-curl -m 5 -s "https://stat.ripe.net/data/rpki-validation/data.json?resource=$autnum&prefix=$prfx" > $tempdir/rpki.json
-f_showROAS "${prfx}" ; f_showORIGIN "${autnum}" ; fi
-if [ -n "$more_spec" ] ; then
-echo -e "\nTrying a first level MORE specific resource instead...\n"
-prfx=$(echo "$more_spec" | head -1); autnum=$(echo "$more_spec" | tail -1)
-curl -m 5 -s "https://stat.ripe.net/data/rpki-validation/data.json?resource=$autnum&prefix=$prfx" > $tempdir/rpki.json
-curl -s "https://stat.ripe.net/data/routing-status/data.json?resource=$s" > $tempdir/bgp.json
-f_showROAS "${prfx}"; f_showORIGIN "${autnum}" ; fi ; fi ; rm $tempdir/rpki.json
+f_showROAS "${prfx}"; f_showORIGIN "${as}" ; else
+echo '' ; f_Long; echo "PREFIX" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; echo "$s is not announced."
+more_sp=$(jq -r '.data.more_specifics[] | {AS: .origin, P: .prefix}' $tempdir/bgp.json | tr -d '{\",}' | sed 's/^ *//' | sed '/null/d' |
+sed '/^$/d' | tr '[:space:]' ' ' | sed 's/AS: /\n\n/g' | sed 's/P:/ |/g')
+less_sp=$(jq -r '.data.less_specifics[] | {AS: .origin, P: .prefix}' $tempdir/bgp.json | tr -d '{\",}' | sed 's/^ *//' | sed '/null/d' |
+sed '/^$/d' | tr '[:space:]' ' ' | sed 's/AS: /\n\n/g' | sed 's/P:/ | /g')
+if [ -n "$more_sp" ] ; then
+echo -e "\nTrying a more specific resource ...\n"
+if [[ $(jq -r '.data.more_specifics[] | .prefix' $tempdir/bgp.json | wc -w) -lt 29 ]] ; then
+echo -e "MORE SPECIFICS"; p_rel="$more_sp"; asn_uniq=$(jq -r '.data.more_specifics[].origin' $tempdir/bgp.json | sort -ug)
+for rel_asn in $asn_uniq ; do
+more_sp_sorted=$(echo "$more_sp" | grep -w -E "^$rel_asn")
+if [ -n "$more_sp_sorted" ] ; then
+mp_as=$(echo "$more_sp_sorted" | grep -w -E -m 1 -o "^${rel_asn}")
+more_sp_out=$(echo "$more_sp_sorted" | grep -w -E "^${rel_asn}" | cut -d '|' -f 2 | sed 's/^ *//' | tr '[:space:]' ' ')
+echo -e "\nAS $mp_as\n"; echo -e "$more_sp_out\n" | fmt -s -w 80 ; fi ; done ; else
+prfx=$(echo "$more_sp" | head -1 | cut -d '|' -f 1 | tr -d ' ')
+as=$(echo "$more_sp" | head -1 | cut -d '|' -f 2 | sed 's/AS//' | sed 's/^ *//' | tr -d ' '); fi
+echo -e "\nTrying a less specific resource ...\n"
+if [[ $(jq -r '.data.less_specifics[] | .prefix' $tempdir/bgp.json | wc -w) -lt 29 ]] ; then
+echo -e "LESS SPECIFICS"; p_rel="$less_sp"; asn_uniq=$(jq -r '.data.less_specifics[].origin' $tempdir/bgp.json | sort -ug)
+for rel_asn in $asn_uniq ; do
+lp_sorted=$(echo "$less_sp" | grep -w -E "AS${rel_asn}")
+if [ -n "$less_sp_sorted" ] ; then
+lp_as=$(echo "$less_sp_sorted" | grep -w -E -m 1 -o "^${rel_asn}")
+less_sp_out=$(echo "$less_sp_sorted" | grep -w -E "^${rel_asn}" | cut -d '|' -f 2 | sed 's/^ *//' | tr '[:space:]' ' ')
+echo -e "\nAS $lp_as\n"
+echo -e "$less_sp_out\n" | fmt -s -w 80 ; fi ; done; fi ; fi
+if [ $target_type = "net" ] ; then
+if [[ $(echo "$p_rel" | grep -E -o -w "${x}" | wc -w) -gt 0 ]]; then
+prfx="$x"; as=$(echo "$p_rel" | grep -E "${x}" | cut -d '|' -f 1 | tr -d ' ') ; else
+prfx=$(echo "$p_rel" | head -1 | cut -d '|' -f 1 | tr -d ' ')
+as=$(echo "$p_rel" | head -1 | cut -d '|' -f 2 | sed 's/AS//' | sed 's/^ *//' | tr -d ' ') ; fi ; else
+prfx=$(echo "$p_rel" | head -1 | cut -d '|' -f 1 | sed 's/AS//' | sed 's/^ *//' | tr -d ' ') ; fi
+curl -s "https://stat.ripe.net/data/routing-status/data.json?resource=$prfx" > $tempdir/bgp.json
+curl -s -m 5 --location --request GET "https://stat.ripe.net/data/rpki-validation/data.json?resource=$as&prefix=$prfx" > $tempdir/rpki.json
+f_showROAS "${prfx}"; f_showORIGIN "${as}" ; fi ; else
+echo "Invalid Argument"; fi
 }
 f_showROAS(){
 local s="$*" ; p_ip=$(echo $s | cut -d '/' -f1)
@@ -2747,8 +2772,7 @@ roa_origin=$(jq -r '.data.validating_roas[0].origin' $tempdir/rpki.json)
 max_length=$(jq -r '.data.validating_roas[0].max_length' $tempdir/rpki.json)
 validity=$(jq -r '.data.validating_roas[0].validity' $tempdir/rpki.json)
 l_seen_origin=$(jq -r '.data.last_seen.origin' $tempdir/bgp.json)
-l_seen_date=$(jq -r '.data.last_seen.time' $tempdir/bgp.json | grep -E -o "[0-9]{4}-[0-9]{2}-[0-9]{2}")
-f_Long; echo "PREFIX" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
+l_seen=$(jq -r '.data.last_seen.time' $tempdir/bgp.json | sed 's/T/  /g')
 if [ $domain_enum = "true" ] ; then
 if [[ $p_ip =~ $REGEX_IP4 ]] ; then
 reverse=$(echo $p_ip | awk -F'.' '{print $4 "." $3 "." $2 "." $1}')
@@ -2758,13 +2782,12 @@ ctry=$(awk -F'|' '{print $3}' $tempdir/cymru_pfx | head -1 | sed 's/^[ \t]*//;s/
 whois -h whois.cymru.com -- "-v -f ${s}"  > $tempdir/cymru_pfx
 in_reg=$(cat $tempdir/cymru_pfx | awk -F'|' '{print $5}' | head -1 | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d ' ')
 ctry=$(awk -F'|' '{print $4}' $tempdir/cymru_pfx  | head -1 | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d ' ') ; fi
-echo -e "Prefix:       $s  ($ctry, $in_reg)" ; else
-echo -e "Prefix:       $s"; fi
-echo -e "Last seen: $l_seen_date ($l_seen_origin)" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
-echo -e "ROA:          $rpki_status"
+f_Long; echo -n "BGP PREFIX"; echo -e "$s  ($ctry, $in_reg)\n" | sed -e :a -e 's/^.\{1,68\}$/ &/;ta' ; else
+f_Long; echo -n "BGP PREFIX"; echo -e "$s\n" | sed -e :a -e 's/^.\{1,68\}$/ &/;ta' ; fi
+echo -e "\nBGP:          last seen: $l_seen - AS $l_seen_origin)"
+echo "ROA: $rpki_status" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 if ! [ $rpki_status = "unknown" ] ; then
-echo -e "            $validity > $roa_prefix >  $roa_origin  > max. /$max_length\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; else 
-echo '' ; fi
+echo -e "ROAs:         $validity > $roa_prefix >  $roa_origin  > max. /$max_length\n" ; fi
 }
 f_showORIGIN(){
 local s="$*" ; if [ $target_type = "hop" ] ; then
