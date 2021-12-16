@@ -2736,8 +2736,7 @@ if [[ ${net_ip} =~ $REGEX_IP4 ]] ; then
 visibility=$(jq -r '.data.visibility.v4.ris_peers_seeing' $tempdir/bgp.json); else
 visibility=$(jq -r '.data.visibility.v6.ris_peers_seeing' $tempdir/bgp.json); fi
 if [[ $visibility -gt 0 ]] ; then
-if [ $domain_enum = "true" ] ; then
-as=$(jq -r '.data.origins[0].origin' $tempdir/bgp.json) ; fi
+as=$(jq -r '.data.origins[0].origin' $tempdir/bgp.json)
 curl -s -m 5 --location --request GET "https://stat.ripe.net/data/rpki-validation/data.json?resource=$as&prefix=$prfx" > $tempdir/rpki.json
 f_showROAS "${prfx}"; f_showORIGIN "${as}" ; else
 echo '' ; f_Long; echo "PREFIX" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; echo "$s is not announced."
