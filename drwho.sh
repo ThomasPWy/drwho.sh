@@ -524,7 +524,8 @@ grep -E -a -i "cf-cache-status" ${s} | tail -1; grep -E -a -i "cf-ray:" ${s} | t
 grep -E -a -i "mpulse_cdn_cache:" ${s} | tail -1; grep -E -a -i "mpulse_cdn_cache:" ${s}
 grep -E -a -i "OriginShieldHit" ${s} | tail -1; grep -E -a -i "CloudFront-.*" ${s} | tail -1
 grep -E -a -i "X-Amz-Cf-Id" ${s} | tail -1 ; grep -E -a -i "^x-pass:" ${s}  | tail -1
-grep -E -a -i "^x-pass-why:" ${s} | tail -1; grep -E -a -i "^x-robots-tag:" ${s} | tail -1
+grep -E -a -i "^x-pass-why:" ${s} | tail -1 ; grep -s -i "^x-proxy-cache:" ${s} | tail -1
+grep -E -a -i "^x-robots-tag:" ${s} | tail -1; grep -s -E -i "^X-Served-By" ${s} | tail -1
 grep -E -m 2 "HIT|MISS" ${s}; grep -E -a -i "^X-UA-Compatible:" ${s} | tail -1
 grep -E -a -i "^vary:" ${s} | tail -1 ; grep -E -a -i -m 1 "^X-AspNet-Version" ${s}
 grep -E -a -i -m 1 "^Liferay-Portal" ${s} ; grep -E -a -i -m 1 "^X-TYPO3-.*" ${s}
@@ -539,23 +540,23 @@ grep -E -a -i "^link:" ${s} | sort -u ; echo ''
 }
 f_getSecHEADERS(){
 local s="$*"
-grep -s -E -i "^access-control-allow-origin:" ${s} | tail -1
-grep -s -a -E -i "^access-control-allow-headers:" ${s} | tail -1
-grep -s -a -E -i "^access-control-expose-headers:" ${s} | tail -1
-grep -s -a -E -i "^allow:" ${s} ; grep -s -i "^cache-control:" ${s} | tail -1
-grep -s -i -E -o -m 1 "^permissions-policy:" ${s}; grep -s -E -i "^referrer-policy:" ${s} | tail -1
-grep -s -E -i "^Strict-Transport-Security:" ${s} | tail -1
-grep -s -E -i "^X-Content-Type-Options:" ${s} | tail -1; grep -s -E -i "^X-Frame-Options:" ${s} | tail -1;
-grep -s -E -i "^x-location:" ${s}; grep -s -i "^x-proxy-cache:" ${s} | tail -1
-grep -s -E -i "^x-robots-tag:" ${s}; grep -s -E -i "^X-Served-By" ${s} | tail -1
-grep -s -E -i -o "^X-WebKit-CSP:" ${s} | tail -1; grep -s -E -i "^X-Xss-Protection:" ${s} | tail -1
-grep -s -E -i "^expect-ct:" ${s} | tail -1 ; grep -s -E -i -o -m 1 "^P3P" ${s}
-grep -i -o "^feature-policy" ${s} | tail -1
-grep -E -i -o "^X-Permitted-Cross-Domain-Policies:" ${s} | tail -1
-grep -m 1 -i -o "^Content-Security-Policy:" ${s}
 c_pol=$(grep -E -o "default-src|font-src|frame-src|img-src|style-src|frame-ancestors|media-src" ${s}  | sort -u | tr '[:space:]' ' ' ; echo '')
+grep -s -E -i "^access-control-allow-origin:" ${s} | tail -1 ; grep -s -a -E -i "^access-control-allow-headers:" ${s} | tail -1
+grep -s -a -E -i "^access-control-expose-headers:" ${s} | tail -1; grep -s -a -E -i "^allow:" ${s}
+grep -s -a -E -i "^cache-control:" ${s} | tail -1; grep -s -a -E -i "^clear-site-data " ${s} | tail -1
+if [ -z "$c_pol" ] ; then
+grep -m 1 -i -o "^Content-Security-Policy:" ${s}; fi 
+grep -s -a -E -i -o "^cross-origin-embedder-policy " ${s} | tail -1
+grep -s -a -E -i -o "^cross-origin-opener-policy" ${s} | tail -1
+grep -s -a -E -i -o "^cross-origin-resource-policy" ${s} | tail -1
+grep -s -E -i "^expect-ct:" ${s} | tail -1; grep -i -o "^feature-policy" ${s} | tail -1
+grep -s -E -i -o -m 1 "^P3P" ${s}; grep -s -i -E -o -m 1 "^permissions-policy:" ${s}
+grep -s -E -i "^referrer-policy:" ${s} | tail -1; grep -s -E -i "^Strict-Transport-Security:" ${s} | tail -1
+grep -s -E -i "^X-Content-Type-Options:" ${s} | tail -1; grep -s -E -i "^X-Frame-Options:" ${s} | tail -1;
+grep -s -E -i "^X-Xss-Protection:" ${s} | tail -1; grep -s -E -i -o "^X-WebKit-CSP:" ${s} | tail -1;
+grep -E -i -o "^X-Permitted-Cross-Domain-Policies:" ${s} | tail -1; grep -m 1 -i -o "^Content-Security-Policy:" ${s}
 if [ -n "$c_pol" ] ; then
-echo "$c_pol"; fi
+echo '' ;  grep -m 1 -i -o "^Content-Security-Policy:" ${s} ; echo "$c_pol"; fi
 cookie_count=$(grep -s -i -o "^set-cookie:" ${s} | wc -w)
 if [ $cookie_count != "0" ] ; then
 path_flag=$(grep -s -i "^set-cookie:" ${s} | grep -s -i -o -a "path=*" | wc -w)
@@ -2279,7 +2280,7 @@ converted=$(jq -r '.messages[]' $tempdir/pov.json | grep 'range' | egrep -o '[0-
 if [ -n "$converted" ] ; then
 geo_target="$converted"; net_resource="$converted"; else
 geo_target=$(echo $s | cut -d '-' -f 1 | tr -d ' '); net_resource=''; fi
-if [ $target_type = "net" ] && ! [ "converted" = "$s" ] ; then
+if [ $target_type = "net" ] && ! [ "$converted" = "$s" ] ; then
 curl -s "https://stat.ripe.net/data/prefix-overview/data.json?resource=${s}" > $tempdir/pov2.json ; fi; fi
 resource=$(jq -r '.data.resource' $tempdir/pov.json); num_related=$(jq -r '.data.actual_num_related' $tempdir/pov.json)
 announced=$(jq -r '.data.announced' $tempdir/pov.json); lp=$(jq -r '.data.is_less_specific' $tempdir/pov.json)
@@ -3017,7 +3018,9 @@ tr '[:space:]' ' ' | fmt -s -w 40 | sed 's/ /  /g' | sed 's/^ *//')
 if [ -n "$pfx6" ] ; then
 echo -e "\n$pfx6\n" ; fi ; fi
 if [ -n "$pfx_ok" ] ; then
-echo -e "\nBGP behaviour consistent with WHOIS\n___________________________________\n\n"
+if [ -n "$pfx_whois_false" ] || [ -n "$pfx_bgp_false" ] ; then
+echo '' ; fi 
+echo -e "\nIn WHOIS & SEEN in BGP\n______________________"
 pfx4=$(echo "$pfx_ok" | awk -F'|' '{print $1}' | sed 's/*> //g' | sed 's/^ *//' | tr -d ' ' | grep -v ":" | sort -uV |
 tr '[:space:]' ' ' | fmt -s -w 40 | sed 's/ /  /g' | sed 's/^ *//')
 pfx6=$(echo "$pfx_ok" | awk -F'|' '{print $1}' | sed 's/*> //g' | sed 's/^ *//' | tr -d ' ' | grep ":" | sort -uV |
@@ -4002,7 +4005,7 @@ echo -e "${B} [2]${D} Related networks, geographic distribution, assignments"
 echo -e "${B} [3]${D} BOTH" ; echo -e "${R} [0]${D} SKIP" ; echo -e -n "\n${B}  ? ${D}  " ; read option_netdetails1
 if [ $option_netdetails1 = "1" ] || [ $option_netdetails1 = "3" ] ; then
 option_detail="2" ; else
-option_detail="1" ; fi
+option_detail="3" ; fi
 echo -e "\n${B}Options > ${G2}DETAILS II${B} Whois-Address Space Consistency / Rev. DNS Lookup Zones\n"
 echo -e "${B} [1]${D} List subnets & Address Space Details"; echo -e "${B} [2]${D} List Rev. DNS Lookup Zones"
 echo -e "${B} [3]${D} BOTH" ; echo -e "${R} [0]${D} SKIP"; echo -e -n "\n${B}  ? ${D}  " ; read option_netdetails2
