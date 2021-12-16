@@ -604,11 +604,11 @@ if echo $s | grep -q -E "\.jp"; then
 sed -n '/Domain Information:/,$p' $tempdir/whois_domain ; else
 whois_mail=$(grep -E -i -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois_domain | sort -uf | head -2 | tr '[:space:]' ' '; echo '')
 if [ -n "$whois_mail" ] ; then
-echo -e "[@]:  $whois_mail" > $tempdir/whoisd; echo -e "____\n\n" >> $tempdir/whoisd; else
+echo -e "\n[@]:  $whois_mail" > $tempdir/whoisd; echo -e "____\n\n" >> $tempdir/whoisd; else
 echo '' > $tempdir/whoisd; fi
 grep -E -a -i "^domain:|^domain name:" $tempdir/whois_domain | head -1 >> $tempdir/whoisd
 grep -i -E -m 1 -A 1 "^domain:|^domain name:" $tempdir/whois_domain | tail -1 | grep -v ':' >> $tempdir/whoisd
-grep -E -a -i "^status:|^domain status:|^registered" $tempdir/whois_domain | sort -u | awk -F'https:' '{print $1}' >> $tempdir/whoisd
+grep -E -a -i -m 2 "^status:|^domain status:|^registered" $tempdir/whois_domain | sort -u | awk -F'https:' '{print $1}' >> $tempdir/whoisd
 grep -i -E "expiry date|expires" $tempdir/whois_domain > $tempdir/whois_temp
 grep -E -a -i -m 1 "^updated:|^changed:|update" $tempdir/whois_domain >> $tempdir/whois_domain_temp
 grep -E -a -i "Re-registration" $tempdir/whois_domain | head -1 >> $tempdir/whois_domain_temp
@@ -625,8 +625,8 @@ sort -u >> $tempdir/whoisd
 grep -E -a -m 1 -A 6 "^Company name:" $tempdir/whois_domain | grep -E -a -i "registrant:|city:|phone:" |
 sort -u >> $tempdir/whoisd
 grep -E -i -m 1 "^dnssec:" $tempdir/whois_domain | tail -1 >> $tempdir/whoisd; cat $tempdir/whoisd
-if [ -f $tempdir/whois_temp ] ; then
-rm $tempdir/whois_temp ; fi ; fi; echo ''
+if [ -f $tempdir/whois_domain_temp ] ; then
+rm $tempdir/whois_domain_temp ; fi ; fi; echo ''
 }
 f_dnsFOR_CHAIN(){
 local s="$*" ; auth_ns='' ; curl -s "https://stat.ripe.net/data/dns-chain/data.json?resource=${s}" > $tempdir/chain.json
@@ -1789,7 +1789,7 @@ f_AS_ABUSEMAIL "${asn}" ; echo -e "\nAS $asn Abuse Contact:  $asabuse_c" ; else
 curl -m 5 -s "https://stat.ripe.net/data/abuse-contact-finder/data.json?resource=${s}" > $tempdir/ac.json
 rir=$(jq -r '.data.authoritative_rir' $tempdir/ac.json) ; abuse_mbox=$(jq -r '.data.abuse_contacts[]' $tempdir/ac.json | tr '[:space:]' ' ' ; echo '')
 if [ -n "$abuse_mbox" ] ; then
-echo -e "\n\n[@]:         $abuse_mbox (source: RipeStat)\n" ; else
+echo -e "\n[@]:         $abuse_mbox (source: RipeStat)\n" ; else
 if [ $rir = "arin" ] || [ $rir = "lacnic" ] ; then
 whois -h whois.${rir}.net $s > $tempdir/whois ; else
 whois -h whois.${rir}.net -- "--no-personal $s" | sed 's/^ *//' > $tempdir/whois; fi 
@@ -1797,7 +1797,7 @@ abuse_mbox=$(grep -E -a -s -m 1 "^OrgAbuseEmail:|^% Abuse|^abuse-mailbox:|^e-mai
 grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b")
 if [ -z "$abuse_mbox" ] ; then
 abuse_mbox=$(grep -E -o -m 2 "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $tempdir/whois); fi
-echo -e "\n\n[@]:         $abuse_mbox (source: whois.$rir.net)\n" ; fi ; fi
+echo -e "\n[@]:         $abuse_mbox (source: whois.$rir.net)\n" ; fi ; fi
 }
 
 #********************** DNS RECORDS & SUBDOMAINS ***********************
@@ -2189,7 +2189,7 @@ grep ')' $tempdir/nmrdns | sed '/Starting Nmap/d' | sed '/Nmap done/d' | sed 's/
 }
 f_NETrDNS() {
 if ! [ $option_netdetails3 = "0" ] ; then
-f_Long; echo -e "REVERSE DNS\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' ; else
+f_Long; echo -e "REVERSE DNS\n\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' ; else
 echo -e "\n* Reverse DNS\n" ; fi
 if [ $option_source = "3" ] || [ $option_connect = "0" ] ; then
 f_RevDNS "${s}" | tee $tempdir/ipv4_hosts.txt ; else
@@ -2285,14 +2285,14 @@ curl -s "https://stat.ripe.net/data/prefix-overview/data.json?resource=${s}" > $
 resource=$(jq -r '.data.resource' $tempdir/pov.json); num_related=$(jq -r '.data.actual_num_related' $tempdir/pov.json)
 announced=$(jq -r '.data.announced' $tempdir/pov.json); lp=$(jq -r '.data.is_less_specific' $tempdir/pov.json)
 if [ $announced = "true" ] ; then
-is_lp="| less specific: $lp" ; else
+as=$(jq -r '.data.asns[0].asn' $tempdir/pov.json); export as; is_lp="| less specific: $lp" ; else
 is_lp=''; fi
 curl -s "https://stat.ripe.net/data/maxmind-geo-lite/data.json?resource=${geo_target}" > $tempdir/netgeo.json
 netgeo=$(jq -r '.data.located_resources[].locations[] | .country' $tempdir/netgeo.json | sort -u | tr '[:space:]' ' ' ; echo '')
 if [ -n "$net_resource" ] ; then
 if [ -n "$net_status" ] ; then
 echo -e "\nNet:         $net_name  | $net_resource | $rir_caps"
-echo -e "\n             $net_status | $created" ; else
+echo -e "\n             $net_status | $created\n" ; else
 echo -e "\nNet:         $net_name  | $n_resource | $created | $rir_caps" ; fi ; else
 if [ -n "$net_status" ] ; then
 echo -e "\nNet:         $net_name  | $created | $net_status | $rir_caps"; else
@@ -2311,11 +2311,13 @@ if [ -f $tempdir/pov2.json ]; then
 echo ''; fi
 echo -e "\nPrefix:      $resource | announced: $announced | related prefixes: $num_related $is_lp"
 if [ -f $tempdir/pov2.json ]; then
-resource_qu=$(jq -r '.data.resource' $tempdir/pov.json); announced_qu=$(jq -r '.data.announced' $tempdir/pov2.json)
-lp_qu=$(jq -r '.data.is_less_specific' $tempdir/pov2.json); if [ $announced_qu = "true" ] ; then
-is_lp_qu=" | less specific: $lp_qu" ; else
-is_lp_qu=''; fi
-echo -e "\n             $resource_qu | announced: $announced_qu $is_lp_qu"; rm $tempdir/pov2.json;  fi
+resource_query=$(jq -r '.data.resource' $tempdir/pov2.json)
+if ! [ "$resource" = "$resource_query" ] ; then 
+lp_qu=$(jq -r '.data.is_less_specific' $tempdir/pov2.json); announced_query=$(jq -r '.data.announced' $tempdir/pov2.json)
+if [ $announced_query = "true" ] ; then
+is_lp_query="| less specific: $lp_qu" ; else
+is_lp_query=''; fi
+echo -e "\n             $resource_query | announced: $announced_query $is_lp_query"; fi ; fi 
 if [[ $(echo "$netgeo" | wc -w ) -gt 21 ]]; then
 echo ''; f_Long ; echo "LOCATION" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 echo -e "Country (whois):\n"; echo -e "$ctry"; echo -e "\nGeolocation (maxmind):\n"; echo "$netgeo" | fmt -w 60; fi
@@ -2328,7 +2330,12 @@ echo '' ; f_ORG "$tempdir/whois"
 if ! [ $rir = "arin" ]; then
 ac=$(grep -E "^admin-c:" $tempdir/whois | cut -d ':' -f 2- | sed 's/^ *//' | head -1); f_Long; f_ADMIN_C "${ac}" ; fi ; else
 f_getWHOIS "${s}" ; f_POC "${s}" ; fi
+if [ -n "$announced_query" ] ; then 
+if [ $announced = "true" ] && [ $announced_query = "true" ] ; then 
+f_PREFIX "$(jq -r '.data.resource' $tempdir/pov2.json)"; fi ; fi 
 f_PREFIX "$(jq -r '.data.resource' $tempdir/pov.json)"
+if [ -f $tempdir/pov2.json ] ; then
+rm $tempdir/pov2.json; fi  
 if [ $option_detail = "2" ] || [ $option_detail = "3" ]; then
 f_netDETAILS "${s}"; fi; else
 f_NETGEO "${s}" > $tempdir/network_maxmind.txt; fi
@@ -2361,7 +2368,7 @@ f_Long ; echo "WHOIS-REV.DNS CONSISTENCY" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 f_rdnsCONS "${s}" > $tempdir/dns_cons
 complete=$(grep 'complete:' $tempdir/dns_cons | grep 'true' | sed '/complete:/G')
 if [ -n "$complete" ] ; then
-echo -e "$complete\n" ; else
+echo -e "$complete" ; else
 grep 'complete:' $tempdir/dns_cons | sed '/complete:/{x;p;x;G}'
 incomplete=$(grep -v 'complete:' $tempdir/dns_cons | grep 'false')
 if [ -n "$incomplete" ] ; then
@@ -2581,7 +2588,7 @@ echo "$locations" | jq -r '{N: .resources[], Lat: .latitude, Lon: .longitude, co
 tr -d '{,"}' | sed 's/^ *//' | sed '/^$/d' | tr '[:space:]' ' ' | sed 's/N: /\n\n/g' | sed 's/ Lon: /\,/g' | sed 's/Lat:/ -  Lat\/Lon:/g' |
 sed 's/cov:/(covered:/g' | sed 's/Country:/%) | Country:/g' | sed 's/C://g' >> $tempdir/geo_temp ; echo '' >> $tempdir/geo_temp
 if [[ $netcount -gt "3" ]] ; then
-echo -e "_______________\n" >> $tempdir/geo_temp ; cat $tempdir/nets_geo.list >> $tempdir/geo_temp  ; fi;  echo ''
+echo -e "_______________\n" >> $tempdir/geo_temp ; cat $tempdir/nets_geo.list >> $tempdir/geo_temp  ; fi
 if [[ $netcount -gt 25 ]] ; then
 echo -e "\nOutput has been written to file ($netcount networks)" ; f_Long > $outdir/NET_GEOLOC.$net_ip.txt
 cat $tempdir/geo_temp >> $outdir/NET_GEOLOC.$net_ip.txt ; else
@@ -2739,7 +2746,8 @@ if [[ ${net_ip} =~ $REGEX_IP4 ]] ; then
 visibility=$(jq -r '.data.visibility.v4.ris_peers_seeing' $tempdir/bgp.json); else
 visibility=$(jq -r '.data.visibility.v6.ris_peers_seeing' $tempdir/bgp.json); fi
 if [[ $visibility -gt 0 ]] ; then
-as=$(jq -r '.data.origins[0].origin' $tempdir/bgp.json)
+if [ $domain_enum = "true" ] ; then
+as=$(jq -r '.data.origins[0].origin' $tempdir/bgp.json); fi
 curl -s -m 5 --location --request GET "https://stat.ripe.net/data/rpki-validation/data.json?resource=$as&prefix=$prfx" > $tempdir/rpki.json
 f_showROAS "${prfx}"; f_showORIGIN "${as}" ; else
 echo '' ; f_Long; echo "PREFIX" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; echo "$s is not announced."
@@ -2748,36 +2756,48 @@ sed '/^$/d' | tr '[:space:]' ' ' | sed 's/AS: /\n\n/g' | sed 's/P:/ |/g')
 less_sp=$(jq -r '.data.less_specifics[] | {AS: .origin, P: .prefix}' $tempdir/bgp.json | tr -d '{\",}' | sed 's/^ *//' | sed '/null/d' |
 sed '/^$/d' | tr '[:space:]' ' ' | sed 's/AS: /\n\n/g' | sed 's/P:/ | /g')
 if [ -n "$more_sp" ] ; then
-echo -e "\nTrying a more specific resource ...\n"
 if [[ $(jq -r '.data.more_specifics[] | .prefix' $tempdir/bgp.json | wc -w) -lt 29 ]] ; then
-echo -e "MORE SPECIFICS"; p_rel="$more_sp"; asn_uniq=$(jq -r '.data.more_specifics[].origin' $tempdir/bgp.json | sort -ug)
+echo -e "\nMORE SPECIFICS"; p_rel=$(echo "$more_sp"); asn_uniq=$(jq -r '.data.more_specifics[].origin' $tempdir/bgp.json | sort -ug)
 for rel_asn in $asn_uniq ; do
 more_sp_sorted=$(echo "$more_sp" | grep -w -E "^$rel_asn")
 if [ -n "$more_sp_sorted" ] ; then
 mp_as=$(echo "$more_sp_sorted" | grep -w -E -m 1 -o "^${rel_asn}")
 more_sp_out=$(echo "$more_sp_sorted" | grep -w -E "^${rel_asn}" | cut -d '|' -f 2 | sed 's/^ *//' | tr '[:space:]' ' ')
-echo -e "\nAS $mp_as\n"; echo -e "$more_sp_out\n" | fmt -s -w 80 ; fi ; done ; else
-prfx=$(echo "$more_sp" | head -1 | cut -d '|' -f 1 | tr -d ' ')
-as=$(echo "$more_sp" | head -1 | cut -d '|' -f 2 | sed 's/AS//' | sed 's/^ *//' | tr -d ' '); fi
-echo -e "\nTrying a less specific resource ...\n"
+echo -e "\nAS $mp_as\n"; echo -e "$more_sp_out\n" | fmt -s -w 80 ; fi ; done ; fi 
+if [ $target_type = "net" ] ; then
+if [[ $(echo "$more_sp" | grep -E -o -w "${x}" | wc -w) -gt 0 ]]; then
+prefix_mp="$x"; asn_mp=$(echo "$more_sp" | grep -E "${x}" | cut -d '|' -f 1 | tr -d ' '); else
+prefix_mp=$(echo "$more_sp" | grep '|' | head -1 | cut -d '|' -f 2 | tr -d ' ')
+asn_mp=$(echo "$more_sp" | grep '|' | head -1 | cut -d '|' -f 1 | tr -d ' '); fi; else 
+prefix_mp=$(echo "$more_sp" | grep '|' | head -1 | cut -d '|' -f 2 | tr -d ' ')
+asn_mp=$(echo "$more_sp" | grep '|' | head -1 | cut -d '|' -f 1 | tr -d ' '); fi ; fi 
+if [ -n "$less_sp" ] ; then
 if [[ $(jq -r '.data.less_specifics[] | .prefix' $tempdir/bgp.json | wc -w) -lt 29 ]] ; then
-echo -e "LESS SPECIFICS"; p_rel="$less_sp"; asn_uniq=$(jq -r '.data.less_specifics[].origin' $tempdir/bgp.json | sort -ug)
+echo -e "\nLESS SPECIFICS"; asn_uniq=$(jq -r '.data.less_specifics[].origin' $tempdir/bgp.json | sort -ug)
 for rel_asn in $asn_uniq ; do
 lp_sorted=$(echo "$less_sp" | grep -w -E "AS${rel_asn}")
 if [ -n "$less_sp_sorted" ] ; then
 lp_as=$(echo "$less_sp_sorted" | grep -w -E -m 1 -o "^${rel_asn}")
 less_sp_out=$(echo "$less_sp_sorted" | grep -w -E "^${rel_asn}" | cut -d '|' -f 2 | sed 's/^ *//' | tr '[:space:]' ' ')
 echo -e "\nAS $lp_as\n"
-echo -e "$less_sp_out\n" | fmt -s -w 80 ; fi ; done; fi ; fi
+echo -e "$less_sp_out\n" | fmt -s -w 80 ; fi ; done; fi
 if [ $target_type = "net" ] ; then
-if [[ $(echo "$p_rel" | grep -E -o -w "${x}" | wc -w) -gt 0 ]]; then
-prfx="$x"; as=$(echo "$p_rel" | grep -E "${x}" | cut -d '|' -f 1 | tr -d ' ') ; else
-prfx=$(echo "$p_rel" | head -1 | cut -d '|' -f 1 | tr -d ' ')
-as=$(echo "$p_rel" | head -1 | cut -d '|' -f 2 | sed 's/AS//' | sed 's/^ *//' | tr -d ' ') ; fi ; else
-prfx=$(echo "$p_rel" | head -1 | cut -d '|' -f 1 | sed 's/AS//' | sed 's/^ *//' | tr -d ' ') ; fi
-curl -s "https://stat.ripe.net/data/routing-status/data.json?resource=$prfx" > $tempdir/bgp.json
-curl -s -m 5 --location --request GET "https://stat.ripe.net/data/rpki-validation/data.json?resource=$as&prefix=$prfx" > $tempdir/rpki.json
-f_showROAS "${prfx}"; f_showORIGIN "${as}" ; fi ; else
+if [[ $(echo "$less_sp" | grep -E -o -w "${x}" | wc -w) -gt 0 ]]; then
+prefix_lp="$x"; asn_lp=$(echo "$less_sp" | grep -E "${x}" | cut -d '|' -f 1 | tr -d ' '); else
+prefix_lp=$(echo "$less_sp" | grep '|' | head -1 | cut -d '|' -f 2 | tr -d ' ')
+asn_lp=$(echo "$less_sp" | grep '|' | head -1 | cut -d '|' -f 1 | tr -d ' '); fi ; else 
+prefix_lp=$(echo "$less_sp" | grep '|' | head -1 | cut -d '|' -f 2 | tr -d ' ')
+asn_lp=$(echo "$less_sp" | grep '|' | head -1 | cut -d '|' -f 1 | tr -d ' '); fi ; fi
+if [ -n "$prefix_mp" ] && [ -n "$asn_mp" ] ; then 
+echo -e "\nTrying a more specific resource ...\n"
+curl -s "https://stat.ripe.net/data/routing-status/data.json?resource=$prefix_mp" > $tempdir/bgp.json
+curl -s -m 5 --location --request GET "https://stat.ripe.net/data/rpki-validation/data.json?resource=$asn_mp&prefix=$prefix_mp" > $tempdir/rpki.json
+f_showROAS "${prefix_mp}" ; f_showORIGIN "${asn_mp}" ; fi
+if [ -n "$prefix_lp" ] && [ -n "$asn_lp" ] ; then 
+echo -e "\nTrying a less specific resource ...\n"
+curl -s "https://stat.ripe.net/data/routing-status/data.json?resource=$prefix_lp" > $tempdir/bgp.json
+curl -s -m 5 --location --request GET "https://stat.ripe.net/data/rpki-validation/data.json?resource=$asn_lp&prefix=$prefix_lp" > $tempdir/rpki.json
+f_showROAS "${prefix_lp}" f_showORIGIN "${asn_lp}" ; fi ; fi ; else 
 echo "Invalid Argument"; fi
 }
 f_showROAS(){
@@ -3996,7 +4016,7 @@ echo -e "\n${B}Options > ${G2}WHOIS CONTACTS\n"; echo -e "${B} [1]${D} Whois Con
 echo -e "${B} [2]${D} Org & admin-c Summary"; echo -e -n "\n${B}  ? ${D}  " ; read option_custom
 if [ $option_custom = "1" ] ; then
 option_netdetails1="3"; option_detail="2"; else
-option_netdetails1="2"; option_detail="1"; fi
+option_netdetails1="2"; option_detail="3"; fi
 set_output="false"; option_netdetails2="3"; option_netdetails3="1"; option_netdetails4="1"; dns_servers='' ; option_source="1"
 elif [ $option_enum =  "3" ] ; then
 set_output="false"
@@ -4490,7 +4510,11 @@ ipcalc ${nrange} | sed '/deaggregate/d' | tail -1 >> $tempdir/cidr ; done
 cat $tempdir/netranges.txt | sed '/inetnum/i \_____________________________________\n' |
 sed '/^in:/i \_____________________________________\n' | cut -d ':' -f 2- | sed 's/^ *//' | tee -a ${out}
 rm $tempdir/netranges.txt; echo '' | tee -a ${out}; f_Shortest | tee -a ${out}
-cat $tempdir/cidr | tr -d ' '  | sort -t / -k 2,2n | sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n -u -V | tee -a ${out} ; fi
+if [[ $(cat $tempdir/cidr | wc -w) -gt 2 ]]; then
+echo -e "\n_______________________________________\n"  | tee -a ${out}
+cat $tempdir/cidr | tr -d ' '  | sort -t / -k 2,2n | sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n -u -V | tr '[:space:]' ' ' | fmt -s -w 40 |
+sed 's/ /  /g' | sed 's/^ *//' | tee -a ${out} ; else 
+echo ''; f_Shortest | tee -a ${out}; cat $tempdir/cidr | tr -d ' '  | sort -t / -k 2,2n | sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n -u -V | tee -a ${out}; fi ; fi 
 if [ $option_poc = "1" ] ; then
 route_obj4=$(sed -e '/./{H;$!d;}' -e 'x;/rt:/!d' $tempdir/full_output.txt | grep -E "^rt:|^or" | grep -E -B 1 "^or:" | sed '/--/d' | sed '/^$/d')
 route_obj6=$(sed -e '/./{H;$!d;}' -e 'x;/r6:/!d' $tempdir/full_output.txt | grep -E "^r6:|^or" | grep -E -B 1 "^or:" | sed '/--/d' | sed '/^$/d'); else
