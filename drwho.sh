@@ -966,8 +966,8 @@ if [ $target_type = "dnsrec" ] ; then
 curl -m 5 -s "https://stat.ripe.net/data/reverse-dns-ip/data.json?resource=${ipaddr}" > $tempdir/rdns.json
 ptr=$(jq -r '.data.result[0]?' $tempdir/rdns.json | sed '/null/d')
 if [ -n "$ptr" ] ; then
-echo "$s - $ptr"; else 
-echo "$s" ; fi ; fi 
+echo -e "\n$s - rDNS: $ptr"; else 
+echo "\n$s" ; fi ; fi 
 echo -e "\n$ipaddr | $regio, $geo (UTC $offset) $is_hosting"
 if ! [[ ${ipaddr} =~ $REGEX_IP4 ]] ; then
 ipv6_info=$(${PATH_nmap} -6 -sn -Pn $s --script address-info.nse 2>/dev/null | grep -E -A 1 "\||\|_|ISATAP" | sed '/--/d' | sed '/address-info:/d' |
@@ -1840,13 +1840,13 @@ grep "^TXT" $tempdir/dns.txt | sed '/TXT :/{x;p;x;}' | cut -d ' ' -f 3- | fmt -s
 for i in $(grep -E "^A|AAAA" $tempdir/dns.txt | cut -d ' ' -f 3) ; do
 f_hostSHORT "${i}" ; echo '' ; done
 if cat $tempdir/dns.txt | grep -q -E "^MX"; then
-echo '' ; for m in $(grep -E "^MX" $tempdir/dns.txt | rev | cut -d '.' -f 2- | cut -d ' ' -f 1 | rev); do 
+for m in $(grep -E "^MX" $tempdir/dns.txt | rev | cut -d '.' -f 2- | cut -d ' ' -f 1 | rev); do 
 f_hostSHORT "${m}"; echo '' ; done > $tempdir/mx_info ; cat $tempdir/mx_info 
 egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $tempdir/mx_info  | tee -a $tempdir/ips.list > $tempdir/mxip.list ; fi
-echo '' ; for n in $(grep -E "^NS" $tempdir/dns.txt | rev | cut -d '.' -f 2- | cut -d ' ' -f 1 | rev); do 
-f_hostSHORT "${n}" ; echo '' ; done > $tempdir/ns_info; cat $tempdir/ns_info
+for n in $(grep -E "^NS" $tempdir/dns.txt | rev | cut -d '.' -f 2- | cut -d ' ' -f 1 | rev); do 
+f_hostSHORT "${n}" ; done > $tempdir/ns_info; cat $tempdir/ns_info
 egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $tempdir/ns_info | tee -a $tempdir/ips.list >> $tempdir/nsip.list
-f_Long; f_whoisTABLE "$tempdir/ips.list" ; cat $tempdir/whois_table.txt | cut -d '|' -f -5 | sed '/^$/d' |
+echo '' ; f_Long; f_whoisTABLE "$tempdir/ips.list" ; cat $tempdir/whois_table.txt | cut -d '|' -f -5 | sed '/^$/d' |
 sed '/NET NAME/G' ; echo -e "\n"
 asns=$(cut -d '|' -f 1 $tempdir/whois_table.txt | sed '/AS/d' | sed '/NA/d' | sed '/^$/d' | tr -d ' ' | sort -uV)
 for as in $asns ; do
