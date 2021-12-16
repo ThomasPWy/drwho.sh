@@ -2726,14 +2726,13 @@ if [ -n "$v4_blocks" ] ; then
 echo -e "\nIPv4 Netblocks\n______________\n" ; echo -e "$v4_blocks\n"
 ranges=$(echo "$v4_blocks" | grep '*>' | awk -F' ' '{print $2 $3 $4}')
 for i in $ranges ; do
-${PATH_ipcalc} "${i}" | sed '/deaggregate/d' | sed '/^$/d' ; done > $tempdir/v4_ranges
-if [[ $(cat $tempdir/v4_ranges | wc -w) -gt 1 ]]; then
-echo -e "\n___________________________________________\n"
-cat $tempdir/v4_ranges | tr '[:space:]' ' ' | fmt -s -w 40 ; else
-echo '' ; cat $tempdir/v4_ranges; fi ; fi
+${PATH_ipcalc} "${i}" | sed '/deaggregate/d' | sed '/^$/d'; done > $tempdir/v4_ranges
+if [[ $(cat $tempdir/v4_ranges | wc -w) -gt 2 ]]; then
+v4_ranges=$(cat $tempdir/v4_ranges | tr '[:space:]' ' ' | sed 's/ /  /g' | sed 's/^ *//' | fmt -s -w 60)
+echo -e "\n__________________________________________________________________\n"
+echo -e "$v4_ranges"; echo -e "__________________________________________________________________\n" ; else
+echo '' ; cat $tempdir/v4_ranges; echo ''; fi ; fi
 if [ -n "$v6_blocks" ] ; then
-if [ -n "$v4_blocks" ] ; then
-echo -e "\n___________________________________________\n"; fi
 echo -e "\nIPv6 Netblocks\n______________\n" ; echo -e "$v6_blocks\n" ; fi
 }
 
