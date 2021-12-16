@@ -650,7 +650,7 @@ f_Long; echo "[+] $s  | DOMAIN STATUS SUMMARY"; f_Long ; option_authns="true"
 echo -e "WEBSITE STATUS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 if [ $option_connect = "0" ] ; then
 eff_url=$(cut -s -d ']' -f 1 $tempdir/ww.txt | sed 's/\[/ /' | tail -1)
-echo '' ; cut -s -d ']' -f 1 $tempdir/ww.txt | sed 's/\[/ /' ; else
+echo '' ; cut -s -d ']' -f 1 $tempdir/ww.txt | sed 's/\[/ /' | sed G; else
 eff_url=$(grep "^URL:" $tempdir/response | cut -d ':' -f 2- | sed 's/^ *//')
 status=$(grep 'Status:' $tempdir/response | cut -d ':' -f 2- | sed 's/^ *//')
 verify=$(grep -s -m 1 'SSL certificate verify' $tempdir/curl_trimmed | rev | cut -d ' ' -f 1 | rev | tr -d '.')
@@ -958,16 +958,22 @@ abx=$(dig +short $nibble.abuse-contacts.abusix.zone txt | tr -d '/"') ; fi ; fi
 curl -s "https://stat.ripe.net/data/network-info/data.json?resource=${ipaddr}" > $tempdir/net.json
 autn=$(jq -r '.data.asns[0]' $tempdir/net.json); pfx=$(jq -r '.data.prefix' $tempdir/net.json)
 curl -s "https://stat.ripe.net/data/as-overview/data.json?resource=AS${autn}" > $tempdir/asov.json
-if ! [ $target_type = "web" ] ; then
-curl -m 5 -s "https://stat.ripe.net/data/reverse-dns-ip/data.json?resource=${s}" > $tempdir/rdns.json
-ptr=$(jq -r '.data.result[0]?' $tempdir/rdns.json | sed '/null/d'); fi
 hosting=$(jq -r '.hosting' $tempdir/geo.json | sed '/false/d')
 if [ -n "$hosting" ] ; then
 is_hosting="| Hosting: $hosting" ; else
 is_hosting='' ; fi
+if [ $target_type = "dnsrec" ] ; then
+curl -m 5 -s "https://stat.ripe.net/data/reverse-dns-ip/data.json?resource=${ipaddr}" > $tempdir/rdns.json
+ptr=$(jq -r '.data.result[0]?' $tempdir/rdns.json | sed '/null/d')
 if [ -n "$ptr" ] ; then
-echo -e "\n$ipaddr | $ptr $is_hosting"; echo -e "\n$regio, $geo (UTC $offset)" ; else
-echo -e "\n$ipaddr | $regio, $geo (UTC $offset) $is_hosting" ; fi
+echo "$s - $ptr"; else 
+echo "$s" ; fi ; fi 
+echo -e "\n$ipaddr | $regio, $geo (UTC $offset) $is_hosting"
+if ! [[ ${ipaddr} =~ $REGEX_IP4 ]] ; then
+ipv6_info=$(${PATH_nmap} -6 -sn -Pn $s --script address-info.nse 2>/dev/null | grep -E -A 1 "\||\|_|ISATAP" | sed '/--/d' | sed '/address-info:/d' |
+tr -d '|_' | sed 's/^[ \t]*//;s/[ \t]*$//' | sed '/^$/d' | sed 's/MAC address:/MAC/' | tr '[:space:]' ' '; echo '')
+if [ -n "$ipv6_info" ]; then
+echo -e "\n$ipv6_info" ; fi; fi 
 if [ -n "$abx" ] ; then
 echo -e "\n$abx" ; fi
 echo -e "\n$orgn | $pfx | AS $autn - $(jq -r '.data.holder' $tempdir/asov.json)\n"
@@ -1127,8 +1133,7 @@ targetURL_dom=$(echo $eff_url | sed 's/http:\/\///' | sed 's/https:\/\///' | cut
 targetURL_dom=$(echo $eff_url | sed 's/http:\/\///' | sed 's/https:\/\///' | cut -d '/' -f 1 | rev | cut -d '.' -f 1,2 | rev) ; fi
 if [ $option_connect = "0" ] ; then
 if [ $domain_enum = "true" ] ; then
-f_domainSTATUS "${s}"; f_Long ; echo "[+] $s | DOMAIN WEBSITE" ; f_Long
-echo '' ; cut -s -d ']' -f 1 $tempdir/ww.txt | sed 's/\[/ /' ; echo '' ; else
+f_domainSTATUS "${s}"; f_Long ; echo "[+] $s | DOMAIN WEBSITE" ; f_Long ; echo '' ; else 
 f_Long; echo "WHATWEB" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 echo -e "\nURL:           $targetURL" ; fi
 target_email=$(grep -s -oP '(Email\[).*?(?=])' $tempdir/ww.txt | sed 's/Email\[/\nEmail:         /' | tr -d ']' | sed 's/,/, /g')
@@ -1139,10 +1144,10 @@ if [ -n "$cms" ] ; then
 cms_output="$cms" ; else
 cms_output="none/unkown" ; fi ; f_TITLE
 if [ -n "$target_email" ] ; then
-echo "$target_email" ; fi
-echo -e "\nServer:        $httpserver  |  CMS: $cms_output"
+echo -e "$target_email\n" ; fi
+echo -e "\nServer:        $httpserver  |  CMS: $cms_output\n"
 if [ -n "$google_a" ] ; then
-echo -e "\nGoogle:        Analytics: $google_a\n"; fi
+echo -e "Google:        Analytics: $google_a\n"; fi
 f_Long; f_wwMARKUP ; echo ''
 if [ -n "$api_key_ht" ]; then
 f_Long; echo -e "HTTP HEADERS\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
@@ -1156,6 +1161,13 @@ f_certINFO "${s}"
 if ! [ "$page_dom" = "$target_url_dom" ] ; then
 f_certINFO "$target_url_dom" ; fi
 f_DNS_REC "${s}"
+if [ $option_zone = "1" ] || [ $option_zone = "3" ] ; then
+echo ''; f_Long; echo "[+] DNS RECORDS | IP REPUTATION CHECK"; f_Long
+echo -e "\nChecking ...\n" | tee -a ${out}
+echo -e "$blocklists_domain" | sed '$!s/$/,/' | sed '1,1d' | tr '[:space:]' ' ' | fmt -s -w 90
+echo -e "Project Honeypot, Stop Forum SPAM, Spamhaus ZEN & Grey Noise Community API\n" 
+for i in $(cat $tempdir/ips.list | sort -uV); do
+f_IP_REPUTATION "${i}" ; done ; fi 
 if [ $option_zone = "2" ] || [ $option_zone = "3" ] ; then
 f_AXFR "${page_dom}" ; fi
 f_subs_HEADER "${s}" ; cat ${outdir}/Subdomains_HT.${s}.txt
@@ -1349,18 +1361,22 @@ grep -s -oP -m 1 '(OpenSearch\[).*?(?=\])' $tempdir/ww.txt | sed 's/OpenSearch\[
 grep -s -oP '(Modernizr\[).*?(?=\])' $tempdir/ww.txt | sort -u | sed 's/Modernizr\[/Modernizr: /' | tr -d '][' >> $tempdir/webtech
 grep -o -m 1 'Lightbox' $tempdir/ww.txt >> $tempdir/webtech
 if [ $option_connect = "0" ] ; then
+grep -s -oP '(X-UA-Compatible\[).*?(?=\])' $tempdir/ww | sed 's/\[/: /' >> $tempdir/webtech
 webtech_other=$(cat $tempdir/webtech | sort -ufV | tr '[:space:]' ' '; echo '')
 if [ -n "$webtech_other" ] ; then
-echo -e "Other:         $webtech_other" ; fi ; f_Long ; echo -e "HEADERS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
-grep -s -oP '(Via-Proxy\[).*?(?=\])' $tempdir/ww.txt | sed 's/\[/: /' >> $tempdir/headers_ww
-grep -s -oP '(Strict-Transport-Security\[).*?(?=\])' $tempdir/ww.txt | tail -1 | sed 's/\[/: /' | tr -d ']['  >> $tempdir/headers_ww
-grep -s -oP '(X-Frame-Options\[).*?(?=\])' $tempdir/ww.txt | tail -1 | sed 's/\[/:  /' | tr -d ']['  >> $tempdir/headers_ww
-grep -s -oP '(X-XSS-Protection\[).*?(?=\])' $tempdir/ww.txt | tail -1 | sed 's/\[/:  /' | tr -d ']['  >> $tempdir/headers_ww
-grep -i -o 'content-security-policy' $tempdir/ww.txt | tail -1 ; grep -i -o 'x-content-type-options' $tempdir/ww.txt | tail -1  >> $tempdir/headers_ww
-grep -s -oP '(UncommonHeaders\[).*?(?=\])' $tempdir/ww.txt | tail -1  | sed 's/UncommonHeaders\[/\n/' | sed 's/,/\n/g'  >> $tempdir/headers_ww
-sort -u $tempdir/headers_ww  ; rm $tempdir/headers_ww
-grep -s -oP '(Cookies\[).*?(?=\])' $tempdir/ww.txt | sed 's/\[/:  /' | tr -d ']['
-grep -s -oP '(HttpOnly\[).*?(?=\])' $tempdir/ww.txt | sed 's/\[/:  /' | tr -d '][' ; fi ; fi
+echo -e "Other:         $webtech_other" ; rm $tempdir/webtech; fi
+grep -s -oP '(Via-Proxy\[).*?(?=\])' $tempdir/ww.txt | sed 's/\[/:     /' 
+grep -s -oP '(UncommonHeaders\[).*?(?=\])' $tempdir/ww.txt | tail -1  | sed 's/UncommonHeaders\[/\n\nUncommon Headers\n\n/' | sed 's/,/\n/g'
+grep -s -oP '(Strict-Transport-Security\[).*?(?=\])' $tempdir/ww.txt | tail -1 | sed 's/\[/: /' | tr -d '][' > $tempdir/sec_headers_ww
+grep -s -oP '(X-Frame-Options\[).*?(?=\])' $tempdir/ww.txt | tail -1 | sed 's/\[/:  /' | tr -d ']['  >> $tempdir/sec_headers_ww
+grep -s -oP '(X-XSS-Protection\[).*?(?=\])' $tempdir/ww.txt | tail -1 | sed 's/\[/:  /' | tr -d ']['  >> $tempdir/sec_headers_ww
+grep -i -o 'content-security-policy' $tempdir/ww.txt | tail -1  >> $tempdir/sec_headers_ww
+grep -i -o 'x-content-type-options' $tempdir/ww.txt | tail -1  >> $tempdir/sec_headers_ww
+grep -s -oP '(Cookies\[).*?(?=\])' $tempdir/ww.txt | sed 's/\[/:  /' | tr -d ']['  >> $tempdir/sec_headers_ww
+grep -s -oP '(HttpOnly\[).*?(?=\])' $tempdir/ww.txt | sed 's/\[/:  /' | tr -d ']['  >> $tempdir/sec_headers_ww
+if [ -f $tempdir/sec_headers_ww ] ; then 
+f_Long ; echo -e "SECURITY HEADERS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
+cat $tempdir/sec_headers_ww; rm  $tempdir/sec_headers_ww; fi ; fi ; fi
 }
 f_htmlCOMMENTS(){
 local s="$*"
@@ -1817,23 +1833,24 @@ grep -E "MX" $tempdir/dns.txt | cut -d ':' -f 2- | sed 's/^ *//' ; echo '' ; fi
 echo -e "\nName Servers\n____________\n"
 grep -E "^NS" $tempdir/dns.txt | cut -d ':' -f 2- | sed 's/^ *//'
 echo -e "\n\nStart of Authority \n___________________\n"
-grep -E "^SOA" $tempdir/dns.txt | cut -d ':' -f 2- | sed 's/^ *//'
+grep -E "^SOA" $tempdir/dns.txt | cut -d ':' -f 2- | sed 's/^ *//' ; echo '' 
 if cat $tempdir/dns.txt | grep -q -E "^TXT"; then
-echo -e "\n\nTXT Records \n____________\n"
-grep "^TXT" $tempdir/dns.txt | sed '/TXT :/{x;p;x;}' | cut -d ' ' -f 3- | fmt -s -w 80 ; echo '' ; fi ; f_Long
+echo -e "\nTXT Records \n____________\n"
+grep "^TXT" $tempdir/dns.txt | sed '/TXT :/{x;p;x;}' | cut -d ' ' -f 3- | fmt -s -w 80 ; echo '' ; fi ; f_Long ; echo '' 
 for i in $(grep -E "^A|AAAA" $tempdir/dns.txt | cut -d ' ' -f 3) ; do
 f_hostSHORT "${i}" ; echo '' ; done
 if cat $tempdir/dns.txt | grep -q -E "^MX"; then
-for m in $(grep -E "^MX" $tempdir/dns.txt | cut -d ' ' -f 4) ; do
-f_hostSHORT "${m}" | tee -a $tempdir/mx_info ; echo '' ; done
-cut -d ' ' -f 2 $tempdir/mx_info | egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tee -a $tempdir/ips.list >> $tempdir/mxip.list ; fi
-for n in $(grep -E "^NS" $tempdir/dns.txt | rev | cut -d ' ' - f1 | rev) ; do
-f_hostSHORT "${n}" | tee -a $tempdir/ns_info ; echo '' ; done
-echo -e "\n" ; f_Long; f_whoisTABLE "$tempdir/rec_ips.list" ; cat $tempdir/whois_table.txt | cut -d '|' -f -5 | sed '/^$/d' |
-sed '/NET NAME/G'; echo ''
+echo '' ; for m in $(grep -E "^MX" $tempdir/dns.txt | rev | cut -d '.' -f 2- | cut -d ' ' -f 1 | rev); do 
+f_hostSHORT "${m}"; echo '' ; done > $tempdir/mx_info ; cat $tempdir/mx_info 
+egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $tempdir/mx_info  | tee -a $tempdir/ips.list > $tempdir/mxip.list ; fi
+echo '' ; for n in $(grep -E "^NS" $tempdir/dns.txt | rev | cut -d '.' -f 2- | cut -d ' ' -f 1 | rev); do 
+f_hostSHORT "${n}" ; echo '' ; done > $tempdir/ns_info; cat $tempdir/ns_info
+egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $tempdir/ns_info | tee -a $tempdir/ips.list >> $tempdir/nsip.list
+f_Long; f_whoisTABLE "$tempdir/ips.list" ; cat $tempdir/whois_table.txt | cut -d '|' -f -5 | sed '/^$/d' |
+sed '/NET NAME/G' ; echo -e "\n"
 asns=$(cut -d '|' -f 1 $tempdir/whois_table.txt | sed '/AS/d' | sed '/NA/d' | sed '/^$/d' | tr -d ' ' | sort -uV)
 for as in $asns ; do
-asn=$(dig +short as$as.asn.cymru.com TXT | tr -d "\"" | sed 's/^ *//' | cut -d '|' -f 1,5 | sed 's/ |/,/g') ; echo -e "AS $asn" ; done ; else
+asn=$(dig +short as$as.asn.cymru.com TXT | tr -d "\"" | sed 's/^ *//' | cut -d '|' -f 1,5 | sed 's/ |/,/g') ; echo -e "AS $asn" ; done ; echo -e "\n"; else
 if [ $domain_enum = "true" ] ; then
 rfc1912="true" ; fi
 if [ $option_ttl = "2" ] ; then
@@ -2129,7 +2146,8 @@ f_SUBS(){
 local s="$*" ; cat $tempdir/hosts_raw | sort -u >> $tempdir/hosts
 sort -t ',' -k 1 $tempdir/results_ht | sed 's/,/ => /' | awk '{print $3 "\t\t" $2 "\t" $1}' |
 sort -t '>' -k 2 -V > $tempdir/subs_ht
-echo "[+] Subdomains (IPv4) | SOURCE: hackertarget.com" > ${outdir}/Subdomains_HT.${s}.txt
+echo '' > ${outdir}/Subdomains_HT.${s}.txt ; f_Long >> ${outdir}/Subdomains_HT.${s}.txt
+echo "[+] Subdomains (IPv4) | SOURCE: hackertarget.com" >> ${outdir}/Subdomains_HT.${s}.txt
 f_Long >> ${outdir}/Subdomains_HT.${s}.txt; echo '' >> ${outdir}/Subdomains_HT.${s}.txt
 cat $tempdir/subs_ht >> ${outdir}/Subdomains_HT.${s}.txt
 if ! [ $option_connect = "0" ] ; then
@@ -3514,10 +3532,10 @@ if ! [ "$x" = "$target_host_dom" ] ; then
 f_DNS_REC "${target_host_dom}" | tee -a ${out} ; fi
 f_dnsREC_II "${x}" | tee -a ${out}
 cat $tempdir/ip4.list >> $tempdir/ips.list
-ttl="+ttlunits"; f_TTL_READABLE "${x}" ; f_cleanupDNS
+ttl="+ttlunits"; f_TTL_READABLE "${x}"
 target_type="dnsrec" ; type_mx="true" ; f_DNSdetails | tee -a ${out} ; type_mx="false"
 if [ $option_zone = "1" ] || [ $option_zone = "3" ] ; then
-echo ''  | tee -a ${out}; f_Long | tee -a ${out}; echo "[+] DNS RECORDS | IP REPUTATION LOOKUP" | tee -a ${out}
+echo ''  | tee -a ${out}; f_Long | tee -a ${out}; echo "[+] DNS RECORDS | IP REPUTATION CHECK" | tee -a ${out}
 f_Long | tee -a ${out}; echo -e "\nChecking ...\n" | tee -a ${out}
 echo -e "$blocklists_domain" | sed '$!s/$/,/' | sed '1,1d' | tr '[:space:]' ' ' | fmt -s -w 90 | tee -a ${out}
 echo -e "Project Honeypot, Stop Forum SPAM, Spamhaus ZEN, Grey Noise Community API & SANS Internet Storm Center\n" | tee -a ${out}
