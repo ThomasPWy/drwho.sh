@@ -1960,11 +1960,14 @@ nsec=$(host -t nsec ${nsurl} 1.1.1.1 | tail -1 | fmt -s -w 80); nsec3=$(host -t 
 echo '' ; echo "$nsec" ; echo "$nsec3" ; done ; echo '' ; f_Long
 }
 f_cleanupDNS(){
-rm $tempdir/mx4.list; rm $tempdir/ns4.list
+if [ -f $tempdir/mx4.list ] ; then
+rm $tempdir/mx4.list; fi 
+if [ -f $tempdir/ns4.list ] ; then
+rm $tempdir/ns4.list ; fi 
 if [ -f $tempdir/mx6.list ] ; then
 rm $tempdir/mx6.list ; fi
 if [ -f $tempdir/ns6.list ] ; then
-rm $tempdir/ns.list ; fi
+rm $tempdir/ns6.list ; fi
 }
 f_PTR(){
 echo -e "\nPTR RECORDS\n\n"
