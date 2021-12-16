@@ -72,8 +72,8 @@ wordl_wfuzz1="/usr/share/wfuzz/wordlist/general/medium.txt"
 #********************** VARIABLES - DEFAULTS & TEMPORARY WORKING DIRECTORY ***********************
 tempdir="${PWD}/drwho_temp" ; outdir="${PWD}/drwho_temp"; folder="not saving results"
 option_connect="1" ; conn="${GREEN}true${D}" ; report="false" ; quiet_dump="false" ; type_mx="false"
-#********************** NMAP - PORTS & NSE SCRIPTS ***********************
 
+#********************** NMAP - PORTS & NSE SCRIPTS ***********************
 ports_net="T:21,T:22,T:23,T:25,T:53,U:53,T:80,T:88,T:110,T:111,U:123,T:135,T:139,T:143,T:443,T:445,T:514,T:993,T:995,T:1025,T:1434,T:1723,T:3306,T:3389,T:5004,T:5005,U:5060,T:5900,T:8080,T:8443"
 nmap_top15_ntp="T:21,T:22,T:23,T:25,T:53,U:53,T:80,T:110,U:123,T:135,T:139,T:143,T:443,T:445,T:3306,T:3389,T:8080"
 ports_lan="T:21,T:22,T:23,T:25,T:53,U:53,T:79,T:80,T:110,U:123,T:135,U:137,T:139,U:161,T:443,T:502,T:631,T:1025,T:1434,T:3306,T:3389,T:5004,T:5005,U:5060,T:5900,T:8080,U:47808"
@@ -2189,7 +2189,7 @@ grep ')' $tempdir/nmrdns | sed '/Starting Nmap/d' | sed '/Nmap done/d' | sed 's/
 }
 f_NETrDNS() {
 if ! [ $option_netdetails3 = "0" ] ; then
-f_Long; echo "REVERSE DNS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' ; else
+f_Long; echo -e "REVERSE DNS\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' ; else
 echo -e "\n* Reverse DNS\n" ; fi
 if [ $option_source = "3" ] || [ $option_connect = "0" ] ; then
 f_RevDNS "${s}" | tee $tempdir/ipv4_hosts.txt ; else
