@@ -1050,12 +1050,14 @@ if [ $target_type = "net" ] ; then
 cat $tempdir/banners.txt; else
 f_Long; echo "BANNERS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; cat $tempdir/banners.txt | sed '/./,$!d'
 if [ $target_type = "default" ] ; then
-https_title=$(jq -r '.https443.title' $tempdir/banners.json | sed '/null/d')
+http80_server=$(jq -r '.http80.server' $tempdir/banners.json | sed '/null/d')
+http80_title=$(jq -r '.http80.title' $tempdir/banners.json | sed '/null/d')
+https_server=$(jq -r '.https443.server' $tempdir/banners.json | sed '/null/d')
 https_cn=$(jq -r '.https443.cn' $tempdir/banners.json | sed '/null/d')
-if [ -n "$https_title" ] ; then
-echo "$https_title" >> $tempdir/https ; fi
-if [ -n "$https_cn" ] ; then
-echo "$https_cn" >> $tempdir/https ; fi ; fi; fi
+if [ -n "$http80_server" ] || [ -n "http80_title" ] ; then
+echo "$http80_server" >> $tempdir/http; echo "$http80_title" >> $tempdir/http ; fi 
+if [ -n "$https_server" ] || [ -n "$https_cn" ] ; then
+echo "$https_server" >> $tempdir/http; echo "$https_cn" >> $tempdir/http ; fi ; fi ; fi 
 }
 
 #********************** WEBSITE - WEB-TECHNOLOGIES & CONTENT ***********************
@@ -3857,15 +3859,11 @@ echo '' | tee -a ${out}; f_Long | tee -a ${out}
 echo "[+]  $x" | tee -a ${out}; f_DNSWhois_STATUS "${x}" | tee -a ${out}
 host_ips=$(jq -r '.data.forward_nodes' $tempdir/chain.json | sed '/\[/d' | egrep -s -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | sort -uV)
 for i in $host_ips ; do
-f_TYPE_HOSTNAME "${i}"
-if [ $option_banners = "true" ] ; then
-f_BANNERS "${i}"; fi
-if  [ $option_bl = "y" ] ; then
-f_Long; echo -e "IP REPUTATION\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' ; f_IP_REPUTATION "${s}" ; echo '' ; fi; done | tee -a ${out}
+f_TYPE_HOSTNAME "${i}"; done | tee -a ${out}
 if [ $ww = "true" ] ; then
-if [ -f $tempdir/https ] || [ $option_enum5 = "2" ] ; then
+if [ -f $tempdir/http ] || [ $option_enum5 = "2" ] ; then
 curl -s https://api.hackertarget.com/whatweb/?q=${x}${api_key_ht} > $tempdir/ww.txt
-page_details="true"; f_PAGE "${x}" | tee -a ${out} ; fi ; fi
+page_details="true"; f_PAGE "${x}" | tee -a ${out} ; rm $tempdir/http; fi ; fi
 if ! [ $option_enum1 = "1" ] && ! [ $option_enum5 = "0" ] ; then
 f_certINFO "${x}"; fi; done ; else
 for x in $(cat $targets | sort -uV) ; do
