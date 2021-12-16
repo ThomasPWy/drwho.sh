@@ -508,8 +508,8 @@ curl -s https://api.hackertarget.com/mtr/?q=${s}${api_key_ht}; echo -e "\n Sourc
 #********************** HTTP HEADERS - DUMP & ANALYSIS ***********************
 f_HEADERS(){
 local s="$*" ; echo ''; f_Long ; echo -e "[+] $s | HTTP HEADERS | $(date)" ; f_Long ; echo ''
-cat $tempdir/headers | sed 's/Content-Security-Policy:/\nContent-Security-Policy:\n\n/' | sed 's/content-security-policy:/\ncontent-security-policy:\n\n/' |
-sed 's/permissions-policy:/\npermissions-policy:\n\n' | sed 's/^ *//' | fmt -w 120 -s ; echo ''
+cat $tempdir/headers | sed 's/Content-Security-Policy:/\nContent-Security-Policy:\n\n/g' | sed 's/content-security-policy:/\ncontent-security-policy:\n\n/g' |
+sed 's/permissions-policy:/\npermissions-policy:\n\n/g' | sed 's/^ *//' | fmt -w 120 -s ; echo ''
 }
 f_getAppHEADERS(){
 local s="$*" ; grep -E -a -i "^server:" ${s} | cut -d ':' -f 2- | sed 's/^ *//' | tr [:lower:] [:upper:] | sort -uV
@@ -1078,18 +1078,17 @@ echo '' > $tempdir/LINKS.${s}.txt; f_Long >> $tempdir/LINKS.${s}.txt
 echo -e "[+] $s | LINK DUMP | $(date)" >> $tempdir/LINKS.${s}.txt ; f_Long >> $tempdir/LINKS.${s}.txt
 echo '' >> $tempdir/LINKS.${s}.txt
 if [ $option_source = "2" ] || [ -z "$PATH_LYNX" ]; then
-curl -s https://api.hackertarget.com/pagelinks/?q=${s}${api_key_ht} > $tempdir/linkdump.txt ; else
+curl -s https://api.hackertarget.com/pagelinks/?q=${s}${api_key_ht} > $tempdir/linkdump.txt
+cat $tempdir/linkdump.txt | sort -u >> $tempdir/LINKS.${s}.txt
+echo -e "\n\nSource: hackertarget.com IP API\n" >> $tempdir/LINKS.${s}.txt ; else
 if ! [ $option_connect = "0" ] ; then
 timeout 3 ${PATH_lynx} -accept_all_cookies -dump -listonly -nonumbers ${s} > $tempdir/linkdump_raw
 timeout 3 ${PATH_lynx} -accept_all_cookies -dump -listonly -nonumbers ${eff_url} >> $tempdir/linkdump_raw
 cat $tempdir/linkdump_raw | sort -f -u | sed '/Sichtbare Links:/d' | sed '/Versteckte Links:/d' |
-sed '/[Vv]isible [Ll]inks:/d' | sed '/[Hh]idden [Ll]inks:/d' > $tempdir/linkdump.txt ; fi ; fi
+sed '/[Vv]isible [Ll]inks:/d' | sed '/[Hh]idden [Ll]inks:/d' > $tempdir/linkdump.txt ; fi
+cat $tempdir/linkdump.txt | sort -u >> $tempdir/LINKS.${s}.txt ; fi 
 grep -E "^http:.*|^https:.*|^www.*|" $tempdir/linkdump.txt > $tempdir/linkdump
-cat $tempdir/linkdump.txt | sort -u >> $tempdir/LINKS.${s}.txt
 cat $tempdir/LINKS.${s}.txt >> ${outdir}/LINK_DUMP.${s}.txt
-if [ $option_source = "2" ] ; then
-echo -e "\nSource: hackertarget.com IP API\n"; else
-echo '' >> ${outdir}/LINK_DUMP.${s}.txt; fi
 hosts_unique=$(grep -E "^http:.*|^https:.*|^www.*" $tempdir/linkdump | sed 's/http:\/\///' |
 sed 's/https:\/\///' | cut -d '/' -f 1 | sort -u)
 if [ -n "$hosts_unique" ] ; then
