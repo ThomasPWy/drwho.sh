@@ -2310,7 +2310,7 @@ resource_qu=$(jq -r '.data.resource' $tempdir/pov.json); announced_qu=$(jq -r '.
 lp_qu=$(jq -r '.data.is_less_specific' $tempdir/pov2.json); if [ $announced_qu = "true" ] ; then
 is_lp_qu=" | less specific: $lp_qu" ; else
 is_lp_qu=''; fi
-echo -e "\n             $resource_qu | announced: $announced_qu $is_lp_qu"; fi
+echo -e "\n             $resource_qu | announced: $announced_qu $is_lp_qu"; rm $tempdir/pov2.json;  fi
 if [[ $(echo "$netgeo" | wc -w ) -gt 21 ]]; then
 echo ''; f_Long ; echo "LOCATION" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 echo -e "Country (whois):\n"; echo -e "$ctry"; echo -e "\nGeolocation (maxmind):\n"; echo "$netgeo" | fmt -w 60; fi
