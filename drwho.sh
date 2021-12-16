@@ -427,7 +427,7 @@ f_getAppHEADERS "$tempdir/h2" > $tempdir/app_headers; f_getSecHEADERS "$tempdir/
 if [ $domain_enum = "true" ]; then
 echo ''; f_REDIR ; echo '' ; else
 f_Long; echo -e "HOST SUMMARY" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' ; f_hostSHORT "${s}"
-if [ $rep_check = "true" ] ; then
+if [ $rep_check = "true" ] && [[ ${s} =~ $REGEX_IP4 ]] ; then
 f_Long; echo "IP REPUTATION" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' ; f_IP_REPUTATION "${s}" ; fi ; echo '' ; fi
 }
 f_REDIR(){
