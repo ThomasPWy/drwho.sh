@@ -3822,7 +3822,7 @@ if [ $option_enum3 = "1" ] ; then
 option_banners="true"
 elif [ $option_enum3 = "2" ] ; then
 option_bl="y" ; option_banners="false"
-elif [ $option_enum3 = "2" ] ; then
+elif [ $option_enum3 = "3" ] ; then
 option_bl="y"; option_banners="true"; else
 option_bl="n"; option_banners="false"; fi
 if [ $option_type = "3" ] ; then
