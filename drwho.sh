@@ -1084,7 +1084,7 @@ $option_source="2"; fi
 echo '' > $tempdir/LINKS.${s}.txt; f_Long >> $tempdir/LINKS.${s}.txt
 echo -e "[+] $s | LINK DUMP | $(date)" >> $tempdir/LINKS.${s}.txt ; f_Long >> $tempdir/LINKS.${s}.txt
 echo '' >> $tempdir/LINKS.${s}.txt
-if [ $option_source = "2" ] || [ -z "$PATH_LYNX" ]; then
+if [ $option_source = "2" ] || [ -z "$PATH_lynx" ]; then
 curl -s https://api.hackertarget.com/pagelinks/?q=${s}${api_key_ht} > $tempdir/linkdump.txt
 cat $tempdir/linkdump.txt | sort -u >> $tempdir/LINKS.${s}.txt
 echo -e "\n\nSource: hackertarget.com IP API\n" >> $tempdir/LINKS.${s}.txt ; else
@@ -3477,7 +3477,7 @@ echo -e -n "\n${B}Option  > ${G2}Load Balancing Detection ${B}>${D} Run lbd  ${B
 out="$outdir/${x}.txt" ; f_textfileBanner "${x}" >> ${out}; eff_url=''
 if [ $option_connect = "0" ] ; then
 curl -s https://api.hackertarget.com/whatweb/?q=${x}${api_key_ht} > $tempdir/ww.txt
-f_PAGE "${x}" | tee -a ${out} ; else
+target_type="dnsrec"; f_PAGE "${x}" | tee -a ${out} ; else
 option_source="1"; dig_array+=(+noall +answer +noclass +ttlid); declare -a st_array=() ; st_array+=(-sLkv)
 declare -a curl_array=() ; curl_array+=(-sLkv) ; error_code=6 ; curl -s -f -L -k ${x} > /dev/null
 if [ $? = ${error_code} ]; then
