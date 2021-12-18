@@ -574,8 +574,8 @@ if [ -n "$links" ] ; then
 grep -E -i "^location:" $tempdir/h2 | tail -1 | awk '{print $NF}'
 for l in $(echo "$links" | sort -u); do
 curl -sILk -m 5 ${l} >> $tempdir/h3
-echo -e "\n$l\n\n" >> $tempdir/sec_headers_alternate
-echo -e "$l\n\n" >> $tempdir/app_headers_alternate
+echo -e "\n$l\n" >> $tempdir/sec_headers_alternate
+echo -e "$l\n" >> $tempdir/app_headers_alternate
 grep -E -i -s -a "^HTTP/.*" $tempdir/h3 | tail -1 >> $tempdir/app_headers_alternate
 f_getAppHEADERS "$tempdir/h3" >> $tempdir/app_headers_alternate
 f_getSecHEADERS "$tempdir/h3" >> $tempdir/sec_headers_alternate ; done ; fi
@@ -587,11 +587,11 @@ f_Long; echo -e "SECURITY HEADERS\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 if [ -n "$links" ] ; then
 grep -E -i "^location:" $tempdir/h2 | tail -1 | awk '{print $NF}'; echo  '' ; fi
 if [[ $(cat $tempdir/sec_headers | wc -w) -lt 2 ]] ; then
-echo -e "Not set / not forwarded by another service (e.g. CDN)" ; else
+echo -e "Not set / not forwarded by another service" ; else
 cat $tempdir/sec_headers ; echo '' ; fi
 if [ -f $tempdir/sec_headers_alternate ] ; then
 if [[ $(cat $tempdir/sec_headers_alternate | wc -l) -lt 3 ]] ; then
-echo -e "\nNot set / not forwarded by another service (e.g. CDN)\n" ; else
+echo -e "\nNot set / not forwarded by another service\n" ; else
 cat $tempdir/sec_headers_alternate; fi ; fi
 }
 
@@ -1358,7 +1358,7 @@ f_Long ; echo -e "HUMANS.TXT\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 cat $tempdir/humans.txt; fi ; fi
 if [ -f $tempdir/robots.txt ] ; then
 if [[ $(cat $tempdir/robots.txt | wc -l) -lt 20 ]] ; then
-f_Long ; echo -e "HUMANS.TXT\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
+f_Long ; echo -e "ROBOTS.TXT\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 cat $tempdir/robots.txt; fi ; fi
 if [ $domain_enum = "false" ] ; then
 f_DNSWhois_STATUS "${s}" ; fi ; fi ; echo ''
@@ -2455,13 +2455,11 @@ echo -e "[@]: $netabu | $netn - $range" ; echo -e "____\n"
 }
 f_POC(){
 local s="$*"
+if [ $rir = "arin" ] ; then
+f_ORG "$s"; else
 if [ $domain_enum = "false" ] ; then
 f_Long; echo "CONTACT" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' ; else
 f_Shorter; grep -s -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" ${s} | sort -u; f_Shorter; fi
-if [ $rir = "arin" ] ; then
-f_ARIN_ORG "$s"
-elif [ $rir = "lacnic" ] ; then
-f_ORG "$s" ; else
 if [[ $(grep -s -w -c '^org-name:' $s ) -gt "0" ]] ; then
 echo '' ; sed -e '/./{H;$!d;}' -e 'x;/organisation:/!d' $s |
 sed -n '/organisation:/,/organisation:/p' | grep -E -a -s "^org-name:|^address:|^phone:|^e-mail:" |
@@ -2569,7 +2567,9 @@ sed '/ro:/{x;p;x;}' | cut -d ':' -f 2- | sed 's/^ *//' ; done ; fi ; fi
 }
 f_domainNETS(){
 local s="$*" ; net_ip=$(echo $s | cut -d '/' -f 1) ; echo '' >> $tempdir/domain_nets ; f_getRIR "${s}"
-if [ $rir = "arin" ] || [ $rir = "lacnic" ] ; then
+if [ $rir = "lacnic" ] ; then
+whois -h whois.lacnic.net ${s} > $tempdir/whois.txt ; f_lacniWHOIS "$tempdir/whois.txt" ; else 
+if [ $rir = "arin" ] ; then
 whois -h whois.$rir.net ${s} > $tempdir/whois.txt ; else
 whois -h whois.$rir.net -- "-B ${s}" > $tempdir/whois.txt ; fi
 netname=$(grep -s -i -E -m 1 "^netname:|^net-name:|^inetrev:" $tempdir/whois.txt | cut -d ':' -f 2- | sed 's/^ *//')
@@ -2591,7 +2591,7 @@ echo -e "\n$descr" >> $tempdir/domain_nets; fi
 if [ $rir = "lacnic" ] || [ -z "$allocation_status" ] ; then
 echo -e "\n$created | $ctry | $rir_caps | $pfx  (AS $asn)\n" >> $tempdir/domain_nets; else
 echo -e "\n$created | $ctry | $rir_caps | $allocation_status | $pfx | AS $asn\n" >> $tempdir/domain_nets ; fi
-f_POC "$tempdir/whois.txt" >> $tempdir/domain_nets ; f_netRESOURCES "${netname}" >> $tempdir/domain_nets ; fi
+f_POC "$tempdir/whois.txt" >> $tempdir/domain_nets ; f_netRESOURCES "${netname}" >> $tempdir/domain_nets ; fi ; fi 
 }
 f_RELATED(){
 local s="$*"; net_ip=$(echo $s | cut -d '/' -f 1); curl -s "https://stat.ripe.net/data/related-prefixes/data.json?resource=${s}" > $tempdir/rel.json
@@ -2638,7 +2638,7 @@ if ! [ -f $tempdir/netgeo.json ] ; then
 curl -s https://stat.ripe.net/data/maxmind-geo-lite/data.json?resource=${s} > $tempdir/netgeo.json ; fi
 jq -r '.data.located_resources[].locations | .[] | .resources[]' $tempdir/netgeo.json | sort -u -V > $tempdir/nets_geo.list
 netcount=$(cat $tempdir/nets_geo.list | wc -w); locations=$(jq -r '.data.located_resources[].locations | .[]' $tempdir/netgeo.json)
-echo -e "GEOGRAPHIC DISTRIBUTION" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' > $tempdir/geo_temp
+echo -e "GEOGRAPHIC DISTRIBUTION\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' > $tempdir/geo_temp
 echo "$locations" | jq -r '{N: .resources[], Lat: .latitude, Lon: .longitude, cov: .covered_percentage, Country: .country, C: .city}' |
 tr -d '{,"}' | sed 's/^ *//' | sed '/^$/d' | tr '[:space:]' ' ' | sed 's/N: /\n\n/g' | sed 's/ Lon: /\,/g' | sed 's/Lat:/ -  Lat\/Lon:/g' |
 sed 's/cov:/(covered:/g' | sed 's/Country:/%) | Country:/g' | sed 's/C://g' >> $tempdir/geo_temp ; echo '' >> $tempdir/geo_temp
@@ -2681,9 +2681,9 @@ net_out=$(echo "$line" | cut -d '|' -f 2- | sed 's/^ *//')
 cidr=$(ipcalc -r ${range} | tail -1); echo -e "$cidr  | $net_out\n"; fi
 done < $tempdir/subs >> $tempdir/subnets; else
 cat $tempdir/subs >> $tempdir/subnets; fi
-if [[ $subnets_total -lt 41 ]] ; then
+if [[ $subnets_total -lt 81 ]] ; then
 cat $tempdir/subnets; else
-echo -e "Results have been written to file" ; cat $tempdir/subnets > ${outdir}/SUBNETS.$net_ip.txt ; fi; fi; fi
+echo -e "\nSubnets: Results have been written to file\n" ; cat $tempdir/subnets > ${outdir}/SUBNETS.$net_ip.txt ; fi; fi; fi
 }
 
 f_addressSPACE(){
@@ -3515,7 +3515,7 @@ echo -e "${R} [0]${D} SKIP" ; echo -e -n "\n${B}  ?${D}  "  ; read option_subs
 echo -e "\n${B}Options  >${G2} MX, NS\n"
 echo -e "${B} [1]${D} Check SPAM Blocklists" ; echo -e "${B} [2]${D} Check for unauthorized zonetransfers"
 echo -e "${B} [3]${D} BOTH" ; echo -e "${R} [0]${D} SKIP" ; echo -e -n "\n${B}  ? ${D}  " ; read option_zone ; else
-echo -e "\n${B}Option > ${G2}curl ${B}> ${G2} User Agent ${B}>\n"
+echo -e "\n${B}Option > ${G2}curl ${B}> ${G2} User Agent\n"
 echo -e "${B} [1]${D} default" ; echo -e "${B} [2]${D} $ua_moz" ; echo -e -n "\n${B}  ? ${D}  " ; read option_ua
 if [ $option_ua = "2" ] ; then
 curl_ua="-A $ua_moz" ; else
@@ -3530,7 +3530,7 @@ echo -e "\n${B}Options > ${G2}Subdomains\n"
 echo -e "${B} [1]${D} Subdomains (IPv4)" ; echo -e "${B} [2]${D} Subdomains (IPv4, IPv6)"
 echo -e "${R} [0]${D} SKIP" ; echo -e -n "\n${B}  ?${D}  "  ; read option_subs
 echo -e "\n${B}Name Servers (System Defaults)${D}\n" ; f_systemDNS
-echo -e "\n\n${B}Options > ${G2}Name Servers ${B}>\n"; echo -e "${B} [1]${D} Use system defaults"; echo -e "${B} [2]${D} 9.9.9.9"
+echo -e "\n\n${B}Options > ${G2}Name Servers\n"; echo -e "${B} [1]${D} Use system defaults"; echo -e "${B} [2]${D} 9.9.9.9"
 echo -e "${B} [3]${D} 1.1.1.1"; echo -e "${B} [4]${D} Set custom NS"; echo -e -n "\n${B}  ? ${D}  "; read option_ns
 if [ $option_ns = "2" ] ; then
 dig_array+=(@9.9.9.9); nssrv="@9.9.9.9"
@@ -3743,7 +3743,8 @@ domain_count=$(cat $tempdir/sharedns.txt | wc -l)
 if [[ $domain_count -lt 501 ]] ; then
 dig +noall +answer +noclass +nottlid -f $tempdir/sharedns.txt | sed 's/A/,/' | sed '/NS/d' | sed '/CNAME/d' | tr -d ' ' | sed 's/,/\t/g' |
 tee -a $tempdir/sharedns_hosts.txt ; cat $tempdir/sharedns_hosts.txt >> ${out}
-sort -t . -k 1,1n -k 2,2n -k 3,3n -u >> $tempdir/ip.list ; echo '' | tee -a ${out}
+egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}' $tempdir/sharedns_hosts.txt |
+sort -t . -k 1,1n -k 2,2n -k 3,3n -u > $tempdir/ip.list ; echo '' | tee -a ${out}
 f_Long | tee -a ${out}; echo "[+] pwhois Bulk Lookup" | tee -a ${out}; f_Long | tee -a ${out}
 f_whoisTABLE "$tempdir/ip.list" ; cat $tempdir/whois_table.txt | cut -d '|' -f 1,2,3,4,5 | tee -a ${out} ; echo '' | tee -a ${out}
 cut -d '|' -f 1 $tempdir/whois_table.txt | sed '/AS/d' | sed '/NA/d' | sed '/^$/d' | tr -d ' ' | sort -g -u  >> $tempdir/asnums.list
