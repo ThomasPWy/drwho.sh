@@ -1227,8 +1227,8 @@ sed 's/googletagmanager/GoogleTagManager/' >> $tempdir/google
 grep -o -m 1 'cookiebot' $tempdir/src_scripts | sed 's/cookiebot/Cookiebot/' >> $tempdir/google
 grep -o -m 1 'google.com/recaptcha' $tempdir/src_scripts | sed 's/google.com\/recaptcha/Google_Recaptcha/' >> $tempdir/google
 grep -o 'maps.googleapis.com' $tempdir/src_scripts | head -1 | sed 's/maps.googleapis.com/GoogleMapsAPI/' >> $tempdir/google
-grep -E "src=|href=" $tempdir/page_src | grep 'fonts.googleapis' | grep -soP '(family=).*?(?=\,)' | sed 's/family=/GoogleWebFonts=/'  >> $tempdir/google
-grep -E "src=|href=" $tempdir/page_src | grep 'fonts.googleapis' | grep -soP '(family=).*?(?=\")' | sed 's/family=/GoogleWebFonts=/' >> $tempdir/google
+grep -E "src=|href=" $tempdir/page_src | grep 'fonts.googleapis' | grep -soP '(family=).*?(?=\,)' | cut -d ':' -f 1 |
+sed 's/family=/GoogleWebFonts=/' >> $tempdir/google
 grep -E "src=|href=" $tempdir/page_src | grep -E -o "google_analytics.js" >> $tempdir/google
 google_stuff=$(cat $tempdir/google | sed 's/^ *//' | sed '/^$/d' | sort -ufV | tr '[:space:]' ' ' | sed 's/ /  /g' | sed 's/^ *//' | sed 's/GoogleWebFonts=/GoogleWebFonts: /')
 grep -o -m 1 'umami.js' $tempdir/src_scripts >> $tempdir/webtech; grep -o -m 1 'html5shiv.js' $tempdir/src_scripts >> $tempdir/webtech
@@ -1259,9 +1259,9 @@ echo "Powered by:    $powered_by"; fi
 grep -soP '(name="generator" content=").*?(?=")' $tempdir/page_src | sed 's/name=\"generator\"/Generator:    /' | sed 's/content="//' | awk -F'\"' '{print $1}'
 grep -soP '(name="author" content=").*?(?=")' $tempdir/page_src | sed 's/name=\"author\"/Author:       /' | sed 's/content="//' | awk -F'\"' '{print $1}'
 if [ -n "$x_powered" ] ; then
-echo "X-Powered By: $x_powered"; fi; fi
+echo "X-Powered By:  $x_powered"; fi; fi
 if [ -n "$x_gen" ] ; then
-echo "X-Generator:  $x_gen"; fi
+echo "X-Generator:   $x_gen"; fi
 grep -sioP '(name="copyright" content=").*?(?=")' $tempdir/page_src | sed 's/name=\"copyright\"/Copyright:     /' | sed 's/content="//' | awk -F'\"' '{print $1}'
 grep -sioP '(name="last-modified" content=").*?(?=")' $tempdir/page_src | sed 's/name=\"last-modified\"/Last modified: /' | sed 's/content="//' |
 awk -F'\"' '{print $1}'
@@ -1274,9 +1274,9 @@ if [ -n "$google_a" ] ; then
 echo ''; fi
 echo "Google:        $google_stuff"
 if [ -n "$google_a" ] ; then
-echo -e "\n              Goolge Analytics ID: $google_a\n" ; fi; fi
+echo -e "\n               Goolge Analytics ID: $google_a\n" ; fi; fi
 if [ -n "$rss_feed" ] ; then
-echo "RSSFeed:        $rss_feed" | sed 's/href=//' | tr -d '>'; fi
+echo "RSSFeed:       $rss_feed" | sed 's/href=//' | tr -d '>'; fi
 webtech_other=$(cat $tempdir/webtech | sed 's/^ *//' | sed '/^$/d' | sort -ufV | tr '[:space:]' ' '; echo '')
 if [ -n "$webtech_other" ] ; then
 echo -e "Other:         $webtech_other\n"; fi
@@ -1736,10 +1736,9 @@ jq -r '.[] | { Date: .date, Time: .time, SourcePort: .sourceport, TargetPort: .t
 tr -d '},\"{' | sed 's/^ *//' | sed '/^$/d' | sed 's/Date:/Date:       /g' | sed 's/Time:/Time:       /g' | sed 's/Protocol: 6/Protocol: TCP/g' |
 sed 's/Protocol: 17/Protocol: UDP/g' | sed 's/Protocol:/Protocol:   /g' |
 sed '/Flags:/G' | sed 's/Flags:/Flags:      /g' | sed 's/SourcePort:/SourcePort: /g' | sed 's/TargetPort:/TargetPort: /g' > $tempdir/attacks
-if [ -f $tempdir/attacks ] ; then
+if [[ $(cat $tempdir/attacks | wc -l) -gt 3 ]] ; then
 echo -e "\n\nRecent Incidents (Times, Ports)\n"
-tail -49 $tempdir/attacks ; rm $tempdir/attacks ; fi
-echo  -e "___________________________________________________\n" ; else
+tail -49 $tempdir/attacks ; rm $tempdir/attacks ; fi; else
 echo "+ I.net Storm Center:  No results for $s"; fi
 }
 f_projectHONEYPOT(){
@@ -1748,35 +1747,39 @@ if [ -n "$honeykey" ] ; then
 response=$(dig +short ${honeykey}.${rev}.dnsbl.httpbl.org)
 if [[ -z "$response" ]]; then
 echo "+ Project Honeypot:    No results for $s" ; else
-echo -e "\n\n* PROJECT HONEYPOT \n"
 last_seen=$(echo "$response" | awk -F'.' '{print $2}') ; score=$(echo "$response" | awk -F'.' '{print $3}')
 category=$(echo "$response" | awk -F'.' '{print $4}')
+#fourth octett: agent category
 if [ $category = "0" ] ; then
-agent_cat="Category:                  Search Engine"
+agent_cat="Search Engine"
 elif [ $category = "1" ] ; then
-agent_cat="Category:                  Suspicious"
+agent_cat="Suspicious"
 elif [ $category = "2" ] ; then
-agent_cat="Category:                  Harvester"
+agent_cat="Harvester"
 elif [ $category = "4" ] ; then
-agent_cat="Category:                  Comment Spammer"
+agent_cat="Comment Spammer"
 elif [ $category = "5" ] ; then
-agent_cat="Category:                  Suspicious & Comment Spammer"
+agent_cat="Suspicious & Comment Spammer"
 elif [ $category = "6" ] ; then
-agent_cat="Category:                  Harvester & Comment Spammer" ; fi
+agent_cat="Harvester & Comment Spammer" ; fi
 if [ $category = "0" ] ; then
+#third octett: agent
 if [ $score = "0" ]; then
-third_octett="Agent:                  Undocumented Searchengine"
+third_octett="Undocumented Searchengine"
 elif [ $score = "3" ] ; then
-third_octett="Agent:                  Baidu"
+third_octett="Baidu"
 elif [ $score = "5" ] ; then
-third_octett="Agent:                  Google"
+third_octett="Google"
 elif [ $score = "8" ] ; then
-third_octett="Agent:                  Yahoo" ; else
-third_octett="Agent:                  Searchengine (Miscellaneous)" ; fi ; fi
+third_octett="Yahoo" ; else
+third_octett="Searchengine (Misc.)" ; fi ; fi
+#third octett: threat score
 if ! [ $category = "0" ] ; then
-third_octett="Threat Score:   $score" ; fi
-echo "$agent_cat" ; echo "$third_octett" ; echo -e "Last Seen:      $last_seen  day(s) ago\n" ; fi ; else
-echo -e "\n+ Project Honeypot:    Please provide API key; for more information run option 'h' (help)" ; fi
+third_octett="$score" ; fi
+if [ $category = "0" ] ; then
+echo -e "+ PROJECT HONEYPOT:\n  Category: $agent_cat | Agent: $third_octett | Last Seen: $last_seen  day(s) ago\n"; else
+echo -e "+ PROJECT HONEYPOT:\n  Category: $agent_cat | Threat Score: $third_octett | Last Seen: $last_seen  day(s) ago\n"; fi ; fi ; else
+echo -e "+ Project Honeypot:    API key required; for more information, select option h) 'help'"; fi
 }
 f_greyNOISE(){
 local s="$*"; curl -m5 -s "https://api.greynoise.io/v3/community/$s" > $tempdir/gn.json
@@ -2366,11 +2369,15 @@ if [ $announced_query = "true" ] ; then
 is_lp_query="| less specific: $lp_qu" ; else
 is_lp_query=''; fi
 echo -e "\n             $resource_query | announced: $announced_query $is_lp_query"; fi ; fi 
+if [ $option_detail = "2" ] && [ $target_type = "net" ]; then
+f_getORGNAME "$tempdir/whois"; fi
 if [[ $(echo "$netgeo" | wc -w ) -gt 21 ]]; then
 echo ''; f_Long ; echo "LOCATION" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
-echo -e "Country (whois):\n"; echo -e "$ctry"; echo -e "\nGeolocation (maxmind):\n"; echo "$netgeo" | fmt -w 60; fi
-if [ $option_detail = "2" ] ; then
-f_getORGNAME "$tempdir/whois"; fi
+echo -e "Country (whois):\n"; echo -e "$ctry"
+if [ $target_type = "net" ]; then
+echo -e "\nGeolocation (maxmind):\n"; else
+echo -e "\nNetwork Geolocation (maxmind):\n"; fi
+echo "$netgeo" | fmt -w 60; fi
 if [ $target_type = "net" ] ; then
 query="$s"; export query
 if [ $rir = "arin" ]; then
