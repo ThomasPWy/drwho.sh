@@ -1066,7 +1066,7 @@ sed 's/https443/443\/HTTPS\n/g' | sed 's/http9090/\n8080\/HTTP\n/g' | sed 's/htt
 sed 's/  IP:/*/g'  > $tempdir/banners.txt; echo '' >> $tempdir/banners.txt
 if [ $target_type = "net" ] ; then
 cat $tempdir/banners.txt | sed '/./,$!d'; else
-f_Long; echo -e "BANNERS\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; cat $tempdir/banners.txt | sed '/./,$!d'
+f_Long; echo "BANNERS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; cat $tempdir/banners.txt | sed '/./,$!d'
 if [ $target_type = "default" ] ; then
 http80_server=$(jq -r '.http80.server' $tempdir/banners.json | sed '/null/d')
 http80_title=$(jq -r '.http80.title' $tempdir/banners.json | sed '/null/d')
@@ -1105,7 +1105,7 @@ timeout 3 ${PATH_lynx} -accept_all_cookies -dump -listonly -nonumbers ${eff_url}
 cat $tempdir/linkdump_raw | sort -f -u | sed '/Sichtbare Links:/d' | sed '/Versteckte Links:/d' |
 sed '/[Vv]isible [Ll]inks:/d' | sed '/[Hh]idden [Ll]inks:/d' > $tempdir/linkdump.txt ; fi
 if [ $domain_enum = "true" ] && [ -n "$PATH_lynx" ]; then
-curl -s https://api.hackertarget.com/pagelinks/?q=${s}${api_key_ht} > $tempdir/linkdump.txt; fi 
+curl -s https://api.hackertarget.com/pagelinks/?q=${s}${api_key_ht} >> $tempdir/linkdump.txt; fi 
 cat $tempdir/linkdump.txt | sort -u >> $tempdir/LINKS.${s}.txt ; fi
 grep -E "^http:.*|^https:.*|^www.*|" $tempdir/linkdump.txt > $tempdir/linkdump
 cat $tempdir/LINKS.${s}.txt >> ${outdir}/LINK_DUMP.${s}.txt
@@ -1354,11 +1354,11 @@ f_Long ; echo -e "WEB BEACONS\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' ; echo "$
 sed 's/<\/noscript/\n<\/noscript/g' | sed 's/src=/\nscr=/g'  | sed 's/^[ \t]*//;s/[ \t]*$//' ; fi ; fi ; fi
 if [ -f $tempdir/humans.txt ] ; then
 if [[ $(cat $tempdir/humans.txt | wc -l) -lt 15 ]] ; then
-f_Long ; echo -e "HUMANS.TXT\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
+echo ''; f_Long ; echo -e "HUMANS.TXT\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 cat $tempdir/humans.txt; fi ; fi
 if [ -f $tempdir/robots.txt ] ; then
 if [[ $(cat $tempdir/robots.txt | wc -l) -lt 20 ]] ; then
-f_Long ; echo -e "ROBOTS.TXT\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
+echo ''; f_Long ; echo -e "ROBOTS.TXT\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 cat $tempdir/robots.txt; fi ; fi
 if [ $domain_enum = "false" ] ; then
 f_DNSWhois_STATUS "${s}" ; fi ; fi ; echo ''
