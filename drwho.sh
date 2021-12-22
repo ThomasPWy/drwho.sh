@@ -4247,7 +4247,7 @@ echo "$input" > $tempdir/nets.list ; nets="$tempdir/nets.list" ; fi
 if [ $report = "true" ] && [ $set_output = "true" ] ; then
 echo -e -n "\n${B}Option > ${D}Set Custom Name for Output File ${B}[y] | [n]  ?${D}  " ; read option_filename
 if [ $option_filename = "y" ] ; then
-echo -e -n "\n${B}Set    > ${D}OUTPUT - FILE NAME ${B}>>${D}  " ; read filename
+echo -e -n "\n${B}Output > ${G2}OUTPUT - FILE NAME ${B}>>${D}  " ; read filename
 out="${outdir}/$filename.txt" ; else
 out="$out" ; fi ; fi
 if [ $option_enum = "4" ] ; then
@@ -4279,9 +4279,9 @@ if [ $option_enum = "3" ] ; then
 out="${outdir}/NET_ENUM.${net_ip}.txt"; f_whoisNET "${x}" | tee -a ${out}; fi
 if [ $option_enum = "2" ] ; then
 out="${outdir}/NET_REPORT_FULL.${net_ip}.txt"; f_whoisNET "${x}" | tee -a ${out}
-echo '' | tee -a ${out}; f_Long | tee -a ${out}; echo -e "DATE:    $(date)\n" | tee -a ${out}
-echo -e "SOURCES: DNS lookup, hackertarget.com IP API, RIPEstat Data API, whois.ripe.net\n" | tee -a ${out}
-echo -e "         port scanning: false\n" | tee -a ${out} ; fi
+echo '' | tee -a ${out}; f_Long | tee -a ${out}; echo -e "DATE:     $(date)\n" | tee -a ${out}
+echo -e "SOURCES:  DNS lookup, hackertarget.com IP API, RIPEstat Data API, whois.ripe.net\n" | tee -a ${out}
+echo -e "          port scanning: false\n" | tee -a ${out} ; fi
 if [ $option_enum = "5" ] ; then
 if [ $option_filename = "n" ] ; then
 out="${outdir}/REV_DNS.${net_ip}.txt" ; fi
@@ -4316,6 +4316,7 @@ echo '' ; f_removeDir ; f_Menu
 ;;
 p|ports|portscan|nmap) echo '' ; f_Long; f_options_P ;;
 t|trace|traceroute|rpki|mtu) echo '' ; f_Long; f_options_T ;;
+w|who|whois) echo '' ; f_Long; f_optionsWHOIS ;;
 #************** WEB SERVER OPTIONS *******************
 web|webserver|webservers|website|ssl|tls|www)
 f_makeNewDir; f_Long; domain_enum="false"; option_detail="1"; blocklists="$blocklists_host" ; target_type="web"; option_authns="0"
