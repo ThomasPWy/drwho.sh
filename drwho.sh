@@ -274,7 +274,7 @@ echo -e "\n"; f_Long
 if  [ $option_www = "1" ] ; then
 headline="WEB SERVER HEALTH CHECK"
 elif [ $option_www = "3" ] ; then
-headline="WEB SITE OVERVIEW"; else
+headline="WEBSITE OVERVIEW"; else
 headline="WEB SERVER TESTING"; fi
 echo "[+]  $headline | UTC: $(date --utc)" ; f_Long
 curl -s "http://ip-api.com/json/?fields=54537985" > $tempdir/local.json
@@ -762,7 +762,7 @@ if ! [ $option_detail = "2" ] ; then
 echo -e "ORG: $org_id" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 sed -n '/organisation:/,/organisation:/p' ${s} | grep -E -a -m 1 -A 12 "^org-name" > $tempdir/temp
 o_name=$(grep -E -a -m 1 "^org-name:" $tempdir/temp | cut -d ':' -f 2- | sed 's/^ *//')
-o_addr=$(grep -E -a "^address:" $tempdir/temp | cut -d ':' -f 2- | sed 's/^ *//' | tr '[:space:]' ' ')
+o_addr=$(grep -E -a "^address:" $tempdir/temp | sed '/*\*\*\*\*/d' | cut -d ':' -f 2- | sed 's/^ *//' | tr '[:space:]' ' ')
 o_ph=$(grep -E -a -m 1 "^phone:" $tempdir/temp | cut -d ':' -f 2- | sed 's/^ *//')
 if [ $target_type = "other" ] ; then
 echo -e "$o_name  $o_ph" ; else
@@ -771,8 +771,8 @@ if ! [ $target_type = "other" ] ; then
 echo -e "$o_ph\n"; fi ; echo -e "$o_addr\n" ; else
 echo -e "ORG: $org_id, $org_type" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; whois -h whois.$rir.net -- "-B $org_id" > $tempdir/org_whois
 sed -n '/organisation:/,/organisation:/p' $tempdir/org_whois | grep -E -a -s "^org-name:|^role:|^person:|^address:|^phone:|^e-mail:" |
-sed '/org-name:/a nnn' | sed '/phone:/i nnn' | sed '/person:/i nnn' | sed '/role:/i nnn' | sed '/mntner:/i nnn' | sed '/e-mail:/i nnn' |
-cut -d ':' -f 2- | sed 's/^ *//' | tr '[:space:]' ' ' | sed 's/nnn /\n\n/g' ; echo '' ; fi; fi
+sed '/*\*\*\*\*/d' | sed '/org-name:/a nnn' | sed '/phone:/i nnn' | sed '/person:/i nnn' | sed '/role:/i nnn' | sed '/mntner:/i nnn' |
+sed '/e-mail:/i nnn' | cut -d ':' -f 2- | sed 's/^ *//' | tr '[:space:]' ' ' | sed 's/nnn /\n\n/g' ; echo '' ; fi; fi
 }
 f_ADMIN_C(){
 local admin="$*"; echo -e "ADMIN-C: $admin\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
@@ -1056,18 +1056,17 @@ local s="$*" ; curl -s https://api.hackertarget.com/bannerlookup/?q=${s}${api_ke
 jq -r '{IP: .ip, SSH: .ssh, FTP: .ftp, Telnet: .telnet, http80_Server: .http80.server, http80_Title: .http80.title, RDP: .rdp, https443_Server: .https443.server, https443_Title: .https443.title, https443_CN: .https443.cn, https443_Org: .https443.o, http8080_Server: .http8080.server, http8080_Title: .http8080.title, https8443_Server: .https8443.server, https8443_Title: .https8443.title, https8443_CN: .https8443.cn}' $tempdir/banners.json | tr -d '{,"}' | sed 's/^ *//' | sed '/^$/d' |
 sed 's/Server: null/Server: unknown/g' | sed '/null/d' | sed '/^$/d' | sed 's/http8080_Server:/http9090_Server:/g' |
 sed 's/https8443_Server:/https9553_Server:/g' | sed 's/http80_Title:/| Title:/g' | sed 's/https443_Title:/| Title:/g' | sed 's/https443_CN:/| CN:/g' |
-sed 's/https443_Org:/| Org:/g' | sed 's/http8080_Title:/| Title:/g' | sed 's/https8443_Title:/|Title:/g' |
-sed 's/https8443_CN:/| CN:/g' | tr '[:space:]' ' ' | sed 's/RDP:/\nRDP:/g' | sed 's/Telnet:/\nTelnet:/g' | sed 's/https443/\n\https443/g' |
-sed 's/http80/\n\http80/g' | sed 's/http9090/\n\http9090/g' | sed 's/https9553/\n\https9553/g' | sed 's/IP:/\n\IP:/g' | sed 's/FTP:/\n\FTP:/g' |
-sed 's/SSH:/\n\SSH:/g' | sed 's/RDP:/\nRDP:/g' | sed 's/Teknet:/\nTelnet:/g' | sed 's/unknown |/un|/g' | sed '/unknown/d' | sed 's/_Server:/ Server:/g' |
-sed 's/http80/\nhttp80/g' | sed 's/https443/\nhttps443/g' | sed 's/http9090/\nhttp9090/g' | sed 's/FTP:/\nFTP:/g' | sed 's/SSH:/\nSSH:/g' |
-sed 's/IP:/\n\nIP:/g' | sed 's/server: //g' | sed 's/Server: un| //g' | sed 's/http80/80\/HTTP/g' | sed 's/https443/443\/HTTPS/g' |
-sed 's/http9090/9090\/HTTP/g' | sed 's/https9553/9553\/HTTP/g'  | sed 's/IP:/*/g' | sed 's/9090\/HTTP/8080\/HTTP/g' |
-sed 's/9553\/HTTP/8443\/HTTP/g' > $tempdir/banners.txt
-echo '' >> $tempdir/banners.txt
+sed 's/https443_Org:/| Org:/g' | sed 's/http8080_Title:/| Title:/g' | sed 's/https8443_Title:/| Title:/g' |
+sed 's/https8443_CN:/| CN:/g' | tr '[:space:]' ' ' | sed 's/RDP:/\nRDP:/g' | sed 's/Telnet:/\nTelnet:/g' | sed 's/https443/\nhttps443/g' |
+sed 's/http80/\nhttp80/g' | sed 's/http9090/\nhttp9090/g' | sed 's/https9553/\nhttps9553/g' | sed 's/IP:/\nIP:/g' | sed 's/FTP:/\nFTP:/g' |
+sed 's/SSH:/\nSSH:/g' | sed 's/RDP:/\nRDP\n/g' | sed 's/Telnet:/\nTelnet\n/g' | sed 's/unknown |/un|/g' | sed '/unknown/d' |
+sed 's/_Server:/ Server:/g' | sed 's/http80/\nhttp80/g' | sed 's/https443/\nhttps443/g' | sed 's/FTP:/\nFTP\n/g' | sed 's/SSH:/\nSSH\n/g' |
+sed 's/IP:/\n\nIP:/g' | sed 's/server: //g' | sed 's/Server: un| //g' | sed 's/server://g' | sed 's/http80/80\/HTTP\n/g' |
+sed 's/https443/443\/HTTPS\n/g' | sed 's/http9090/\n8080\/HTTP\n/g' | sed 's/https9553/\n8443\/HTTPS\n/g' | sed 's/^ *//' | sed 's/^/  /g' |
+sed 's/  IP:/*/g'  > $tempdir/banners.txt; echo '' >> $tempdir/banners.txt
 if [ $target_type = "net" ] ; then
-cat $tempdir/banners.txt; else
-f_Long; echo "BANNERS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; cat $tempdir/banners.txt | sed '/./,$!d'
+cat $tempdir/banners.txt | sed '/./,$!d'; else
+f_Long; echo -e "BANNERS\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; cat $tempdir/banners.txt | sed '/./,$!d'
 if [ $target_type = "default" ] ; then
 http80_server=$(jq -r '.http80.server' $tempdir/banners.json | sed '/null/d')
 http80_title=$(jq -r '.http80.title' $tempdir/banners.json | sed '/null/d')
@@ -1135,7 +1134,6 @@ rm $tempdir/robots.txt ; rm $tempdir/robots; else
 rm  $tempdir/robots; cat $tempdir/robots.txt >> $tempdir/cms
 f_Long >> ${outdir}/ROBOTS.${x}.txt ; cat $tempdir/robots.txt >> ${outdir}/ROBOTS.${x}.txt ; fi ; fi
 }
-
 f_PAGE(){
 local s="$*" ; echo ''
 if [ $option_connect = "0" ] ; then
@@ -1230,13 +1228,16 @@ grep -o 'maps.googleapis.com' $tempdir/src_scripts | head -1 | sed 's/maps.googl
 grep -E "src=|href=" $tempdir/page_src | grep 'fonts.googleapis' | grep -soP '(family=).*?(?=\,)' | cut -d ':' -f 1 |
 sed 's/family=/GoogleWebFonts=/' >> $tempdir/google
 grep -E "src=|href=" $tempdir/page_src | grep -E -o "google_analytics.js" >> $tempdir/google
-google_stuff=$(cat $tempdir/google | sed 's/^ *//' | sed '/^$/d' | sort -ufV | tr '[:space:]' ' ' | sed 's/ /  /g' | sed 's/^ *//' | sed 's/GoogleWebFonts=/GoogleWebFonts: /')
+google_stuff=$(cat $tempdir/google | sed 's/^ *//' | sed '/^$/d' | sort -ufV | tr '[:space:]' ' ' | sed 's/ /  /g' |
+sed 's/^ *//' | sed 's/GoogleWebFonts=/GoogleWebFonts: /')
 grep -o -m 1 'umami.js' $tempdir/src_scripts >> $tempdir/webtech; grep -o -m 1 'html5shiv.js' $tempdir/src_scripts >> $tempdir/webtech
 grep -o 'xmlrpc.php' $tempdir/page_src >> $tempdir/webtech
 grep 'rel="stylesheet"' $tempdir/page_src | grep -o font-awesome | sed 's/font-awesome/FontAwesome/g' > $tempdir/fonta
 grep -E -o "<i class=\"fas|<i class=\"fab|<i class=\"fa" $tempdir/page_src | sed 's/<i class=\"fas/FontAwesome/g' |
 sed 's/<i class=\"fab/FontAwesome/g' | sed 's/<i class=\"fa/FontAwesome/g' | tail -1  >> $tempdir/fonta
 grep -E "src=|href=" $tempdir/page_src | grep -soP '(type=").*?(?=")' | grep -E -o "text/\b[A-Za-z0-9.+]{1,30}\b|application/\b[A-Za-z0-9.+]{1,30}\b" |
+sed 's/^ *//' | sed '/^$/d' >> $tempdir/mime_types
+grep -soP '(type=").*?(?=")' $tempdir/src_scripts | grep -E -o "text/\b[A-Za-z0-9.+]{1,30}\b|application/\b[A-Za-z0-9.+]{1,30}\b" |
 sed 's/^ *//' | sed '/^$/d' >> $tempdir/mime_types
 if [[ $(cat $tempdir/fonta | wc -l) -gt 2 ]] ; then
 cat $tempdir/fonta | sort -u | tail -1 >> $tempdir/webtech; fi
@@ -1250,9 +1251,9 @@ rss_feed=$(grep -i 'application/rss+xml' $tempdir/page_src | grep -E -o "href=*.
 f_Long ; echo -e "MARKUP" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 echo "Doctype:       $doctype"
 grep -sioP '(meta charset=").*?(?=")' $tempdir/page_src | sed 's/meta charset=\"/Charset:       /'
-head -15 $tempdir/page_src | grep -sioP '(lang=").*?(?=")' $tempdir/page_src | sed 's/lang=\"/Language:      /'
 if [ -f $tempdir/ww.txt ] ; then
 f_wwMARKUP ; else
+head -15 $tempdir/page_src | grep -sioP '(lang=").*?(?=")' $tempdir/page_src | head -1 | sed 's/lang=\"/Language:      /'
 powered_by=$(grep -A 5 '<!--' $tempdir/page_src | grep -i 'powered by' | sed 's/By/by/' | awk -F'by' '{print $2}' | awk '{print $1}')
 if [ -n "$powered_by" ] ; then
 echo "Powered by:    $powered_by"; fi
@@ -1293,6 +1294,10 @@ page_descr=$(grep -siP '(name="description" content=").*?(?=")' $tempdir/page_sr
 page_keyw=$(grep -siP '(name="keywords" content=").*?(?=")' $tempdir/page_src | awk -F'content=\"' '{print $2}' | awk -F'\"' '{print $1}' | sed 's/,/ /g')
 if [ -n "$page_descr" ] ; then
 f_Long; echo -e "DESCRIPTION" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; echo -e "$page_descr\n" | fmt -w 60 -s ; fi
+if [ -n "$page_keyw" ] ; then
+if [ -n "$page_descr" ] ; then
+echo ''; fi
+echo -e "KEYWORDS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; echo "$page_keyw" | fmt -w 60 -s ; fi
 og_locale=$(cat $tempdir/page_src | grep -soP '(property=\"og:locale).*?(?=/>)' | grep -soP '(content=\").*?(?=\")' |
 sed 's/content=\"/Locale: /')
 og_type=$(cat $tempdir/page_src | grep -soP '(property=\"og:type).*?(?=/>)' | grep -soP '(content=\").*?(?=\")' | sed 's/content=\"/Type: /')
@@ -1307,11 +1312,6 @@ sed 's/content=\"/\nDescription:\n\n/' | sed 's/^ *//' >> $tempdir/ograph
 if [[ $(cat $tempdir/ograph | wc -w) -gt 1 ]] ; then
 f_Long; echo -e "OPEN GRAPH PROTOCOL" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 cat $tempdir/ograph | fmt -s -w 60; fi
-if [ -n "$page_keyw" ] ; then
-if [ -n "$page_descr" ] || [[ $(cat $tempdir/ograph | wc -w) -gt 1 ]] ; then
-echo '' ; else
-f_Long; fi
-echo -e "KEYWORDS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; echo "$page_keyw" | fmt -w 60 -s ; fi
 echo ''; cat $tempdir/page.html > $tempdir/pages; f_linkDUMP "${s}"
 curl -sLk ${curl_ua} ${targetURL} >> $tempdir/pages
 curl -sLk ${curl_ua} ${targetURL}/impressum >> $tempdir/pages
@@ -1374,7 +1374,7 @@ echo -e "Doctype:       $doctype" ; fi
 grep -s -oP -m 1 '(Script\[).*?(?=\])' $tempdir/ww.txt | sed 's/\[/:        /' | sed 's/,/, /g'
 jqu=$(grep -s -oP '(JQuery\[).*?(?=\,)' $tempdir/ww.txt )
 if [ -n "$jqu" ] ; then
-echo -e "jQuery:        $jqu" ; fi ; echo '' ; fi
+echo -e "jQuery:        $jqu" ; fi ; echo ''
 grep -s -oP -m 1 '(Content-Language\[).*?(?=\])' $tempdir/ww.txt | sed 's/Content-Language\[/Language:      /' | tr -d ']'
 grep -oP '(Meta-Author\[).*?(?=,)' $tempdir/ww.txt | sed 's/Meta-Author\[/Author:        /' | tr -d '][' | sed 's/^ *//'
 grep -s -oP '(PasswordField\[).*?(?=\])' $tempdir/ww.txt | sed 's/PasswordField\[/PasswdField:   /' | tr -d ']'
@@ -1403,7 +1403,7 @@ grep -s -oP '(Cookies\[).*?(?=\])' $tempdir/ww.txt | sed 's/\[/:  /' | tr -d '][
 grep -s -oP '(HttpOnly\[).*?(?=\])' $tempdir/ww.txt | sed 's/\[/:  /' | tr -d ']['  >> $tempdir/sec_headers_ww
 if [ -f $tempdir/sec_headers_ww ] || [ -n "$uncommon_headers" ] ; then
 f_Long ; echo -e "UNCOMMON & SECURITY HEADERS\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
-echo "$uncommon_headers"; cat $tempdir/sec_headers_ww; rm  $tempdir/sec_headers_ww; fi ; fi
+echo "$uncommon_headers"; cat $tempdir/sec_headers_ww; rm  $tempdir/sec_headers_ww; fi ; fi ; fi
 }
 f_htmlCOMMENTS(){
 local s="$*"
@@ -1447,14 +1447,14 @@ sed -n '/Subject:/,/Issuer:/p' $tempdir/sslscn | sed '/Issuer:/d' | sed 's/Subje
 sed 's/Altnames:/\n\nAltnames:\n\n/' | sed 's/DNS://g' | sed 's/^ *//' | fmt -s -w 80 ; fi ; fi; fi
 }
 f_testSSL(){
-local s="$*" ; target=$(echo $s | sed 's/www.//')
+local s="$*"
 if ! [ $option_testSSL = "0" ] ; then
 declare -a testssl_array=()
 if [ $option_testSSL = "1" ] ; then
 testssl_array+=(--sneaky --phone-out --quiet --warnings off --color 0 -S)
 if [ -z "$PATH_sslscan" ]; then
 testssl_array+=(-p -E); fi
-${PATH_testssl} ${testssl_array[@]} $target | sed 's/^[ \t]*//;s/[ \t]*$//' > $tempdir/testtls
+${PATH_testssl} ${testssl_array[@]} $s | sed 's/^[ \t]*//;s/[ \t]*$//' > $tempdir/testtls
 grep -E "^Start|Common Name|DB|OCSP URI|Transparency|Certificates provided|^Chain of|^Trust" $tempdir/testtls |
 sed '/Start/i \\n_______________________________________________________________________________\n' |
 sed '/Common Name (CN)/{x;p;x;G}' | sed 's/Common Name (CN)             /CN: /g' | sed 's/(CN in response/\n(CN in response/g' | sed 's/^ *//' |
@@ -1463,7 +1463,7 @@ sed '/Chain/G' | sed '/SHA256/d' | sed '/ordered by encryption strength/G' |
 sed '/Testing ciphers/i \\n______________________________________________________________________________\n'
 elif [ $option_testSSL = "2" ] ; then
 testssl_array+=(--sneaky --phone-out --quiet --warnings off --color 0 -S -p)
-${PATH_testssl} ${testssl_array[@]} $target | sed 's/^[ \t]*//;s/[ \t]*$//' > $tempdir/testtls
+${PATH_testssl} ${testssl_array[@]} $s | sed 's/^[ \t]*//;s/[ \t]*$//' > $tempdir/testtls
 grep -E "^Start|Common Name|OK|DB|OCSP URI|Transparency|Certificates provided|^Chain of|^Trust" $tempdir/testtls |
 sed '/Start/i \\n___________________________________________________________\n' |
 sed '/Common Name (CN)/i \\n___________________________________________________________\n' |
@@ -1478,7 +1478,7 @@ testssl_array+=(--ids-friendly --warnings off --phone-out --quiet --color 0 -B -
 if [ -z "$PATH_sslscan" ]; then
 testssl_array+=(-E); fi ; fi
 if [ $option_testSSL = "3" ] || [ $option_testSSL = "4" ] ; then
-${PATH_testssl} ${testssl_array[@]} $target | sed 's/^[ \t]*//;s/[ \t]*$//' > $tempdir/testtls
+${PATH_testssl} ${testssl_array[@]} $s | sed 's/^[ \t]*//;s/[ \t]*$//' > $tempdir/testtls
 cat $tempdir/testtls |
 grep -E "Start|offered|^Trust|^Chain of|^Common Name|DB|Resumption|^Elliptic curves offered:|^DH group offered:|clock skew|Compression|^Client Authentication|URI|transparency|provided|hostname|Issuer|vulnerable|supported|compression|Intermediate|<--|^SSLv.*|TLSv.*|^TLS 1|^TLS 1\.*|^xc.*|KeyExch\.|------|^Testing ciphers per protocol|Running client simulations" |
 sed '/Start/i \\n_______________________________________________________________________________\n' | sed 's/SSLv2/\n\nSSLv2/g' | sed '/SSLv3/G' |
@@ -2336,8 +2336,7 @@ curl -s "https://stat.ripe.net/data/prefix-overview/data.json?resource=${s}" > $
 resource=$(jq -r '.data.resource' $tempdir/pov.json); num_related=$(jq -r '.data.actual_num_related' $tempdir/pov.json)
 announced=$(jq -r '.data.announced' $tempdir/pov.json); lp=$(jq -r '.data.is_less_specific' $tempdir/pov.json)
 if [ $announced = "true" ] ; then
-as=$(jq -r '.data.asns[0].asn' $tempdir/pov.json); export as; is_lp="| less specific: $lp" ; else
-is_lp=''; fi
+as=$(jq -r '.data.asns[0].asn' $tempdir/pov.json); export as; fi
 curl -s "https://stat.ripe.net/data/maxmind-geo-lite/data.json?resource=${geo_target}" > $tempdir/netgeo.json
 netgeo=$(jq -r '.data.located_resources[].locations[] | .country' $tempdir/netgeo.json | sort -u | tr '[:space:]' ' ' ; echo '')
 if [ -n "$net_resource" ] ; then
@@ -2360,15 +2359,12 @@ if [ -n "$descr" ] ; then
 echo -e "\nDescr:       $descr" ; fi
 if [ -f $tempdir/pov2.json ]; then
 echo ''; fi
-echo -e "\nPrefix:      $resource | announced: $announced | related prefixes: $num_related $is_lp"
+echo -e "\nPrefix:      $resource | announced: $announced | related prefixes: $num_related"
 if [ -f $tempdir/pov2.json ]; then
 resource_query=$(jq -r '.data.resource' $tempdir/pov2.json)
 if ! [ "$resource" = "$resource_query" ] ; then 
-lp_qu=$(jq -r '.data.is_less_specific' $tempdir/pov2.json); announced_query=$(jq -r '.data.announced' $tempdir/pov2.json)
-if [ $announced_query = "true" ] ; then
-is_lp_query="| less specific: $lp_qu" ; else
-is_lp_query=''; fi
-echo -e "\n             $resource_query | announced: $announced_query $is_lp_query"; fi ; fi 
+announced_query=$(jq -r '.data.announced' $tempdir/pov2.json)
+echo -e "\n             $resource_query | announced: $announced_query"; fi ; fi 
 if [ $option_detail = "2" ] && [ $target_type = "net" ]; then
 f_getORGNAME "$tempdir/whois"; fi
 if [[ $(echo "$netgeo" | wc -w ) -gt 21 ]]; then
@@ -2385,7 +2381,7 @@ f_ORG "$tempdir/whois" ; else
 if [ $option_detail = "1" ] || [ $option_detail = "3" ]; then
 echo '' ; f_ORG "$tempdir/whois"
 ac=$(grep -E "^admin-c:" $tempdir/whois | cut -d ':' -f 2- | sed 's/^ *//' | head -1); f_Long; f_ADMIN_C "${ac}" ; else
-f_getWHOIS "${s}" ; f_POC "$tempdir/whois.txt" ; fi; fi
+f_getWHOIS "${s}" ; f_POC "$tempdir/whois.txt" ; fi; fi ; echo ''
 if [ -n "$announced_query" ] ; then
 if [ $announced = "true" ] && [ $announced_query = "true" ] ; then
 f_PREFIX "$(jq -r '.data.resource' $tempdir/pov2.json)"; fi ; fi
@@ -2417,7 +2413,7 @@ f_nmapSL "${s}"; fi
 if  [ $option_netdetails3 = "3" ] ; then
 f_RevDNS "${s}" ; fi ; fi
 if [ $option_netdetails4 = "1" ] ; then
-echo ''; f_Long; echo "BANNERS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
+echo ''; f_Long; echo -e "BANNERS\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 f_BANNERS "${s}" ; fi
 if [ $option_netdetails2 = "2" ] || [ $option_netdetails2 = "3" ]; then
 if [ $rir = "ripe" ] ; then
@@ -2469,17 +2465,17 @@ f_Long; echo "CONTACT" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' ; else
 f_Shorter; grep -s -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" ${s} | sort -u; f_Shorter; fi
 if [[ $(grep -s -w -c '^org-name:' $s ) -gt "0" ]] ; then
 echo '' ; sed -e '/./{H;$!d;}' -e 'x;/organisation:/!d' $s |
-sed -n '/organisation:/,/organisation:/p' | grep -E -a -s "^org-name:|^address:|^phone:|^e-mail:" |
+sed -n '/organisation:/,/organisation:/p' | grep -E -a -s "^org-name:|^address:|^phone:|^e-mail:" | sed '/*\*\*\*\*/d' |
 sed '/org-name:/a nnn' | sed '/phone:/i nnn' | sed '/e-mail:/i nnn' | cut -d ':' -f 2- | sed 's/^ *//' | tr '[:space:]' ' ' |
 sed 's/nnn /\n/g' ; echo '' ; fi
 if [[ $(grep -s -w -c '^role:' $s ) -gt "0" ]] ; then
-sed -e '/./{H;$!d;}' -e 'x;/role:/!d' $s | grep -E -a "^role:|^address:|^phone:|^nic-hdl:" |
+sed -e '/./{H;$!d;}' -e 'x;/role:/!d' $s | grep -E -a "^role:|^address:|^phone:|^nic-hdl:" | sed '/*\*\*\*\*/d' |
 sed '/role:/a nnn' | sed '/role:/i nnn' | sed '/phone:/i nnn' | sed '/e-mail:/i nnn' | sed '/nic-hdl:/i nnn' |
 sed '/nic-hdl:/a nnn' | cut -d ':' -f 2- | sed 's/^ *//' | tr '[:space:]' ' ' | sed 's/nnn /\n/g'
 if [[ $(grep -s -w -c '^person:' $s ) -gt "0" ]] ; then
 echo '' ; fi ; fi
 if [[ $(grep -s -w -c '^person:' $s ) -gt "0" ]] ; then
-sed -e '/./{H;$!d;}' -e 'x;/person:/!d' $s | grep -E -a "^person:|^address:|^phone:|^e-mail:|^nic-hdl:" |
+sed -e '/./{H;$!d;}' -e 'x;/person:/!d' $s | grep -E -a "^person:|^address:|^phone:|^e-mail:|^nic-hdl:" | sed '/*\*\*\*\*/d' |
 sed '/person:/a nnn' | sed '/person:/i nnn' | sed '/phone:/i nnn' | sed '/e-mail:/i nnn' | sed '/nic-hdl:/i nnn' |
 sed '/nic-hdl:/a nnn' | cut -d ':' -f 2- | sed 's/^ *//' | tr '[:space:]' ' ' | sed 's/nnn /\n/g' ; echo ''
 sed -e '/./{H;$!d;}' -e 'x;/person:/!d' $s | grep -a -s "^nic-hdl" | sed '/^$/d' |
@@ -2575,7 +2571,7 @@ sed '/ro:/{x;p;x;}' | cut -d ':' -f 2- | sed 's/^ *//' ; done ; fi ; fi
 f_domainNETS(){
 local s="$*" ; net_ip=$(echo $s | cut -d '/' -f 1) ; echo '' >> $tempdir/domain_nets ; f_getRIR "${s}"
 if [ $rir = "lacnic" ] ; then
-whois -h whois.lacnic.net ${s} > $tempdir/whois.txt ; f_lacniWHOIS "$tempdir/whois.txt" ; else 
+whois -h whois.lacnic.net ${s} > $tempdir/whois.txt ; f_lacnicWHOIS "$tempdir/whois.txt" ; else 
 if [ $rir = "arin" ] ; then
 whois -h whois.$rir.net ${s} > $tempdir/whois.txt ; else
 whois -h whois.$rir.net -- "-B ${s}" > $tempdir/whois.txt ; fi
@@ -2650,8 +2646,6 @@ echo "$locations" | jq -r '{N: .resources[], Lat: .latitude, Lon: .longitude, co
 tr -d '{,"}' | sed 's/^ *//' | sed '/^$/d' | tr '[:space:]' ' ' | sed 's/N: /\n\n/g' | sed 's/ Lon: /\,/g' | sed 's/Lat:/ -  Lat\/Lon:/g' |
 sed 's/cov:/(covered:/g' | sed 's/Country:/%) | Country:/g' | sed 's/C://g' >> $tempdir/geo_temp ; echo '' >> $tempdir/geo_temp
 if [[ $netcount -gt "3" ]] ; then
-echo -e "_______________\n" >> $tempdir/geo_temp ; cat $tempdir/nets_geo.list >> $tempdir/geo_temp  ; fi
-if [[ $netcount -gt "3" ]] ; then
 echo -e "\n_______________________________________\n" >> $tempdir/geo_temp
 cat $tempdir/nets_geo.list | tr '[:space:]' ' ' | fmt -s -w 40 | sed 's/ /  /g' | sed 's/^ *//' >> $tempdir/geo_temp
 echo '' >> $tempdir/geo_temp ; fi
@@ -2692,7 +2686,6 @@ if [[ $subnets_total -lt 81 ]] ; then
 cat $tempdir/subnets; else
 echo -e "\nSubnets: Results have been written to file\n" ; cat $tempdir/subnets > ${outdir}/SUBNETS.$net_ip.txt ; fi; fi; fi
 }
-
 f_addressSPACE(){
 local s="$*" ; net=`echo "$s" | cut -d '/' -f 1`
 if [[ ${net} =~ $REGEX_IP4 ]] ; then
@@ -2921,7 +2914,7 @@ echo -e "\nASN:          $s  | $as_name\n" ; else
 f_AS_WHOIS "${s}" ; fi
 }
 f_ROUTE_CONS(){
-local s="$*"; f_Long ; echo "BGP-WHOIS CONSISTENCY: PREFIXES" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
+local s="$*"; f_Long ; echo "BGP-WHOIS CONSISTENCY" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 curl -s "https://stat.ripe.net/data/prefix-routing-consistency/data.json?resource=${s}" > $tempdir/rc.json
 jq -r '.data.routes[] | {Pfx: .prefix, AS: .origin, N: .asn_name, BGP: .in_bgp, WHOIS: .in_whois}' $tempdir/rc.json | tr -d '{",}' | sed 's/^ *//' |
 sed '/^$/d' | tr '[:space:]' ' ' | sed 's/Pfx: /\n\n/g' | sed 's/AS:/ | AS/g' | sed 's/N: /, /g' | sed 's/BGP:/| BGP:/g' |
@@ -3234,20 +3227,20 @@ echo -e " ${B}[b]${D}  Back to the Global ${G2}Options Menu${D}\n"
 }
 f_optionsHOSTSv4(){
 echo -e "\n ${B}Options > IP ADDRESS INFORMATION  ${G2}(IPV4)\n"
-echo -e " ${B}[1]${D}  Hostname / IPv4 Address ${bold}Overview${D} (Geolocation, DNS, Prefix, Whois Summary)"
-echo -e " ${B}[2]${D}  ${bold}Customize${D} Options (e.g. Banners, IP Reputation, Contact or Network Details)"
-echo -e " ${B}[3]${D}  Send TestPing via hackertarget.com API (API key required)"
+echo -e " ${B}[1]${D}  Hostname / IPv4 Address ${bold}Overview${D}"
+echo -e " ${B}[2]${D}  ${bold}Customize${D} Options"
+echo -e " ${B}[3]${D}  Send TestPing via hackertarget.com IP API (API key required)"
 echo -e " ${B}[4]${D}  Virtual Hosts"
 echo -e " ${B}[b]${D}  Back to the Global ${G2}Options Menu${D}\n"
 }
 f_optionsHOSTNAME(){
 echo -e "\n ${B}Options > Look up Host Information by Host Name  ${G2}(IPV4)\n"
-echo -e " ${B}[1]${D}  Hostname/IP ${bold}Overview${D} (Geolocation, DNS, Prefix, Whois Summary)"
-echo -e " ${B}[2]${D}  ${bold}Customize${D} Options (e.g. Banners, WhatWeb, IP Reputation, Certificates (via certspotter), Whois Contact Details)"
+echo -e " ${B}[1]${D}  Hostname/IP ${bold}Overview${D}"
+echo -e " ${B}[2]${D}  ${bold}Customize${D} Options (e.g. Banners, WhatWeb)"
 }
 f_optionsHOSTSv6(){
 echo -e "\n ${B}Options > IP ADDRESS INFORMATION  ${G2}(IPV6)\n"
-echo -e " ${B}[1]${D}  IP Address Info (Geolocation, RDNS, Prefix BGP Status, Whois Summary)"
+echo -e " ${B}[1]${D}  IP Address Info"
 echo -e " ${B}[2]${D}  IP Address Info, Whois Contact Details"
 echo -e " ${B}[3]${D}  THC-Ping6 ICMPv6/TCP Packet Builder $denied"
 echo -e " ${B}[b]${D}  Back to the Global ${G2}Options Menu${D}\n"
@@ -3265,14 +3258,15 @@ echo -e "\n ${B}[b]${D}  Back to the Global ${G2}Options Menu${D}\n"
 }
 f_optionsNET(){
 echo -e "\n\n ${B}Options > NETWORKS\n"
-echo -e " ${B}[1]${D}  Network ${bold}Summary${D} (Whois, BGP- & RPKI Status)"
+echo -e " ${B}[1]${D}  Network ${bold}Summary${D}"
 echo -e " ${B}[2]${D}  Generate Network ${bold}Report${D}  ${B}(IPv4)${D} $denied"
-echo -e " ${B}[3]${D}  ${bold}Customize${D} Options (e.g. BGP-Whois Consistency, Geolocoation, Related Networks, Contact Details)"
+echo -e " ${B}[3]${D}  ${bold}Customize${D} Options"
 echo -e " ${B}[4]${D}  Prefix Address Space (More Specifics/Subnets)"
 if [ $option_type = "2" ] ; then
 echo -e " ${B}[5]${D}  Reverse DNS Lookup (max-size: /48)"; else
 echo -e " ${B}[5]${D}  Reverse DNS Lookup"; fi
 echo -e " ${B}[6]${D}  Reverse IP Lookup (Virtual Hosts)  ${B}(IPv4)${D}"
+echo -e " ${B}[7]${D}  Service Banners"
 echo -e " ${B}[8]${D}  Ping Sweep  ${B}(IPv4)${D} $denied"
 echo -e "\n ${B}[b]${D}  Back to the Global ${G2}Options Menu${D}\n"
 }
@@ -3286,9 +3280,9 @@ echo -e "\n ${B}[b]${D} Back to the Global ${G2}Options Menu${D}" ; echo ''
 }
 f_optionsWWW(){
 echo -e "\n${B}Options > WEB SERVERS $denied\n"
-echo -e "${B} [1]${D}  Quick ${bold}Health Check${D}  (Ping, SSL (Ciphers, Basic Vulners), Response & Page-Loading-Times, Security Headers, Website Hash)"
-echo -e "${B} [2]${D}  ${bold}Customize${D} Test Options (Vulnerabilities, SSL Configs, Connectivity & Server Response)"
-echo -e "${B} [3]${D}  Website Overview (Markup,Contacts,Description)"
+echo -e "${B} [1]${D}  Quick ${bold}Health Check${D}"
+echo -e "${B} [2]${D}  ${bold}Customize${D} Test Options"
+echo -e "${B} [3]${D}  Website Overview"
 echo -e "${B} [4]${D}  Dump HTTP Headers"; echo -e "${B} [5]${D}  Dump SSL Certificate Files"
 echo -e "${B} [b]${D}  Back to the Global ${G2}Options Menu${D}" ; echo ''
 }
@@ -3318,7 +3312,7 @@ while true
 do
 echo -e -n "\n  ${B}?${D}  " ; read choice
 if [ $option_connect = "0" ] ; then
-denied="available in target-connect-mode only)" ; else
+denied=" (target-connect-mode only)" ; else
 denied='' ; fi
 case $choice in
 m)
@@ -3380,7 +3374,7 @@ echo -e " ${B}[6]${D}  Reverse IP Lookup (Virtual Hosts) ${B}(IPv4)"
 echo -e " ${B}[7]${D}  Network Services Banners ${B}(IPv4)"
 echo -e " ${B}[8]${D}  Ping Sweep ${B}(IPv4)"
 echo -e "\n\n${B}Options > WEB SERVERS\n\n"
-echo -e "${B} [1]${D}  Quick ${bold}Health Check${D}\n      Ping, SSL (Ciphers, Basic Vulners), Response & Page-Loading-Times, Security Headers, Website Hash\n"
+echo -e "${B} [1]${D}  Quick ${bold}Health Check${D}\n      Ping, SSL (Ciphers, Basic SSL Security Test), Response & Page-Loading-Times, Security Headers, Website Hash\n"
 echo -e "${B} [2]${D}  ${bold}Customize${D} Test Options\n      Vulnerabilities, SSL Configs, Connectivity & Server Response\n"
 echo -e "${B} [3]${D}  Website Overview  (Markup,Contacts,Description)"
 echo -e "${B} [4]${D}  Dump HTTP Headers"; echo -e "${B} [5]${D}  Dump SSL Certificate Files"
@@ -3547,7 +3541,7 @@ elif [ $option_ns = "4" ] ; then
 echo -e -n "\n${B}Set     >${D} NAME SERVER  ${B} >>${D}   " ; read ns_input
 dig_array+=(@ns_input); nssrv="@${ns_input}" ; else
 nssrv="" ; fi
-echo -e "\n${B}Options >${G2} DNS RECORDS\n"
+echo -e "\n${B}Options >${G2} DNS Records\n"
 echo -e "${B} [1]${D} Check Threat Feeds & DNS Blocklists" ; echo -e "${B} [2]${D} Check for unauthorized zonetransfers"
 echo -e "${B} [3]${D} BOTH" ; echo -e "${R} [0]${D} SKIP" ; echo -e -n "\n${B}  ? ${D}  " ; read option_zone
 echo -e -n "\n${B}Option  > ${G2}Load Balancing Detection ${B}>${D} Run lbd  ${B}?  [y] | [n] ${D}  " ; read option_lbd ; fi
@@ -4424,7 +4418,7 @@ out="${outdir}/WEBSERV_HealthCheck.${x}.txt"
 elif [ $option_www = "2" ] ; then
 rep_check="true"; out="${outdir}/WEBSERV.${x}.txt"
 elif [ $option_www = "3" ] ; then
-page_details="true"; ww="false"; rep_check="false"; out="${outdir}/WEBSITE.${x}.txt"; fi
+page_details="true"; ww="false"; ssl_details="false"; out="${outdir}/WEBSITE.${x}.txt"; fi
 declare -a st_array=() ; st_array+=(-sLkv); declare -a curl_array=() ; curl_array+=(-sLkv)
 declare -a ping_array=(); ping_array+=(-c 3)
 if [ $? = ${error_code} ]; then
@@ -4518,15 +4512,15 @@ f_Long ; echo -e "${B}File Input${D} - one entry per line\n"
 echo -e "${B}Regular Lookups${D} - name of object"
 echo -e "\n${B}Inverse Lookups${D} - to activste inverse searches use the following syntax:\n"
 echo -e "${G2}ObjectType;SearchTerm${D}  -  e.g.  admin-c;JohnDoeXY-RIPE"
-echo -e "\nRegular & inverse Lookups can becombined in file input"; f_Long
-echo -e -n "\n${B}Target  > [1]${D} Set target ${B}| [2]${D} Read from file  ${B}?${D}  " ; read option_target
+echo -e "\nRegular & inverse Lookups can be combined in file input"; f_Long
+echo -e -n "\n${G2}Target  ${B}> [1]${D} Set target ${B}| [2]${D} Read from file  ${B}?${D}  " ; read option_target
 if [ $option_target = "2" ] ; then
-echo -e -n "\n${B}Target  > ${D}PATH TO FILE  ${B}>>${D}   " ; read input
+echo -e -n "\n${B}Target  > ${G2}PATH TO FILE ${D}e.g. ./objects.list  ${B}>>${D}   " ; read input
 targets="${input}" ; else
-echo -e -n "\n${B}Target  > ${D}SEARCH TERM  ${B}>>${D} " ; read input
+echo -e -n "\n${B}Target  > ${G2}SEARCH TERM  ${B}>>${D} " ; read input
 echo "$input" > $tempdir/targets.list ; targets="$tempdir/targets.list" ; fi
 if [ $option_target = "2" ] && [ $report = "true" ] ; then
-echo -e -n "\n${B}Set   > ${D}OUTPUT - FILE NAME  ${B}>>${D}  " ; read filename ; fi
+echo -e -n "\n${B}Output  > ${G2}OUTPUT - FILE NAME  ${B}>>${D}  " ; read filename ; fi
 headl="$tempdir/headline"
 echo -e "\n${R}Warning: ${D} Exzessive searches for non-abuse contact details are considered abusive."
 echo -e "\n${B}Options > ${G2}PoC Details\n"
@@ -4549,12 +4543,12 @@ filename=$(echo $x | cut -d '/' -f 1 | tr -d ' ') ; fi ; fi
 if [ $iSearch = "true" ] ; then
 if [ $option_poc = "2" ] ; then
 whois -h ${regserver} -- "-B -i ${query_type} ${obj}"  >> $tempdir/whois_temp ; else
-whois -h ${regserver} -- "--no-personal -F -i ${query_type} ${obj}" | tr -d '*' | sed 's/^ *//' >> $tempdir/whois_temp ; fi
+whois -h ${regserver} -- "--no-personal -i ${query_type} ${obj}" | tr -d '*' | sed 's/^ *//' >> $tempdir/whois_temp ; fi
 f_whoisFORMAT >> $tempdir/who1.txt ; fi
 if [ $iSearch = "false" ] ; then
 if [ $option_poc = "2" ] ; then
 whois -h ${regserver} -- "-B ${x}" >> $tempdir/whois_temp ; else
-whois -h ${regserver} -- "--no-personal -F ${x}"  | tr -d '*' | sed 's/^ *//' >> $tempdir/whois_temp ; fi
+whois -h ${regserver} -- "--no-personal ${x}"  | tr -d '*' | sed 's/^ *//' >> $tempdir/whois_temp ; fi
 f_whoisFORMAT >> $tempdir/who1.txt ; fi ; done
 if [ $iSearch = "true" ] ; then
 if [ $option_poc = "3" ] ; then
@@ -4588,58 +4582,61 @@ whois -h ${regserver} -- "--no-personal $oid" > $tempdir/whois_org
 echo ''; f_ORG "$tempdir/whois_org" ; done | tee -a ${out}
 for oid in $(cat $tempdir/orgs.list | sort -u -V) ; do
 echo '' ; f_netBLOCKS "${oid}" ; done | tee -a ${out} ; fi
-echo '' | tee -a ${out} ; f_Long | tee -a ${out} ; echo -e "[+] NETWORKS & ROUTES" | tee -a ${out}; f_Long | tee -a ${out}
+echo '' | tee -a ${out} ; f_Long | tee -a ${out} ; echo -e "[+] NETWORKS" | tee -a ${out}; f_Long | tee -a ${out}
 if [[ $(grep -s -E -c "^inet6num:|^i6:" $tempdir/full_output.txt ) -gt "0" ]] ; then
-echo -e "* Network Ranges (IPv6)" | tee -a ${out}
+echo -e "\nNetwork Ranges (IPv6)\n_____________________" | tee -a ${out}
 grep -s -E -A 5 "^inet6num:|^i6:" $tempdir/full_output.txt > $tempdir/i6nums1
 grep -E "^inet6num:|^i6:" $tempdir/i6nums1 | cut -d ' ' -f 2- | tr -d ' ' | sort -u -V > $tempdir/i6nums2
 for i in $(cat $tempdir/i6nums2 | sort -u -V) ; do
-grep -s -A 5 -m 1 ${i} $tempdir/i6nums1 | grep -s -E "^inet6num:|^netname:|^country:|^org-name:|^descr:|^i6:|^na:|^cy:|^og:|^de:" |
-sed '/^i6:/i \_____________________________________\n' | sed '/inet6num/i \_____________________________________\n' |
-cut -d ' ' -f 2- | sed 's/^ *//' ; done | tee -a ${out} ; fi
-if [[ $(grep -s -E -c "^inetnum:|^in:" $tempdir/full_output.txt ) -gt "0" ]] ; then
-echo -e "\n_____________________________________\n" | tee -a ${out} ; echo -e "* Network Ranges (IPv4)" | tee -a ${out}
-grep -s -E -A 2 '^inetnum:|^in:' $tempdir/full_output.txt > $tempdir/inetnums1
-grep -s -E '^inetnum:|^in:' $tempdir/inetnums1  | cut -d ':' -f 2- | tr -d ' ' | cut -d '-' -f 1 > $tempdir/inetnums2
+grep -s -A 5 -m 1 ${i} $tempdir/i6nums1 | grep -s -E "^inet6num:|^netname:|^country:|^org-name:|^descr:" |
+sed '/inet6num/i \nnn' | sed '/inet6num/a \nnn' | sed '/^netname:/a \|' | sed '/^org-name:/a \|' | sed '/^descr:/a \|' |
+sed '/^country:/a \|' | sed '$d' | cut -d ' ' -f 2- | sed 's/^ *//' | tr '[:space:]' ' ' | sed 's/nnn/\n\n/g' |
+sed '/|/G' | sed 's/^ *//' ; done | tee -a ${out} ; fi
+if [[ $(grep -s -E -c "^inetnum:" $tempdir/full_output.txt ) -gt 0 ]] ; then
+echo -e "\nNetworks (IPv4)\n_________________" | tee -a ${out}
+grep -s -E -A 2 "^inetnum:" $tempdir/full_output.txt > $tempdir/inetnums1
+grep -s -E "^inetnum:" $tempdir/inetnums1  | cut -d ':' -f 2- | tr -d ' ' | cut -d '-' -f 1 > $tempdir/inetnums2
 sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n -u $tempdir/inetnums2 > $tempdir/inetnums_u4
 grep -s -w '^inetnum:|^in:' $tempdir/inetnums1  | cut -d ':' -f 2- | tr -d ' ' | cut -d '-' -f 2 >> $tempdir/inetnums2
 sort -t . -k 1,1n -k 2,2n -k 3,3n -u $tempdir/inetnums2 > $tempdir/inetnums_u3
 for a in $(cat $tempdir/inetnums_u4) ; do
-grep -s -m 1 -A 2 "${a}" $tempdir/inetnums1 >> $tempdir/netranges.txt
+inum=$(grep -s -m 1 "${a}" $tempdir/inetnums1 | cut -d ':' -f 2- | sed 's/^ *//' | tr -d ' ')
+inum_cidr=$(ipcalc ${inum} | sed '/deaggregate/d' | sed '/^$/d' | tr '[:space:]' ' ')
+echo -e "\n\n$inum\n" | sed 's/-/ - /' >> $tempdir/netranges.txt
+grep -s -m 1 -A 2 "${a}" $tempdir/inetnums1 | tail -2 | sed '/^netname:/a \|' | sed '/^org:/a \|' | sed '/^descr:/a \|' |
+sed '/^country:/a \|' | cut -d ':' -f 2- | sed 's/^ *//' | tr '[:space:]' ' ' >> $tempdir/netranges.txt
+echo -e "$inum_cidr\n" >> $tempdir/netranges.txt
 nrange=$(grep -s -m 1 "${a}" $tempdir/inetnums1 | cut -d ':' -f 2- | tr -d ' ')
-ipcalc ${nrange} | sed '/deaggregate/d' | tail -1 >> $tempdir/cidr ; done
-cat $tempdir/netranges.txt | sed '/inetnum/i \_____________________________________\n' |
-sed '/^in:/i \_____________________________________\n' | cut -d ':' -f 2- | sed 's/^ *//' | tee -a ${out}
-rm $tempdir/netranges.txt; echo '' | tee -a ${out}
+ipcalc ${nrange} | sed '/deaggregate/d' | sed '/^$/d' >> $tempdir/cidr ; done
+cat $tempdir/netranges.txt | tee -a ${out}; rm $tempdir/netranges.txt; echo '' | tee -a ${out}
 if [[ $(cat $tempdir/cidr | wc -w) -gt 2 ]]; then
-echo -e "\n_______________________________________\n"  | tee -a ${out}
+echo -e "_______________________________________\n"  | tee -a ${out}
 cat $tempdir/cidr | tr -d ' '  | sort -t / -k 2,2n | sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n -u -V | tr '[:space:]' ' ' | fmt -s -w 40 |
 sed 's/ /  /g' | sed 's/^ *//' | tee -a ${out} ; else
 echo ''; f_Shortest | tee -a ${out}; cat $tempdir/cidr | tr -d ' '  | sort -t / -k 2,2n | sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n -u -V | tee -a ${out}; fi ; fi
-if [ $option_poc = "1" ] ; then
-route_obj4=$(sed -e '/./{H;$!d;}' -e 'x;/rt:/!d' $tempdir/full_output.txt | grep -E "^rt:|^or" | grep -E -B 1 "^or:" | sed '/--/d' | sed '/^$/d')
-route_obj6=$(sed -e '/./{H;$!d;}' -e 'x;/r6:/!d' $tempdir/full_output.txt | grep -E "^r6:|^or" | grep -E -B 1 "^or:" | sed '/--/d' | sed '/^$/d'); else
-route_obj4=$(sed -e '/./{H;$!d;}' -e 'x;/route:/!d' $tempdir/full_output.txt | grep -E "^route:|^origin" |
-grep -E -B 1 "^origin:" | sed '/--/d' | sed '/^$/d')
+route_obj4=$(sed -e '/./{H;$!d;}' -e 'x;/route:/!d' $tempdir/full_output.txt | grep -E "^route:|^origin" | grep -E -B 1 "^origin:" |
+sed '/--/d' | sed '/^$/d')
 route_obj6=$(sed -e '/./{H;$!d;}' -e 'x;/route6:/!d' $tempdir/full_output.txt | grep -E "^route6:|^origin" | grep -E -B 1 "^origin:" |
-sed '/--/d' | sed '/^$/d') ; fi
-if [ -n "$route_obj4" ] ; then
-echo -e "\n_____________________________________\n" | tee -a ${out}; echo -e "* Routes (IPv4)" | tee -a ${out}
-echo -e "_____________________________________" | tee -a ${out}; echo "$route_obj4" | sed 's/as/AS/g' > $tempdir/route_obj4
-origin4=$(grep -E "^or:|^origin:" $tempdir/route_obj4 | cut -d ':' -f 2- | sed 's/^ *//' |  tr -d ' ' | sort -u -f -V)
-for o in $origin4 ; do
-echo -e "\n\n$o\n" | sed 's/AS/AS /g'; grep -E -B 1 "${o}" $tempdir/route_obj4 | sed '/--/d' | sed '/^$/d' | grep -E -v "^or:" | cut -d ' ' -f 2- |
-sed 's/^ *//' | tr -d ' ' | sort -u -V | tee $tempdir/routes.$o.txt >> $tempdir/routes4
-cat $tempdir/routes4 | tr -d ' '  | sort -t / -k 2,2n | sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n -u -V
-rm $tempdir/routes4 ; done | tee -a ${out} ; fi
+sed '/--/d' | sed '/^$/d')
+if [ -n "$route_obj4" ] || [ -n "$route_obj6" ] ; then
+echo -e "\n" | tee -a ${out}; f_Long | tee -a ${out}; echo "[+] ROUTES" | tee -a ${out}; f_Long | tee -a ${out}; fi
 if [ -n "$route_obj6" ] ; then
-echo -e "\n_____________________________________\n" | tee -a ${out}; echo -e "* Routes (IPv6)" | tee -a ${out}
-echo -e "_____________________________________" | tee -a ${out}; echo "$route_obj6" | sed 's/as/AS/g' > $tempdir/route_obj6
+echo -e "\nRoutes (IPv6)\n_____________" | tee -a ${out}; echo "$route_obj6" | sed 's/as/AS/g' > $tempdir/route_obj6
 origin6=$(grep -E "^or:|^origin:" $tempdir/route_obj6 | cut -d ':' -f 2- | sed 's/^ *//' |  tr -d ' ' | sort -u -f -V)
 for i in $origin6 ; do
 echo -e "\n\n$i\n" | sed 's/AS/AS /g'
-grep -E -B 1 "${i}" $tempdir/route_obj6 | sed '/--/d' | sed '/^$/d' | grep -E -v "^or:" | cut -d ' ' -f 2- |
-sed 's/^ *//' | tr -d ' ' | sort -u -V | tee $tempdir/routes6.$i.txt ; done | tee -a ${out} ; fi
+grep -E -B 1 "${i}" $tempdir/route_obj6 | sed '/--/d' | sed '/^$/d' | grep -E -v "^origin:" | cut -d ' ' -f 2- |
+sed 's/^ *//' | tr -d ' ' | sort -uV ; done | tee -a ${out} ; fi
+if [ -n "$route_obj4" ] ; then
+if [ -n "$route_obj6" ] ; then
+echo ''; fi
+echo -e "\nRoutes (IPv4)\n_____________" | tee -a ${out}; echo "$route_obj4" | sed 's/as/AS/g' > $tempdir/route_obj4
+origin4=$(grep -E "^origin:" $tempdir/route_obj4 | cut -d ':' -f 2- | sed 's/^ *//' |  tr -d ' ' | sort -u -f -V)
+for o in $origin4 ; do
+echo -e "\n\n$o\n" | sed 's/AS/AS /g'; grep -E -B 1 "${o}" $tempdir/route_obj4 | sed '/--/d' | sed '/^$/d' | grep -E -v "^origin:" | cut -d ' ' -f 2- |
+sed 's/^ *//' | tr -d ' ' | sort -u -V >> $tempdir/routes4
+cat $tempdir/routes4 | tr -d ' '  | sort -t / -k 2,2n | sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n -u -V
+rm $tempdir/routes4 ; done | tee -a ${out} ; fi
 if [ $option_poc = "1" ] ; then
 echo '' | tee -a ${out}; f_Long | tee -a ${out}; echo -e "[+] ABUSE CONTACTS & ADMIN-C" | tee -a ${out}; f_Long | tee -a ${out}
 echo -e "* Abuse Contacts\n" | tee -a ${out}
@@ -4664,7 +4661,9 @@ mail_contacts=$(grep -s -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}
 if [ -n "$mail_contacts" ] ; then
 echo '' | tee -a ${out}; f_Long | tee -a ${out}; echo "[+] Domains" | tee -a ${out}
 for mc in $mail_contacts ; do
-f_DNSWhois_STATUS "$(echo $mc | cut -d '@' -f 2)" ; done | tee -a ${out}; fi
+f_DNSWhois_STATUS "$(echo $mc | cut -d '@' -f 2)"
+for a in $(cat $tempdir/addresses | sort -uV) ; do
+f_Long; echo -e "$a\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; f_hostSHORT "${a}"; done ; done | tee -a ${out}; fi
 if [ $iSearch = "true" ] ; then
 if [ $option_poc = "3" ] ; then
 echo -e "\n_________________________________________________________\n\n[+] Object Details" | tee -a ${out}
