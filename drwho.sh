@@ -1351,15 +1351,15 @@ echo -e "$ga   -  $(dig +short $ga)\n" ; done ; fi ; fi ; fi
 if [ -n "$pixels" ] ; then
 if [ $(echo "$pixel" | wc -w ) -lt "60" ] ; then
 f_Long ; echo -e "WEB BEACONS\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' ; echo "$pixels" | sed 's/<noscript/\n<noscript/g' |
-sed 's/<\/noscript/\n<\/noscript/g' | sed 's/src=/\nscr=/g'  | sed 's/^[ \t]*//;s/[ \t]*$//' ; fi ; fi ; fi
+sed 's/<\/noscript/\n<\/noscript/g' | sed 's/src=/\nscr=/g'  | sed 's/^[ \t]*//;s/[ \t]*$//' ; fi ; fi
 if [ -f $tempdir/humans.txt ] ; then
 if [[ $(cat $tempdir/humans.txt | wc -l) -lt 15 ]] ; then
 echo ''; f_Long ; echo -e "HUMANS.TXT\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
-cat $tempdir/humans.txt; fi ; fi
+cat $tempdir/humans.txt; echo '' ; fi ; fi
 if [ -f $tempdir/robots.txt ] ; then
 if [[ $(cat $tempdir/robots.txt | wc -l) -lt 20 ]] ; then
 echo ''; f_Long ; echo -e "ROBOTS.TXT\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
-cat $tempdir/robots.txt; fi ; fi
+cat $tempdir/robots.txt; echo '' ; fi ; fi ; fi 
 if [ $domain_enum = "false" ] ; then
 f_DNSWhois_STATUS "${s}" ; fi ; fi ; echo ''
 }
@@ -1370,12 +1370,12 @@ doctype=$(grep -s -o -w 'HTML5' $tempdir/ww.txt | tail -1)
 if [ -n "$doctype" ] ; then
 doctype="$doctype" ; else
 doctype="HTML4.x/XHTML1.x or similar" ; fi
-echo -e "Doctype:       $doctype" ; fi
+echo -e "Doctype:       $doctype"
+grep -s -oP -m 1 '(Content-Language\[).*?(?=\])' $tempdir/ww.txt | sed 's/Content-Language\[/Language:      /' | tr -d ']'; fi
 grep -s -oP -m 1 '(Script\[).*?(?=\])' $tempdir/ww.txt | sed 's/\[/:        /' | sed 's/,/, /g'
 jqu=$(grep -s -oP '(JQuery\[).*?(?=\,)' $tempdir/ww.txt )
 if [ -n "$jqu" ] ; then
 echo -e "jQuery:        $jqu" ; fi ; echo ''
-grep -s -oP -m 1 '(Content-Language\[).*?(?=\])' $tempdir/ww.txt | sed 's/Content-Language\[/Language:      /' | tr -d ']'
 grep -oP '(Meta-Author\[).*?(?=,)' $tempdir/ww.txt | sed 's/Meta-Author\[/Author:        /' | tr -d '][' | sed 's/^ *//'
 grep -s -oP '(PasswordField\[).*?(?=\])' $tempdir/ww.txt | sed 's/PasswordField\[/PasswdField:   /' | tr -d ']'
 grep -s -oP '(WWW-Authenticate\[).*?(?=\])' $tempdir/ww.txt | sort -u | sed 's/WWW-Authenticate\[/WWW-Auth.:     /' | tr -d ']['
