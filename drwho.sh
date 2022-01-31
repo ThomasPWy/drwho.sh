@@ -1002,7 +1002,7 @@ echo 'null' > $tempdir/cdn; fi
 f_LBD(){
 local s="$*" ; echo '' ; f_Long ; echo "LOAD BALANCING DETECTION" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 echo -e "\nRunning lbd... [$s]\n"
-timeout 180 ${PATH_lbd} ${s} > $tempdir/l_b
+timeout 240 ${PATH_lbd} ${s} > $tempdir/l_b
 cat $tempdir/l_b | sed -n '/Checking for DNS-Loadbalancing:/,$p' | sed '/^$/d' | sed 's/\]:/\]:\n/' | sed 's/^ *//' | sed 's/, NOT FOUND/\nNOT FOUND/' |
 sed '/Checking for/{x;p;x;}' | sed 's/\[Date\]:/\[Date\]:\n/' | sed 's/\[Diff\]:/\[Diff\]:\n/' | sed '/does/{x;p;x;G}' | fmt -s -w 60
 }
@@ -2043,7 +2043,7 @@ cat $tempdir/srv ; rm $tempdir/srv ; fi
 if [ -n "$txt_rec" ] ; then
 echo ''; f_Long; echo -e "\nTXT RECORDS\n"; echo "$txt_rec" | sed '/\"/{x;p;x;}' | fmt -s -w 80 ; fi
 if [ $domain_enum = "false" ] ; then
-f_NSEC "${s}"; fi; f_FCRDNS "${s}"
+f_NSEC "${s}"; f_FCRDNS "${s}"; fi
 if [ $pmtu = "true" ] ; then
 echo''; f_Long; echo "PATH-MTU" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 sudo ${PATH_nmap} -sS -Pn -p 80 --open --resolve-all --script path-mtu $s 2> /dev/null > $tempdir/pmtu; f_PATH_MTU
@@ -2499,9 +2499,9 @@ org_cc=$(grep -sEa -m 1 "^country:" $s | cut -d ':' -f 2 | sed 's/^ *//')
 orgid=$(grep -sEa -m 1 "^owner-c:" $s | cut -d ':' -f 2 | sed 's/^ *//')
 orgname=$(grep -sEa -m 1 "^owner:" $s | cut -d ':' -f 2- | sed 's/^ *//')
 org_out="$orgname, $org_cc  ($orgid)"; else
-if [[ $(sed -e '/./{H;$!d;}' -e 'x;/organisation:/!d' $s | grep -s -w -c '^country:') -gt "0" ]] ; then
-org_cc=$(sed -e '/./{H;$!d;}' -e 'x;/organisation:/!d' $s | grep -E -m 1 "^country:" | head -1 | cut -d ':' -f 2- | sed 's/^ *//'); else
-org_cc=$(sed -e '/./{H;$!d;}' -e 'x;/organisation:/!d' $s | grep -E "^address:" | tail -1 | cut -d ':' -f 2- | sed 's/^ *//'); fi
+if [[ $(sed -e '/./{H;$!d;}' -e 'x;/organisation:/!d' $s | grep -sawc '^country:') -gt "0" ]] ; then
+org_cc=$(sed -e '/./{H;$!d;}' -e 'x;/organisation:/!d' $s | grep -sEa -m 1 "^country:" | head -1 | cut -d ':' -f 2- | sed 's/^ *//'); else
+org_cc=$(sed -e '/./{H;$!d;}' -e 'x;/organisation:/!d' $s | grep -sEa "^address:" | tail -1 | cut -d ':' -f 2- | sed 's/^ *//'); fi
 orgid=$(grep -sEa "^organisation:" $s | cut -d ':' -f 2- | sed 's/^ *//' | head -1)
 orgname=$(grep -sEa "^org-name:" $s | cut -d ':' -f 2- | sed 's/^ *//' | head -1)
 if [ -n "$orgtype" ] ; then
@@ -3191,8 +3191,8 @@ if [ $target_type = "hop" ] || [ $target_type = "net" ]; then
 echo -e "BGP:          last seen:   $l_seen - AS $l_seen_origin"
 echo -e "              first seen:  $f_seen - AS $f_seen_origin"
 echo -e "              visibility:  $visibility/$peers_total\n"; else
-echo -e "BGP:          last seen:   $l_seen - AS $l_seen_origin\n"
-echo -e "              visibility:  $visibility/$peers_total\n"; fi
+echo -e "\nBGP:          last seen:   $l_seen - AS $l_seen_origin\n"
+echo -e "              visibility:  $visibility/$peers_total\n\n"; fi
 if ! [ $rpki_status = "unknown" ] ; then
 echo -e "ROAs:         $validity >  $roa_prefix >  $roa_origin  > max. /$max_length\n" ; fi
 }
