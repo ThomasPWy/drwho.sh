@@ -3176,7 +3176,7 @@ if [[ ${p_ip} =~ $REGEX_IP4 ]] ; then
 visibility=$(jq -r '.data.visibility.v4.ris_peers_seeing' $tempdir/bgp.json)
 peers_total=$(jq -r '.data.visibility.v4.total_ris_peers' $tempdir/bgp.json); else
 visibility=$(jq -r '.data.visibility.v6.ris_peers_seeing' $tempdir/bgp.json)
-peers_total=$(jq -r '.data.visibility.v4.total_ris_peers' $tempdir/bgp.json); fi
+peers_total=$(jq -r '.data.visibility.v6.total_ris_peers' $tempdir/bgp.json); fi
 if [ $domain_enum = "true" ] ; then
 if [[ $p_ip =~ $REGEX_IP4 ]] ; then
 reverse=$(echo $p_ip | awk -F'.' '{print $4 "." $3 "." $2 "." $1}')
@@ -4462,8 +4462,13 @@ for nic4 in $(ip -4 addr show | grep -s 'state UP' | cut -d ':' -f 2 | sed 's/^ 
 echo -e "\n\nPublic IPv4:         $(curl -s -m 5 --interface $nic4 https://api.ipify.org?format=json | jq -r '.ip')  ($nic4)"; done > $tempdir/pub4
 cat $tempdir/pub4 | tee -a ${out}; pub4=$(egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $tempdir/pub4)
 for nic6 in $(ip -6 addr show | grep -s 'state UP' | cut -d ':' -f 2 | sed 's/^ *//'); do
-public_v6=$(ip -6 addr show | grep -Es -A 1 "${nic6}" | grep inet6 | sed 's/^ *//' | cut -d ' ' -f 2 | cut -d '/' -f 1 | grep ':')
-echo -e "\n\nPublic IPv6:         $public_v6  ($nic6)"; echo "$public_v6" >> $tempdir/pub6; done; pub6=$(cat $tempdir/pub6 | sort -uV)
+addr_v6=$(ip -6 addr show | grep -Es -A 3 "${nic6}" | grep inet6 | sed 's/^ *//' | cut -d ' ' -f 2 | cut -d '/' -f 1 | grep ':' | sort -u)
+for addr in $addr_v6; do
+f_BOGON "${addr}"
+if [ $bogon = "FALSE" ]; then
+echo -e "\n\nPublic IPv6:         $addr  ($nic6)"; echo "$addr" >> $tempdir/pub6; fi; done; done | tee -a ${out}
+if [ -f $tempdir/pub6 ]; then
+pub6=$(cat $tempdir/pub6 | sort -uV); fi
 echo '' | tee -a ${out}
 if [ $option_pub_ip = "1" ]; then
 bl_check="true"; option_root="n"; option_trace="n"; blocklists="$blocklists_domain"
