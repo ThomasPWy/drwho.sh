@@ -766,7 +766,7 @@ abx=$(dig +short ${nibble}.abuse-contacts.abusix.zone txt | tr -d '\"' | sed 's/
 f_Long; echo -e "$s\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 echo "GEO:       $regio, $geo  (UTC $offset)"
 echo "ISP:       $isp"
-echo "[@]:       $abx\n"
+echo "[@]:       $abx"
 if [[ ${s} =~ $REGEX_IP4 ]] ; then
 echo -e "IP REPUTATION\n\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 f_IP_REPUTATION "${s}"; echo ''; else
@@ -1335,12 +1335,13 @@ echo ''; f_Long; echo "DNS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 echo -e "DNS FORWARD CHAIN\n"; f_dnsFOR_CHAIN "${targetHOSTNAME}"
 if ! [ "$page_dom" = "$targetURL_dom" ]; then
 echo ''; f_dnsFOR_CHAIN "${page_dom}"; fi
+if [[ $(jq -r '.data.forward_nodes' $tempdir/chain.json | tr -d '}[,"{' | sed 's/^ *//' | sed '/^$/d' | sed 's/\]//g' | wc -l) -lt 12 ]]; then
 echo -e "\nFORWARD CONFIRMED RDNS"
 nmap -Pn -sn -R --resolve-all --script fcrdns 2> /dev/null $s | grep -E "scan report|\||\|_" | sed 's/fcrdns: //g' | sed 's/^|_//g' |
 sed 's/^|//g' | sed '/^$/d' | sed '/Nmap scan report/G' | sed 's/Nmap scan report for/\n\n*/g' | sed 's/(/ (/g'
 if [ -n "$target6" ] ; then
 nmap -6 -Pn -sn -R --resolve-all --script fcrdns 2> /dev/null $s | grep -E "scan report|\||\|_" | grep -v 'fcrdns' | sed 's/^|_//g' |
-sed 's/^|//g' | sed '/^$/d' | sed '/Nmap scan report/G' | sed 's/Nmap scan report for/\n\n*/g' | sed 's/(/ (/g'; fi; echo ''
+sed 's/^|//g' | sed '/^$/d' | sed '/Nmap scan report/G' | sed 's/Nmap scan report for/\n\n*/g' | sed 's/(/ (/g'; fi; fi; echo ''
 if [[ $(grep -w -i -o  "Incapsula" $tempdir/cdn | wc -w) = 0 ]] && [ $request_times = "1" ]; then
 f_requestTIME "${s}"; fi
 echo ''; f_Long; echo -e "WHOIS STATUS\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; f_whoisSTATUS "${s}"
@@ -1707,13 +1708,14 @@ echo -e "\nNAME SERVERS:\n"; cat $tempdir/whois_ns_list | tr '[:space:]' ' ' | f
 rm $tempdir/whois_ns_list; echo ''; fi; fi; fi
 }
 f_dnsFOR_CHAIN(){
-local s="$*" ; auth_ns='' ; curl -s "https://stat.ripe.net/data/dns-chain/data.json?resource=${s}" > $tempdir/chain.json
+local s="$*"; auth_ns=''; query=$(echo $s | sed 's/http[s]:\/\///' | cut -d '/' -f 1 | tr -d ' ')
+curl -s -m 5 --location --request GET "https://stat.ripe.net/data/dns-chain/data.json?resource=$query" > $tempdir/chain.json
 auth_ns=$(jq -r '.data.authoritative_nameservers[]?' $tempdir/chain.json | sed '/null/d')
-if [ -n "$auth_ns" ] ; then
-export auth_ns; jq -r '.data.forward_nodes?' $tempdir/chain.json | tr -d '{,"}' | sed 's/^ *//' | sed '/^$/d' | sed 's/\]//g' |
-tr -d '[' > $tempdir/chain.txt; cat $tempdir/chain.txt; jq -r '.data.authoritative_nameservers[]' $tempdir/chain.json >> $tempdir/authns
-jq -r '.data.authoritative_nameservers[]?' $tempdir/chain.json | sort -V | tr '[:space:]' ' ' | fmt -s -w 80
-echo '' ; fi
+if [ -n "$auth_ns" ]; then
+export auth_ns; if [[ ${query} =~ ":" ]] || [[ ${query} =~ $REGEX_IP4 ]] ; then
+jq -r '.data.reverse_nodes' $tempdir/chain.json | tr -d '}[,"{' | sed 's/^ *//' | sed '/^$/d' | sed 's/\]//g'; else
+jq -r '.data.forward_nodes' $tempdir/chain.json | tr -d '}[,"{' | sed 's/^ *//' | sed '/^$/d' | sed 's/\]//g'; fi
+jq -r '.data.authoritative_nameservers[]?' $tempdir/chain.json | sort -V | tr '[:space:]' ' ' | fmt -s -w 80; echo ''; fi
 }
 f_DNSWhois_STATUS(){
 local s="$*" ; f_Long
@@ -2028,7 +2030,7 @@ if [ -f $tempdir/mx4.list ] ; then
 echo -e "\n* Checking MX records for known backscatterers ...\n\n"
 for i in $(egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $tempdir/mx4.list | sort -uV) ; do
 f_bSCATTERER "${i}" ; done; fi
-if [ $domain_enum = "false" ] ; then
+if [ $dns_summary = "false" ] && ! [ $option_connect = "0" ] ; then
 echo ''; f_Long; echo "ZONE SERIALS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
 dig +short +nssearch $s | awk '{print "\n\n"$11":\n\n",$1,$2," "$4," >",$13,$14,$15}' | sed 's/^ *//'; fi; fi
 echo -e "\n"; f_Long; f_whoisTABLE "$tempdir/rec_ips.list" ; cat $tempdir/whois_table.txt | cut -d '|' -f -5 | sed '/^$/d' | sed '/NET NAME/G'
@@ -2106,29 +2108,29 @@ sed 's/serial:/serial: /' | sed 's/retry:/retry:  /' | sed 's/expire:/expire: /'
 }
 f_FCRDNS(){
 local s="$*"; echo ''; f_Long; echo "FORWARD CONFIRMED RDNS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
-nmap -Pn -sn -R --script fcrdns 2> /dev/null $s | grep -E "scan report|\||\|_" | grep -v 'fcrdns' | sed 's/^|_//g' |
-sed 's/^|//g' | sed '/^$/d' | sed '/Nmap scan report/G' | sed 's/Nmap scan report for/\n\n*/g' | sed 's/(/ (/g'
+nmap -Pn -sn -R --script fcrdns 2> /dev/null $s | grep -E "scan report|\||\|_" | sed 's/fcrdns: //g' | sed 's/^|_//g' |
+sed 's/^|//g' | sed '/^$/d' | sed '/Nmap scan report/G' | sed 's/Nmap scan report ' | sed 's/(/ (/g'
 if [ -f $tempdir/hostsAAAA.list ] ; then
-nmap -6 -Pn -sn -R --resolve-all --script fcrdns 2> /dev/null $s | grep -E "scan report|\||\|_" | grep -v 'fcrdns' | sed 's/^|_//g' |
+nmap -6 -Pn -sn -R --resolve-all --script fcrdns 2> /dev/null $s | grep -E "scan report|\||\|_"| sed 's/fcrdns: //g' | sed 's/^|_//g' | 
 sed 's/^|//g' | sed '/^$/d' | sed '/Nmap scan report/G' | sed 's/Nmap scan report for/\n\n*/g' | sed 's/(/ (/g'; fi
 for n in $(dig ns +short $s | rev | cut -c 2- | rev); do
 if echo $n | grep -q -E "\.edu\.|\.co\.|\.org.|\.gov\."; then
 echo $n | cut -d '/' -f 1 | rev | cut -d '.' -f 1,2,3 | rev >> $tempdir/host_domains; else
 echo $n | cut -d '/' -f 1 | rev | cut -d '.' -f 1,2 | rev >> $tempdir/host_domains; fi
-nmap -Pn -sn -R --resolve-all --script fcrdns 2> /dev/null $n | grep -E "scan report|\||\|_" | grep -v 'fcrdns' | sed 's/^|_//g' |
+nmap -Pn -sn -R --resolve-all --script fcrdns 2> /dev/null $n | grep -E "scan report|\||\|_" | sed 's/fcrdns: //g' | sed 's/^|_//g' |
 sed 's/^|//g' | sed '/^$/d' | sed '/Nmap scan report/G' | sed 's/Nmap scan report for/\n\n*/g' | sed 's/(/ (/g'
 if [ -f $tempdir/ns6.list ] ; then
-nmap -6 -Pn -sn -R --resolve-all --script fcrdns 2> /dev/null $n | grep -E "scan report|\||\|_" | grep -v 'fcrdns' | sed 's/^|_//g' |
+nmap -6 -Pn -sn -R --resolve-all --script fcrdns 2> /dev/null $n | grep -E "scan report|\||\|_" | sed 's/fcrdns: //g' | sed 's/^|_//g' | 
 sed 's/^|//g' | sed '/Nmap scan report/G' | sed 's/Nmap scan report for/\n\n*/g' | sed 's/(/ (/g'; fi; done
 for m in $(dig mx +short $s | rev | cut -d ' ' -f 1 | cut -c 2- | rev); do
 if echo $m | grep -q -E "\.edu\.|\.co\.|\.org.|\.gov\."; then
 echo $m | cut -d '/' -f 1 | rev | cut -d '.' -f 1,2,3 | rev >> $tempdir/host_domains; else
 echo $m | cut -d '/' -f 1 | rev | cut -d '.' -f 1,2 | rev >> $tempdir/host_domains; fi
 if [ -f $tempdir/mx4.list ] ; then
-nmap -Pn -sn -R --resolve-all --script fcrdns 2> /dev/null $m | grep -E "scan report|\||\|_" | grep -v 'fcrdns' | sed 's/^|_//g' |
+nmap -Pn -sn -R --resolve-all --script fcrdns 2> /dev/null $m | grep -E "scan report|\||\|_" | sed 's/fcrdns: //g' | sed 's/^|_//g' |
 sed 's/^|//g' | sed '/^$/d' | sed '/Nmap scan report/G' | sed 's/Nmap scan report for/\n\n*/g' | sed 's/(/ (/g'; fi
 if [ -f $tempdir/mx6.list ] ; then
-nmap -Pn -sn -R --resolve-all --script fcrdns 2> /dev/null $m | grep -E "scan report|\||\|_" | grep -v 'fcrdns' | sed 's/^|_//g' |
+nmap -Pn -sn -R --resolve-all --script fcrdns 2> /dev/null $m | grep -E "scan report|\||\|_" | sed 's/fcrdns: //g' | sed 's/^|_//g' | 
 sed 's/^|//g' | sed '/^$/d' | sed '/Nmap scan report/G' | sed 's/Nmap scan report for/\n\n*/g' | sed 's/(/ (/g'; fi; done; echo ''
 }
 f_TTL_ALT(){
@@ -4460,29 +4462,26 @@ for nic4 in $(ip -4 addr show | grep -s 'state UP' | cut -d ':' -f 2 | sed 's/^ 
 echo -e "\n\nPublic IPv4:         $(curl -s -m 5 --interface $nic4 https://api.ipify.org?format=json | jq -r '.ip')  ($nic4)"; done > $tempdir/pub4
 cat $tempdir/pub4 | tee -a ${out}; pub4=$(egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $tempdir/pub4)
 for nic6 in $(ip -6 addr show | grep -s 'state UP' | cut -d ':' -f 2 | sed 's/^ *//'); do
-publicv6=$(curl -s -m 5 --interface $nic6 https://api64.ipify.org?format=json | jq -r '.ip?' | sed '/null/d')
-if [ -n "$publicv6" ]; then
-echo -e "\n\nPublic IPv6:         $publicv6  ($nic6)"
-echo $publicv6 >> $tempdir/pub6; fi; done; echo '' | tee -a ${out}
+public_v6=$(ip -6 addr show | grep -Es -A 1 "${nic6}" | grep inet6 | sed 's/^ *//' | cut -d ' ' -f 2 | cut -d '/' -f 1 | grep ':')
+echo -e "\n\nPublic IPv6:         $public_v6  ($nic6)"; echo "$public_v6" >> $tempdir/pub6; done; pub6=$(cat $tempdir/pub6 | sort -uV)
+echo '' | tee -a ${out}
 if [ $option_pub_ip = "1" ]; then
-bl_check="true"; option_root="n"; option_trace="n"
+bl_check="true"; option_root="n"; option_trace="n"; blocklists="$blocklists_domain"
 for a in $(egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $tempdir/pub4 | sort -uV); do
-f_WEB "${a}"; f_dnsFOR_CHAIN "${a}" > $tempdir/dns_chain
-if [ -n "$auth_ns" ]; then
-echo '' ; f_Long; echo -e "DNS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
-cat $tempdir/dns_chain ; else
-if [ $rir = "ripe" ] ; then
-echo '' ; f_Long; echo -e "REV.DNS DELEGATION" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
-f_DELEGATION "${a}" > $tempdir/rdnszone; cat $tempdir/rdnszone | sed '/./,$!d' ; fi ; fi; done | tee -a ${out}
-if [ -f $tempdir/pub6 ]; then
-echo -e "\n" | tee -a ${out}; for z in $(cat $tempdir/pub6 | sort -uV); do
-f_WEB "${z}"; f_dnsFOR_CHAIN "${z}" > $tempdir/dns_chain
-if [ -n "$auth_ns" ]; then
-echo '' ; f_Long; echo -e "DNS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
-cat $tempdir/dns_chain ; else
-if [ $rir = "ripe" ] ; then
-echo '' ; f_Long; echo -e "REV.DNS DELEGATION" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
-f_DELEGATION "${z}" > $tempdir/rdnszone; cat $tempdir/rdnszone | sed '/./,$!d' ; fi ; fi; done | tee -a ${out}; fi; fi
+f_WEB "${a}"; echo '' ; f_Long; echo -e "\nDNS" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; ptr=$(dig +short -x $a)
+if [ -n "$ptr" ]; then
+f_dnsFOR_CHAIN "${a}"; else
+echo -e "$a - no PTR record\n"; fi; f_DELEGATION "${a}" > $tempdir/rdnszone
+if [[ $(cat $tempdir/rdnszone | wc -l) -gt 2 ]]; then
+echo -e "\nREV.DNS DELEGATION\n"; cat $tempdir/rdnszone | sed '/./,$!d'; fi; done | tee -a ${out}
+if [ -n  "$pub6" ]; then
+echo -e "\n" | tee -a ${out}; for z in $pub6; do
+f_WEB "${z}"; echo '' ; f_Long; echo -e "DNS\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'; ptr=$(dig +short -x $z)
+if [ -n "$ptr" ]; then
+f_dnsFOR_CHAIN "${z}"; else
+echo -e "$z - no PTR record\n"; fi; f_DELEGATION "${z}" > $tempdir/rdnszone
+if [[ $(cat $tempdir/rdnszone | wc -l) -gt 2 ]]; then
+echo -e "\nREV.DNS DELEGATION\n"; cat $tempdir/rdnszone | sed '/./,$!d'; fi; done | tee -a ${out}; fi; fi
 if ! [[ $(uname -o) =~ "Android" ]] ; then
 echo '' | tee -a ${out}; f_Long | tee -a ${out}; echo -e "\n******************** DEFAULT DNS SERVERS *******************" | tee -a ${out}
 f_systemDNS | tee -a ${out} ; fi; echo '' ; f_removeDir; f_Long; f_Menu
