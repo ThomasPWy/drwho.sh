@@ -106,7 +106,7 @@ nse_lan_vulners_intrusive="smb-double-pulsar-backdoor,mysql-empty-password,ms-sq
 nse_iot="bacnet-info,knx-gateway-discover,modbus-discover,s7-info"
 nse_web_safe="http-apache-server-status,http-generator,http-php-version,http-mobileversion-checker,http-affiliate-id,http-referer-checker,mysql-info"
 nse_web_safe_root="http-apache-server-status,http-generator,http-php-version,http-mobileversion-checker,http-affiliate-id,http-referer-checker,mysql-info,vulners"
-nse_web1="ftp-anon,http-auth,http-auth-finder,http-csrf,http-dombased-xss,http-enum,http-generator,http-malware-host,http-mobileversion-checker,http-methods,http-php-version,https-redirect http-referer-checker,http-stored-xss,http-unsafe-output-escaping,mysql-empty-password,xmlrpc-methods,ssh-auth-methods,ssh2-enum-algos,http-wordpress-enum"
+nse_web1="ftp-anon,http-auth,http-auth-finder,http-csrf,http-dombased-xss,http-enum,http-generator,http-malware-host,http-mobileversion-checker,http-methods,http-php-version,https-redirect,http-referer-checker,http-stored-xss,http-unsafe-output-escaping,mysql-empty-password,xmlrpc-methods,ssh-auth-methods,ssh2-enum-algos,http-wordpress-enum"
 nse_web1_root="ftp-anon,http-auth,http-auth-finder,http-csrf,http-dombased-xss,http-enum,http-generator,http-malware-host,http-mobileversion-checker,http-methods,http-php-version,https-redirect,http-referer-checker,http-stored-xss,http-unsafe-output-escaping,mysql-empty-password,xmlrpc-methods,ssh-auth-methods,ssh2-enum-algos,http-wordpress-enum,vulners"
 nse_web2="http-drupal-enum,http-jsonp-detection,http-open-proxy,http-backup-finder,smtp-strangeport,http-slowloris-check,hadoop-namenode-info,hadoop-datanode-info,hadoop-jobtracker-info,rpcinfo,vmware-version"
 
