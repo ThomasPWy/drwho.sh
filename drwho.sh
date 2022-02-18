@@ -5205,7 +5205,7 @@ for z in $target_host6 ; do
 f_serverINSTANCE "${z}" ; done | tee -a ${out}; fi; fi
 hashes_outfile="WEBSITE_HASHES_$x.$file_date.txt"; f_HASHES_OUT "${x}" >> ${outdir}/$hashes_outfile
 if [[ $(cat $tempdir/ips_all | sort -uV | wc -w) -gt 1 ]]; then
-echo -e "\n"; f_Long; echo "WEBSITE HASHES" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' | tee -a ${out}
+echo -e "\n" | tee -a ${out}; f_Long | tee -a ${out}; echo "WEBSITE HASHES" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta' | tee -a ${out}
 cat $tempdir/hashes_temp | tee -a ${out}; fi
 if [ $sec2 = "1" ] || [ $sec2 = "3" ]; then
 cat $tempdir/page.html > $outdir/SOURCE.${x}.html
