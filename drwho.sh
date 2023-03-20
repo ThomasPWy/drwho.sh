@@ -3361,8 +3361,8 @@ sed 's/http9090_Title:/\nHTTP\/8080 Title:/g' | sed 's/https8553_Title:/\nHTTPS\
 sed 's/IP:/\n>IP:/g' | sed 's/FTP:/\nFTP:/g' | sed 's/SSH:/\nSSH:/g' | sed 's/Telnet:/\nTelnet:/g' | sed 's/RDP:/\nRDP:/g' |
 sed 's/http9090_Server:/\n8080\/HTTP Server:/g' | sed 's/https443_Server:/\n443\/HTTPS Server:/g' |
 sed 's/https85533_Server:/\n8443\/HTTPS\ Server:/g' | sed 's/http_Server:/\n80\/HTTP Server:/g' | sed 's/server: //g' |
-sed 's/nnnn/\n/g' | sed 's/^ *//' > $tempdir/banners; echo -e "BANNERS\n" | sed -e :a -e 's/^.\{1,78\}$/ &/;ta'
-if [[ $(cat $tempdir/banners | wc -w) -gt 2 ]]; then
+sed 's/nnnn/\n/g' | sed 's/^ *//' > $tempdir/banners;
+if [[ $(wc -w < $tempdir/banners) -gt 2 ]]; then
 sed '/>IP:/G' $tempdir/banners | sed 's/>IP:/\n>/g' > $tempdir/netbanners
 sed '/./,$!d' $tempdir/netbanners | sed 's/^/  /' | sed 's/  >/>/'; else
 echo "No results (Source: hackertarget.com API)"; fi; fi
