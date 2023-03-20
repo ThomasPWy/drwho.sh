@@ -708,7 +708,6 @@ f_HEADLINE "DOMAIN WEBPRESENCE"; echo -e "HOST DNS\n" | sed -e :a -e 's/^.\{1,78
 f_dnsCHAIN "$1"; f_getURLSCAN "$1"; f_urlSCAN_FULL "$1" > $tempdir/uscan_results
 [[ -f $tempdir/uscan_results ]] && cat $tempdir/uscan_results > ${outdir}/URLSCAN_$1.txt
 }
-
 f_WHOIS_STATUS(){
 whois_query=$(f_getDOMAIN "$1"); if [ -n "$whois_query" ]; then
 unset whois_ns; [[ -f $tempdir/whois_domain ]] && rm $tempdir/whois_domain; [[ -f $tempdir/whois_dates ]] && rm $tempdir/whois_dates
@@ -954,8 +953,8 @@ jq -r '.mobile' $tempdir/ipqs.json | grep -o 'true' | sed 's/true/Mobile/' >> $t
 jq -r '.active_tor' $tempdir/ipqs.json | grep -o 'true' | sed 's/true/Tor/' >> $tempdir/ipqs_descr
 [[ -f $tempdir/ipqs_descr ]] && ipqs_descr="| $(cat $tempdir/ipqs_descr | tr '[:space:]' ' '; echo '')"
 echo -e "\n$ipqs_marking IPQualityScore:     $fraud_score ($ipqs_class) | Recent abuse: $recent_abuse $ipqs_descr"; else
-echo -e "\n+ IPQualityScore:      No response"; fi; else 
-echo -e "\n+ IPQualityScore:      API key required (see help)"; fi
+echo -e "\n+ IPQualityScore:     No response"; fi; else 
+echo -e "\n+ IPQualityScore:     API key required (see help)"; fi
 }
 f_ISC(){
 curl -s "https://isc.sans.edu/api/ip/$1?json" > $tempdir/iscip.json
@@ -4017,18 +4016,18 @@ f_BOGON "$addr"; [[ $bogon = "TRUE" ]] || echo $addr >> $tempdir/pub6; done
 pub6=$(sort -u $tempdir/pub6)
 if [ -n "$pub4" ] || [ -n "$pub6" ]; then
 for a in $pub4; do
-curl -s -m 5 http://ip-api.com/json/${a}?fields=91137 > $tempdir/geo.json; geo=$(jq -r '.country' $tempdir/geo.json)
+f_getRIR "$a"; curl -s -m 5 http://ip-api.com/json/${a}?fields=91137 > $tempdir/geo.json; geo=$(jq -r '.country' $tempdir/geo.json)
 f_getABUSE_C "$a"; abuse=$(cat $tempdir/abx | tr '[:space:]' ' ')
 mobile=$(jq -r '.mobile' $tempdir/geo.json | grep -o 'true' | sed 's/true/| MOBILE/')
 echo -e "\n\n>  $a\n"
-echo -e "   $geo | $(jq -r '.org' $tempdir/geo.json) | $abuse | $(f_TOR "${a}") $mobile\n"
-f_ROUTE "$a"; done | tee -a ${out}
+echo -e "   $geo | $(jq -r '.org' $tempdir/geo.json) | $abuse | $(f_TOR "$a") $mobile\n"
+f_ROUTE "$a"; done | tee -a ${out}; unset rir
 for z in $pub6; do
-curl -s -m 5 http://ip-api.com/json/${z}?fields=91137 > $tempdir/geo.json; geo=$(jq -r '.country' $tempdir/geo.json)
+f_getRIR "$z"; curl -s -m 5 http://ip-api.com/json/${z}?fields=91137 > $tempdir/geo.json; geo=$(jq -r '.country' $tempdir/geo.json)
 f_getABUSE_C "${z}"; abuse=$(cat $tempdir/abx | tr '[:space:]' ' ')
 mobile=$(jq -r '.mobile' $tempdir/geo.json | grep -o 'true' | sed 's/true/| MOBILE/')
 echo -e "\n\n>  $z\n"; echo -e "   $geo | $(jq -r '.org' $tempdir/geo.json) | $abuse $mobile\n"
-f_ROUTE "$z"; done | tee -a ${out}; fi; else 
+f_ROUTE "$z"; done | tee -a ${out}; unset rir; fi; else 
 echo ''; f_setTARGET; if [ $option_tools = "1" ]; then
 out="${outdir}ABUSE_CONTACTS.${file_date}.txt"; echo '' | tee -a ${out}; f_HEADLINE2 "ABUSE CONTACTS  ($file_date)\n" | tee -a ${out}
 elif [ $option_tools = "2" ]; then
