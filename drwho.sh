@@ -310,10 +310,8 @@ unset vers4; unset vers6
 if [ -n "$addr_input" ]; then
 vers4=$(f_EXTRACT_IP4_ALL "$addr_input"); vers6=$(f_EXTRACT_IP6 "$addr_input"); netwrk=$(cut -s -d '/' -f 1 <<<$addr_input)
 if [ -n "$netwrk" ]; then
-[[ -n "$vers4" ]] && fmt -w 70 | sed 's/ /  /g' | sed G <<<$vers4
-[[ -n "$vers6" ]] && fmt -w 70 | sed 's/ /  /g' | sed G <<<$vers6;  else
-[[ -n "$vers4" ]] && fmt -w 60 | sed 's/ /  /g'  <<<$vers4
-[[ -n "$vers6" ]] && fmt -w 60 | sed 's/ /  /g'  <<<$vers6; fi; fi
+[[ -n "$vers4" ]] && fmt -w 70 | sed G <<<$vers4; [[ -n "$vers6" ]] && fmt -w 70 | sed G <<<$vers6;  else
+[[ -n "$vers4" ]] && fmt -w 60  <<<$vers4; [[ -n "$vers6" ]] && fmt -w 60 <<<$vers6; fi; fi
 }
 #**********************  CLIENT  ***********************
 f_CLIENT_INFO(){
