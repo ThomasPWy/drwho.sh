@@ -8,7 +8,7 @@ _______________________________________________________________________________
   drwho.sh
  ---------------
 
-https://github.com/ThomasPWy/drwho.sh,  Author: Thomas Wy,   Vers.4.3 (Mar 2023)
+https://github.com/ThomasPWy/drwho.sh,  Author: Thomas Wy,   Vers. 5.0 (Apr 2023)
 _______________________________________________________________________________
 
 Installation
@@ -21,9 +21,9 @@ Dependencies
 
 Dependencies (essential): 
 
-curl, dnsutils (installs dig & host), jq, ipcalc, lynx, nmap, netcat/nc, openssl, whois
+curl, dnsutils (installs dig, delv & host), jq, ipcalc, lynx, nc/ncat, nmap, nping, openssl, whois
 
 
 Dependencies (recommended): 
 
-dublin-traceroute, mtr, testssl.sh, thc-ipv6, tracepath, whatweb
+dublin-traceroute, locate/mlocate, mtr, testssl.sh, tracepath ('iputils-tracepath' in Debian/Ubuntu, 'tracepath' in Termux), thc-atk6, whatweb"
