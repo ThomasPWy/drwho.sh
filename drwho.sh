@@ -5560,9 +5560,7 @@ echo -e -n "\n${B}Option  >${G}  Target Port (e.g. 25)  ${B}>>${D}  " ; read tpo
 [[ $proto = "4" ]] && trace_array+=(--sct -P $tport) && mtr_proto="SCTP:$tport"
 echo ''; f_Long; echo ''; f_printIF_ADDRESSES
 echo -e -n "\n${B}Set     > ${G}  Interface; hit enter to use default   ${B}>>${D}  " ; read if_input
-if_count=$(f_countW "$if_input")
-[[ $if_count -eq 1 ]] && trace_array+=(--interface $if_input) && print_if="NIC: $if_input"
-fi; fi # end config op 1 & 2
+if_count=$(f_countW "$if_input"); [[ $if_count -eq 1 ]] && trace_array+=(--interface $if_input) && print_if="NIC: $if_input"; fi; fi #end config op = 1,2
 for x in $(cat $tempdir/targets.list); do
 f_CLEANUP_FILES; f_getTYPE "$x"
 if [ $target_cat = "hostname" ] || [ $target_cat = "host4" ] || [ $target_cat = "host6" ]; then
@@ -5572,27 +5570,22 @@ out="${outdir}/DUBLIN_TRACERT.${file_date}.${file_name}.txt"
 tr_head="DUBLIN TRACEROUTE"; f_TRACE_HEADER "$x" | tee -a ${out}
 ${run_as_sudo} ${PATH_dublin_t} -n 15 $a > $tempdir/dt
 sed -n '/Traceroute from/,/Saved JSON/p' $tempdir/dt | sed '/==/{x;p;x;G}' | sed 's/NAT ID:/\n     NAT ID:/g' |
-sed '/flow hash/G' | sed '/*/G' | sed "/Saved JSON file/{x;p;x;G}" | tee -a ${out}
-f_Long | tee -a ${out}
+sed '/flow hash/G' | sed '/*/G' | sed "/Saved JSON file/{x;p;x;G}" | tee -a ${out}; f_Long | tee -a ${out}
 sed -n '/Flow ID/,$p' $tempdir/dt | grep -sEo "Flow ID [0-9]{1,7}|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" |
 sed '/Flow ID/a nnn' | tr '[:space:]' ' ' | sed 's/Flow ID/\n\nFlow ID/g' | sed 's/nnn/\n\n/g' | sed 's/ /  /g' |
 sed 's/^ *//' | fmt -s -w 70 | tee -a ${out}; echo '' | tee -a ${out}
 elif [ $op = "1" ]; then
-[[ $hop_details = "0" ]] && out="${outdir}/MTR.${file_date}_${file_name}.txt"
-[[ $hop_details = "1" ]] && out="${outdir}/MTR_DETAILS.${file_date}_${file_name}.txt"
-tr_head="$x MTR  ($trace_mode, $mtr_proto, PING COUNT: $pingcount) $print_if"
-f_MTR "$x" | tee -a ${out}
+[[ $hop_details = "1" ]] && out="${outdir}/MTR_DETAILS.${file_date}_${file_name}.txt" || out="${outdir}/MTR.${file_date}_${file_name}.txt"
+tr_head="$x MTR  ($trace_mode, $mtr_proto, PING COUNT: $pingcount) $print_if"; f_MTR "$x" | tee -a ${out}
 elif [ $op = "2" ]; then
-tr_head="TRACEPATH ($trace_mode)"; [[ $hop_details = "0" ]] && out="${outdir}/TPATH.${file_date}_${file_name}.txt"
-[[ $hop_details = "1" ]] && out="${outdir}/TPATH_DETAILS.${file_date}_${file_name}.txt"
-f_TRACEPATH "$x" | tee -a ${out}; fi
+[[ $hop_details = "1" ]] && out="${outdir}/MTR_DETAILS.${file_date}_${file_name}.txt" || out="${outdir}/TPATH.${file_date}_${file_name}.txt"
+tr_head="TRACEPATH ($trace_mode)"; f_TRACEPATH "$x" | tee -a ${out}; fi
 if [ $hop_details = "1" ]; then
 if [ $op = "1" ]; then
-hoplist=$(grep -v 'Wrst' $tempdir/mtr.txt | grep -sEoi "$REGEX_IP46"); else 
+hoplist=$(grep -v 'Wrst' $tempdir/mtr.txt | grep -sEoi "$REGEX_IP46"); else
 hoplist=$(grep -E "[0-9]{1,2}:" $tempdir/trace | sed '/no reply/d' | awk '{print $2}'); fi
 for hop in $hoplist; do
-unset hop_count; unset rtt
-if [ $op = "1" ]; then
+unset hop_count; unset rtt; if [ $op = "1" ]; then
 hop_count=$(sed 's/^ *//' $tempdir/mtr.txt | grep -E "^[0-9]{1,2}\." | grep -w $hop | cut -s -d '.' -f 1 |
 tr '[:space:]' ' ' | sed 's/^[ \t]*//;s/[ \t]*$//')
 rtt=$(sed 's/AS???/AS-/' $tempdir/mtr.txt | grep 'AS' | sed '/???/d' | sed '/^$/d' | grep -w $hop | awk -F'%' '{print $NF}' | awk '{print $2}' |
@@ -5605,9 +5598,10 @@ echo '' | tee -a ${out}; f_HEADLINE2 "HOP ADDRESSES (PUBLIC)\n\n" | tee -a ${out
 sed 's/^[ \t]*//;s/[ \t]*$//' | sed 's/ /  /g' | fmt -s -w 60 | sed G | tee -a ${out}; rm $tempdir/hops_public; fi
 if [ -f $tempdir/hops_bogon ]; then
 echo '' | tee -a ${out}; f_HEADLINE2 "HOP ADDRESSES (BOGONS)\n\n" | tee -a ${out}; cat $tempdir/hops_bogon |  tr '[:space:]' ' ' |
-sed 's/^[ \t]*//;s/[ \t]*$//' | sed 's/ /  /g' | fmt -s -w 60 | sed G | tee -a ${out}; rm $tempdir/hops_bogon; fi; done; else
-f_WARNING_PRIV; fi; else
-f_WARNING; fi; unset target_type; unset x; echo ''; fi; f_removeDir; f_Menu
+sed 's/^[ \t]*//;s/[ \t]*$//' | sed 's/ /  /g' | fmt -s -w 60 | sed G | tee -a ${out}; rm $tempdir/hops_bogon; fi; done
+unset target_type; unset x; echo ''; else
+f_WARNING_PRIV; fi; fi; else
+f_WARNING; fi; f_removeDir; f_Menu
 ;;
 #-------------------------------  WEB SERVER OPTIONS  -------------------------------
 web|webserver|webservers|website|www)
