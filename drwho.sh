@@ -569,9 +569,9 @@ v4_range=$(ipcalc -b -n $net_addr | grep -E "Network:|Broadcast:" | sed '/HostMi
 tr '[:space:]' ' ' | sed 's/^ *//'); echo -e "\nRange:        $v4_range ($net_mask)\n"; fi; f_NETGEO "$inetnum"
 echo -e "\n\nOwner:        $owner, $owner_cc"; else
 echo -e "\nNet:          $inetnum | $owner, $owner_cc"; fi
-echo -e "\nResponsible:  $responsible,  $owner_poc"
+echo -e "\nResponsible:  $responsible,  $owner_poc\n"; f_ROUTE
 if [ $target_type = "net" ]; then
-f_ROUTE; echo ''; f_HEADLINE2 "NAME SERVERS (SOURCE: WHOIS)\n\n"
+echo ''; f_HEADLINE2 "NAME SERVERS (SOURCE: WHOIS)\n\n"
 grep -E "^nserver:" $tempdir/whois | awk '{print $NF}' | tr -d ' ' | sort -uV | tr '[:space:]' ' ' | sed 's/ /  /g' | sed 's/^ *//' | fmt -w 80 | sed G; fi
 }
 f_printLACNIC_ABUSE_C(){
