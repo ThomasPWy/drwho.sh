@@ -2378,12 +2378,10 @@ f_HEADLINE2 "SRV RECORDS PING"
 for srv in $(cat $tempdir/services); do
 srv_host=$(echo "$srv" | cut -s -d ';' -f 2 | tr -d ' '); dst_port=$(echo "$srv" | cut -s -d ';' -f 1 | tr -d ' ')
 for sa in $(f_RESOLVE_v4 "$srv_host"); do
-echo -e "\n\n$srv_host  ($sa) tcp/$dst_port\n"
-echo -e "\n$sa"; f_PING "$sa"
+echo -e "\n\n$srv_host  ($sa) tcp/$dst_port\n"; f_PING "$sa"
 ${PATH_nping} --safe-payloads --tcp-connect -p $dst_port -c 5 $sa > $tempdir/np; f_printNPING; done
 for sz in $(f_RESOLVE_v6 "$srv_host"); do
-echo -e "\n\n$srv_host  ($sz) tcp/$dst_port\n"
-echo -e "\n$sz"; f_PING "$sz"
+echo -e "\n\n$srv_host  ($sz) tcp/$dst_port\n"; f_PING "$sz"
 ${PATH_nping} -6 --safe-payloads --tcp-connect -p $dst_port -c 5 $sz > $tempdir/np; f_printNPING; done; done; fi
 }
 
