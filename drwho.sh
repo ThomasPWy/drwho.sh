@@ -3635,9 +3635,10 @@ local s="$*"; echo ''; sudo ${PATH_nmap} $custom_inf -R --resolve-all -sS -sU -P
 grep -E "scan report|\||\|_" | sed '/Nmap scan report/G' | sed 's/Nmap scan report for/\n\n*/' | tr -d '|_' | sed 's/^ *//' | sed 's/path-mtu:/\n /'
 }
 f_PING(){
+if [ $target_type = "web" ]; then
 if [[ $1 =~ $REGEX_IP4 ]]; then
 ${PATH_nping} --safe-payloads --tcp-connect -p 80 -c 5 $1 > $tempdir/np; else
-${PATH_nping} -6 --safe-payloads --tcp-connect -p 80 -c 5 $1 > $tempdir/np; fi
+${PATH_nping} -6 --safe-payloads --tcp-connect -p 80 -c 5 $1 > $tempdir/np; fi; fi
 timeout 7 ping -c 5 $1 > $tempdir/ipg; [[ -f $tempdir/np ]] && f_printNPING
 icmp_packets=$(grep packets $tempdir/ipg | cut -d ',' -f -2 | sed 's/packets transmitted/sent/' | sed 's/received/ok/' |
 sed 's/^[ \t]*//;s/[ \t]*$//')
