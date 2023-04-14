@@ -1978,7 +1978,7 @@ echo '' >> $tempdir/zone.txt; cat $tempdir/zone.txt
 }
 f_CNAMES(){
 [[ $option_connect = "0" ]] && test_ns="1.1.1.1" || test_ns=$(dig -r @1.1.1.1 soa +short $x | cut -d ' ' -f 1 | rev | cut -c 2- | rev | tr -d ' ')
-unset check_host_cname; f_Long; echo -e "\nCNAME / HINFO\n\n"
+unset check_host_cname; f_Long; echo -e "\nCNAME / HINFO\n"
 dom_host_hinfo=$(dig -r @${test_ns} +short hinfo $x | tr '[:space:]' ' '; echo '')
 [[ -n $dom_host_hinfo ]] && echo "$x  HINFO  $dom_host_hinfo" >> $tempdir/hinfo
 if [ $option_connect = "0" ]; then
