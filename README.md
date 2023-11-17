@@ -8,7 +8,7 @@ _______________________________________________________________________________
   drwho.sh
  ---------------
 
-https://github.com/ThomasPWy/drwho.sh,  Author: Thomas Wy,   Vers. 5.0 (Apr 2023)
+https://github.com/ThomasPWy/drwho.sh,  Author: Thomas Wy,   Vers. 6.0 (Nov 2023)
 _______________________________________________________________________________
 
 Installation
