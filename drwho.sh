@@ -198,7 +198,7 @@ echo -e "${C}DEPENDENCIES ${D}\n"
 echo -e "\n${B}Dependencies (required):${D}\n"
 echo "curl, dnsutils (installs dig, delv & host), jq, ipcalc, lynx, ncat, nmap, nping, openssl, whois"
 echo -e "\n\n${B}Dependencies (recommended):${D}\n"
-echo -e "dublin-traceroute, locate/mlocate, mtr, \ntestssl.sh, tracepath ('iputils-tracepath' in Debian/Ubuntu, 'tracepath' in Termux), thc-atk6, whatweb"
+echo -e "dublin-traceroute, locate/mlocate, mtr, proxychains \ntestssl.sh, tracepath ('iputils-tracepath' in Debian/Ubuntu, 'tracepath' in Termux), thc-atk6, whatweb"
 echo -e "${B}"; f_Long; echo -e "\n${C}CUSTOMIZATIONS${D}\n"
 echo -e "\n${B}API KEYS ${D}\n"
 echo -e "API keys are required for usage of Project Honeypot (projecthoneypot.org) and\nIP Quality Score (ipqualityscore.com) APIs"
@@ -316,6 +316,9 @@ NMAP="/usr/bin/nmap"
 NPING="/usr/bin/nping"
 OPENSSL="/usr/bin/openssl"
 PING="/usr/bin/ping"
+if type proxychains &> /dev/null; then
+  PROXYCHAINS="/usr/bin/proxychains"
+fi 
 TOUT="/usr/bin/timeout"
 TPATH="/usr/bin/tracepath"
 WHATWEB="/usr/bin/whatweb"
@@ -955,7 +958,7 @@ if [ -n "$rir_objects" ]; then
     elif [ $target_type = "whois_target" ]; then
       f_HEADLINE2 "$x POC OBJECTS ($(f_toUPPER "$rir"))\n\n"
     else
-      f_HEADLINE2 "$(f_toUPPER "$rir") POCs (Searchable in option [w1])\n\n"
+      f_Long; echo -e "\n$(f_toUPPER "$rir") POCs (Searchable in option [w1])\n\n"
     fi
   fi
   echo -e "$printRIR_OBJ" | fmt -s -w 80; echo ''
@@ -2524,7 +2527,7 @@ fi
 #organisation=$(f_VALUE ":" "$(grep -sEa -m 1 "^Organization:" $temp/whois)")
 descr=$(f_VALUE ":" "$(grep -sEa -m 1 "^descr:" $temp/whois)"); rir_caps=$(f_toUPPER "$rir") 
 mnt_by=$(f_VALUE ":" "$(grep -sEa "^mnt-by:" $temp/whois)" | grep -E -v "RIPE-NCC-HM-MNT|RIPE-NCC-LEGACY-MNT" | head -1)
-if [ $target_cat = "net4" ] && [ $rir = "ripe" ]; then
+if [ $target_cat = "net4" ] && [ $rir = "ripe" ] && [ $net_type = "cidr" ]; then
   space_usage_res=$($JQ '.data.resource?' $temp/su.json | sed '/null/d')
   if [ -n "$space_usage_res" ] && [[ $space_usage_res =~ "/" ]]; then
     net4_status=$(echo $net_status | grep -sEow "SUB-ALLOCATED PA|ASSIGNED PA" | cut -d ' ' -f 1)
@@ -2742,26 +2745,30 @@ fi
 }
 
 f_WHOIS_NET(){
-local s="$*"
 if [ $bogon = "TRUE" ]; then
-  f_Long2; f_BOGON_INFO "$s"
+  f_Long2; f_BOGON_INFO "$1"
 else
   if [ $target_cat = "nethandle" ]; then
-    $WHOIS -h whois.arin.net -- "z + > ! $s" > $temp/whois
+    $WHOIS -h whois.arin.net -- "z + > ! $1" > $temp/whois
     f_HEADLINE3 " [NET]  $s  |  ARIN  |  $file_date": f_NET_INFO > $temp/arin_net
     [[ -f $temp/arin_net ]] && cat $temp/arin_net
     f_POC "$temp/whois" > $temp/arin_pocs; echo '' >> $temp/arin_pocs
     [[ -f $temp/arin_pocs ]] && echo '' && f_HEADLINE2 "CONTACT\n" && cat $temp/arin_pocs
     cidr1=$(grep -sEa -m 1 "^CIDR:" $temp/whois | cut -d ':' -f 2- | sed 's/^[ \t]*//;s/[ \t]*$//' | cut -d ' ' -f 1)
     [[ -n "$cidr1" ]] && f_ROUTE_CONS "$cidr1"
-    f_RESOURCES_NETNAME "$s"; f_SUBNETS "$s"
+    f_RESOURCES_NETNAME "$s"; f_SUBNETS "$1"
   else
-    f_get_RIPESTAT_WHOIS "$s"
-    f_getRIR "$s"; timeout 20 $WHOIS -h whois.pwhois.org $1  > $temp/pwhois
+    stripped=$(echo "$1" | cut -d '/' -f -1 | cut -d '-' -f -1)
+    f_get_RIPESTAT_WHOIS "$1"
+    f_getRIR "$1"
+    [[ $net_type = "range" ]] && [[ -f $temp/irr_records ]] && pwhois_query=$(cut -s -d '-' -f 1 $temp/irr_records | head -1 | tr -d ' ')
+    [[ $net_type = "cidr" ]] && pwhois_query="$1"; [[ -n "$pwhois_query" ]] || pwhois_query="$stripped"
+    timeout 20 $WHOIS -h whois.pwhois.org $pwhois_query > $temp/pwhois
+    prefix=$(grep -sE "^Prefix:" $temp/pwhois | awk '{print $NF}' | tr -d ' ')
     if [ $rir = "lacnic" ]; then
-    [[ $option_detail = "0" ]] || $WHOIS -h whois.lacnic.net $s > $temp/whois; f_LACNIC_WHOIS "$s"; else
+    [[ $option_detail = "0" ]] || $WHOIS -h whois.lacnic.net $1 > $temp/whois; f_LACNIC_WHOIS "$1"; else
     if [ $option_detail = "0" ]; then
-      f_NET_HEADER "$s"
+      f_NET_HEADER "$1"
     else
       if [ $rir = "arin" ]; then
         handle=$($JQ '.data.records[]? | .[] | select (.key=="NetHandle") | .value' $temp/whois.json | tail -1)
@@ -2771,26 +2778,26 @@ else
           $WHOIS -h whois.arin.net -- "n ! $handle" > $temp/whois
         fi
       else
-        if [ $rir = "ripe" ] && [ $target_cat = "net4" ]; then
-          $CURL -s -m 10 --location --request GET "https://stat.ripe.net/data/address-space-usage/data.json?resource=$s" > $temp/su.json
+        if [ $rir = "ripe" ] && [ $target_cat = "net4" ] && [ $net_type = "cidr" ]; then
+          $CURL -s -m 10 --location --request GET "https://stat.ripe.net/data/address-space-usage/data.json?resource=$1" > $temp/su.json
         fi
         if [ $option_detail = "2" ]; then
-          $WHOIS -h whois.$rir.net -- "-B $s" > $temp/whois
+          $WHOIS -h whois.$rir.net -- "-B $1" > $temp/whois
         else
-          $WHOIS -h whois.$rir.net -- "--no-personal $s" > $temp/whois
+          $WHOIS -h whois.$rir.net -- "--no-personal $1" > $temp/whois
         fi
       fi # $rir = arin ?
       netabuse=$(grep -sEa "^OrgAbuseEmail:|^% Abuse|^abuse-mailbox:" $temp/whois | grep -sEao "$REGEX_MAIL" | sort -u | tr '[:space:]' ' ' ; echo '')
-      f_HEADLINE3 "[NET]  $s  (query)  -  $file_date"
+      f_HEADLINE3 "[NET]  $1  (query)  -  $file_date"
       [[ -n "$netabuse" ]] && echo -e "[@]: $netabuse\n___\n"
-      [[ -f $temp/whois ]] && f_NET_INFO "$s"
+      [[ -f $temp/whois ]] && f_NET_INFO "$1"
     fi # $option_detail = 0 ?
    fi # $rir = lacnic ?
    if [ $net_report = "false" ]; then
-     f_ROUTE_CONS "$s"
+     f_ROUTE_CONS "$prefix"
    else
      if [ $option_detail = "2" ] || [ $option_detail = "3" ]; then
-       f_NET_DETAILS "$s"
+       f_NET_DETAILS "$1"
      fi
     fi
   fi # target_cat = nethandle ?
@@ -7343,18 +7350,25 @@ if [ $opt1 != "0" ]; then
         echo -e -n "\n${B}Set     > Ports  ${D}- e.g. U:69,T:636,T:989-995  ${B}>>${D} "; read -r ports_input
         ports="-p $(echo $ports_input | tr -d ' ')"
       fi
-      echo -e "\n\n${B} Options  > ${C}Nmap Scripts - Aggression Level\n"
-      echo -e "${B} [1]${D}  Safe Mode"
-      echo -e "${B} [2]${D}  Aggressive"
+      echo -e "\n\n${B} Options  > ${C}Nmap Scripts - Aggression Level & Proxychains\n"
+      echo -e "${B} [1]${D}   Safe"
+      echo -e "${B} [2]${D}   Aggressive\n"
+      echo -e "${B} [11]${D}  Safe via Proxychains"
+      echo -e "${B} [12]${D}  Aggressive via Proxychains"
       echo -e -n "\n${B}  ?${D}   " ; read option_scripts
-      if [ $option_scripts = "1" ]; then
+      if [ $option_scripts = "11" ] || [ $option_scripts = "12" ]; then
+        proxych="$PROXYCHAINS"
+      else
+        proxych=''
+      fi
+      if [ $option_scripts = "1" ] || [ $option_scripts = "11" ]; then
         script_choice="$nse1"
       if [ $option_ports = "1" ] || [ $option_ports = "4" ] || [ $option_ports = "5" ]; then
         nmap_array+=(-T4 -sS -sV -O --osscan-limit --version-intensity 7 -Pn -R --resolve-all --open)
       else
         nmap_array+=(-T4 -sS -sU -sV -O --osscan-limit --version-intensity 7 -Pn -R --resolve-all --open)
       fi
-      elif [ $option_scripts = "2" ]; then
+      elif [ $option_scripts = "2" ] || [ $option_scripts = "12" ]; then
         script_choice="${nse1},${nse2}" && script_args="--script-args=http-methods.test-all"
         if [ $option_ports = "1" ] || [ $option_ports = "4" ] || [ $option_ports = "5" ]; then
           nmap_array+=(-T4 -sS -sV -O --version-intensity 9 -Pn -R --resolve-all --open)
@@ -7411,11 +7425,16 @@ if [ $opt1 != "0" ]; then
             for t in $target_v4; do f_HOST_SHORT "$t"; done  | tee -a ${out}
             if [ $option_ports = "1" ] || [ $option_ports = "2" ]; then
               if [ -f $temp/detected_ports ] && [[ $(wc -w < $temp/detected_ports) -gt 0 ]]; then
-                [[ $option_ports = "2" ]] && echo "$services_tcp" | sed 's/,/\n/g' | tr -d ' ' >> $temp/detected_ports
-                ports_tcp=$(sort -ug $temp/detected_ports | sed 's/^/,T:/' | tr '[:space:]' ' ' | tr -d ' ' | sed 's/^\,//')
-                ports="${ports_tcp},${services_udp1}"
+                detected_ports=$(sort -ug $temp/detected_ports | sed 's/^/,T:/' | tr '[:space:]' ' ' | tr -d ' ' | sed 's/^\,//')
+                if [ $option_ports = "1" ]; then
+                  ports="-p $detected_ports"
+                else
+                  echo "$detected_ports" | sed 's/,/\n/g' | tr -d ' '  > $temp/ports; echo "$top250" | sed 's/,/\n/g' | tr -d ' '  >> $temp/ports
+                  port_list=$(sort -u $temp/ports | sed 's/^/,/' | tr '[:space:]' ' ' | tr -d ' ' | sed 's/^\,//')
+                  [[ -n "$port_list" ]] && ports="-p $port_list"
+                fi
               else
-                [[ $option_ports = "2" ]] && ports="${services_tcp},${services_udp1}"
+                [[ $option_ports = "2" ]] && ports="-p $top250"
               fi
             fi
             [[ -n "$ports" ]] && f_RUN_NMAP "$x" | tee -a ${out}
@@ -7607,7 +7626,7 @@ if [ $netop != "0" ] ; then
         echo -e -n "\n${B}  ? ${D}  " ; read option_banners
         if [ $option_banners = "4" ] || [ $option_banners = "5" ]; then
           if [ $option_connect != "0" ] && [ -n "$is_admin" ]; then
-            [[ $option_banners = "5" ]] && proxych="proxychains" || proxych=''
+            [[ $option_banners = "5" ]] && proxych="$PROXYCHAINS" || proxych=''
             nmap_array+=(-PE -PP -PS25,80,443 -PA80,443,3389 -PU:53,40125 -sS -sU -sV -O --osscan-limit --version-intensity 5 -T4 -R)
             scripts="--script=$nse1"; ports="-p $top80"; script_args=''
           fi
