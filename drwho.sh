@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 
 #-------------------------------  API KEYS  -------------------------------
@@ -8,7 +7,6 @@
 
 # *  projecthoneypot.org
 #   api_key_honeypot=""
-
 
 #-------------------------------  BASIC VARIABLES  -------------------------------
 
@@ -121,17 +119,14 @@ services
 "
 
 #------------------------------------- WEB SERVER  TARGET PORTS & NSE SCRIPTS  -------------------------------------
-
-ports_web="T:21,T:22,T:23,T:80,T:443,T:1099,T:3306,T:8080,T:8443"
-net_scripts="http-title,https-redirect,irc-botnet-channels,nfs-ls,smb-double-pulsar-backdoor,smb-ls,snmp-netstat,snmp-info,snmp-win32-shares,ssl-cert,ssl-known-key,vulners"
-net_scripts2="ftp-anon,http-malware-host,http-methods,http-slowloris-check,http-title,https-redirect,irc-botnet-channels,,ms-sql-empty-password,mysql-empty-password,rmi-vuln-classloader,nfs-ls,smb-double-pulsar-backdoor,smb-ls,snmp-netstat,snmp-info,snmp-win32-shares,ssl-cert,ssl-heartbleed,ssl-known-key,sslv2,vulners"
-nse_vulners1="http-slowloris-check,http-malware-host,http-title,https-redirect,irc-botnet-channels,memcached-info,nbstat,nfs-ls,smb-double-pulsar-backdoor,smb-vuln-ms17-010,smb-ls,ssl-cert,sslv2,ssl-heartbleed,ssl-dh-params,ssl-enum-ciphers,ssl-known-key,ssh2-enum-algos,snmp-netstat,snmp-info,snmp-ios-config,snmp-win32-software,snmp-win32-shares,vulners"
-nse_vulners2="ftp-anon,http-enum,http-methods,http-phpmyadmin-dir-traversal,http-unsafe-output-escaping,http-webdav-scan,ms-sql-empty-password,mysql-empty-password,rmi-vuln-classloader"
-web0="http-affiliate-id,http-apache-server-status,http-cookie-flags,http-malware-host,http-mobileversion-checker,http-php-version,http-referer-checker,ssl-known-key,xmlrpc-methods,http-trace"
-web1="ftp-anon,http-cors,http-methods,http-open-proxy,http-slowloris-check,ssh2-enum-algos"
+nse1="http-git,http-title,https-redirect,http-slowloris-check,irc-botnet-channels,ike-version,smb-double-pulsar-backdoor,smb-vuln-ms17-010,snmp-netstat,snmp-info,snmp-win32-shares,ssl-cert,ssl-heartbleed,ssl-known-key,sslv2,tftp-enum,vulners"
+nse2="ftp-anon,http-methods,ms-sql-empty-password,mysql-empty-password,nfs-ls,rmi-vuln-classloader,smb-ls,ssh-auth-methods"
+web0="ajp-headers,http-affiliate-id,http-apache-server-status,http-cookie-flags,http-date,http-malware-host,http-slowloris-check,http-traceroute,http-mobileversion-checker,http-php-version,http-referer-checker,ssl-date,ssl-known-key,xmlrpc-methods,http-trace"
+web1="ajp-methods,ftp-anon,http-cors,http-methods,http-open-proxy,ssh-auth-methods,ssh2-enum-algos"
 web2="http-auth,http-auth-finder,http-enum,http-jsonp-detection,http-phpmyadmin-dir-traversal,http-unsafe-output-escaping,http-webdav-scan,mysql-empty-password,rmi-vuln-classloader"
 web3="http-csrf,http-dombased-xss,http-stored-xss"
-ports_net="T:21,T:22,T:23,T:25,T:53,T:80,T:88,T:89,T:110,T:139,T:179,T:222,T:389,T:443,T:445,T:465,T:514,T:587,T:631,T:636,T:860,T:873,T:993,T:1025,T:1080,T:1433,T:1434,T:1723,T:2000,T:2002,T:2049,T:2082,T:2083,T:2483,T:2484,T:3260,T:3306,T:3389,T:4444,T:5000,T:5060,T:5061,T:5222,T:5223,T:5432,T:5500,T:5800,T:5938,T:6379,T:6443,T:6665,T:6666,T:8040,T:8041,T:8080,T:8200,T:8443,T:8834,T:9001,T:9200,T:9396,T:9800,T:10000,T:55000,U:123,U:161,U:162,U:514,U:5060"
+ports_web="T:21,T:22,T:23,T:80,T:443,T:1080,T:1099,T:1433,T:1434,T:3306,T:8009,T:8080,T:8443"
+top80="T:21,T:22,T:23,T:25,T:53,T:80,T:88,T:89,T:110,T:139,T:179,T:222,T:389,T:443,T:445,T:465,T:514,T:587,T:631,T:636,T:860,T:873,T:993,T:1025,T:1080,T:1194,T:1433,T:1434,T:1723,T:2000,T:2002,T:2049,T:2082,T:2083,T:2483,T:2484,T:3260,T:3306,T:3389,T:4444,T:5000,T:5060,T:5061,T:5222,T:5223,T:5432,T:5500,T:5800,T:5900,T:5938,T:6379,T:6443,T:6665,T:6666,T:8009,T:8040,T:8041,T:8080,T:8200,T:8443,T:8834,T:9001,T:9160,T:9200,T:9396,T:9800,T:10000,T:11211,T:27017,T:55000,U:123,U:161,U:162,U:500,U:514,U:5060"
 top250="T:7,T:9,T:13,T:17,T:19-23,T:25,T:26,T:37,T:53,T:79,T:80,T:81,T:82,T:88,T:89,T:100,T:102,T:106,T:110,T:111,T:113,T:119,T:135,T:139,T:143,T:144,T:157,T:179,T:199,T:222,T:255,T:371,T:385,T:389,T:427,T:443,T:444,T:445,T:465,T:500,T:502,T:512-515,T:543,T:544,T:548,T:554-556,T:587,T:631,T:636,T:646,T:691,T:808,T:860,T:873,T:902,T:989,T:990,T:993,T:995,T:1000,T:1022,T:1024-1031,T:1038,T:1039,T:1041,T:1044,T:1048,T:1049,T:1053,T:1054,T:1056,T:1064,T:1065,T:1071,T:1080,T:1098,T:1099,T:1110,T:1194,T:1433,T:1434,T:1443,T:1515,T:1701,T:1720,T:1723,T:1755,T:1801,T:1883,T:1900,T:2000,T:2001,T:2049,T:2082,T:2083,T:2100,T:2103,T:2105,T:2107,T:2121,T:2222,T:2379,T:2380,T:2483,T:2484,T:2601,T:2717,T:2869,T:2967,T:3000,T:3001,T:3128,T:3260,T:3268,T:3269,T:3306,T:3333,T:3389,T:3478,T:3689,T:3690,T:3703,T:3986,T:4001,T:4333,T:4433,T:4444,T:4899,T:5000,T:5001,T:5004,T:5005,T:5009,T:5050,T:5051,T:5060,T:5101,T:5120,T:5190,T:5222,T:5223,T:5357,T:5432,T:5500,T:5631,T:5632,T:5666,T:5800,T:5900,T:5901,T:5938,T:5984,T:5985,T:6000-6009,T:6379,T:6443,T:6514,T:6646,T:6665,T:6666,T:6667,T:6679,T:6697,T:7000,T:7070,T:8000,T:8008,T:8009,T:8010,T:8031,T:8040,T:8041,T:8080,T:8081,T:8086,T:8088,T:8200,T:8443,T:8500,T:8834,T:8888,T:8901,T:8902,T:8903,T:9000,T:9001,T:9090,T:9100,T:9102,T:9160,T:9200,T:9391,T:9396,T:9501,T:9800,T:9999,T:10000,T:10010,T:10250,T:27017,T:31337,T:32768,T:49152,T:49153,T:49154,T:49155,T:49156,T:49157,T:50000-50003,T:50007,T:55000,U:67-69,U:161,U:162,U:500,U:514,U:3478,U:3479,U:3480,U:3481,U:5060,U:11211,U:31335,U:51820"
 # ----------------------------------  DIRECTORIES  -------------------------------------
 
@@ -194,6 +189,24 @@ f_ERROR_MESSAGE(){
 echo -e "\nERROR: $1 is not installed on your system. Please make sure that at least the essential dependencies are satisfied."
 echo -e "\nDependencies (essential):\n\ncurl, dnsutils (installs dig & host), jq, ipcalc, lynx, nc (netcat), nmap, nping, openssl, whois"
 echo -e "\nDependencies (recommended):\n\ndublin-traceroute, mtr, thc-ipv6, tracepath, whatweb\n"
+}
+
+f_showHELP(){
+echo -e "${B}"; f_Long; echo -e "\n ---------------\n  drwho.sh\n ---------------\n"
+echo -e "https://github.com/ThomasPWy/drwho.sh,  Author: Thomas Wy,  Version: 6.1 (Nov 2023)"; f_Long ; echo -e "${D}"
+echo -e "${C}DEPENDENCIES ${D}\n"
+echo -e "\n${B}Dependencies (required):${D}\n"
+echo "curl, dnsutils (installs dig, delv & host), jq, ipcalc, lynx, ncat, nmap, nping, openssl, whois"
+echo -e "\n\n${B}Dependencies (recommended):${D}\n"
+echo -e "dublin-traceroute, locate/mlocate, mtr, \ntestssl.sh, tracepath ('iputils-tracepath' in Debian/Ubuntu, 'tracepath' in Termux), thc-atk6, whatweb"
+echo -e "${B}"; f_Long; echo -e "\n${C}CUSTOMIZATIONS${D}\n"
+echo -e "\n${B}API KEYS ${D}\n"
+echo -e "API keys are required for usage of Project Honeypot (projecthoneypot.org) and\nIP Quality Score (ipqualityscore.com) APIs"
+echo -e "\nAn API key for hackertarget's IP API is recommended (required for the Nmap API)\nQueries are rate-limited without API key. (https://hackertarget.com)"
+echo -e "\nnOptained API keys can be entered in the designated fields (script source, line 4)"
+echo -e "\n\n${B}EXECUTABLES ${D}\n\nCustom paths to executables of dependencies can be set in the EXECUTABLES section, starting with line 302." 
+echo -e "\n\n${B}NAME SERVERS ${D}\n"
+echo -e "The name servers to be used for any DNS lookups and DNS-based APIs can be set via the dialogue shown when the script is started\n"
 }
 
 if ! type curl &> /dev/null; then
@@ -394,7 +407,7 @@ fi
 f_setTARGET(){
 if [ $option_target = "1" ] || [ $option_target = "2" ]; then
   if [ $option_target = "2" ]; then
-    echo -e -n "\n${B}Target  >  ${C}PATH TO FILE  ${D}e.g.  ./targets.txt  ${B}>>${D}  " ; read input
+    echo -e -n "\n${B}Target  >  ${C}PATH TO FILE  ${D}e.g.  ./targets.txt  ${B}>>${D}  " ; read -r input
     cat $input > $temp/targets_raw
   else
     echo -e -n "\n${C}TARGET  ${B}>>${D}  " ; read -r input
@@ -748,6 +761,10 @@ grep -sEo "RIPE|ARIN|AFRINIC|APNIC|LACNIC" | tr [:upper:] [:lower:])
 f_get_RIPESTAT_WHOIS(){
 [[ -f $temp/whois.json ]] && rm $temp/whois.json
 $CURL -s -m 20 --location --request GET "https://stat.ripe.net/data/whois/data.json?resource=$1" > $temp/whois.json
+if [ -f $temp/whois.json ]; then
+  $JQ '.data.irr_records[]? | .[] | select (.key=="route"), select (.key=="origin") | .value' $temp/whois.json | sed '/\//i ==' |
+  sed '/\//a - AS'| tr '[:space:]' ' ' | sed 's/== /\n/g' | sort -u | grep 'AS' > $temp/irr_records
+fi
 }
 
 f_getWHOIS(){
@@ -980,9 +997,13 @@ if [ $rir = "arin" ] || [[ $whois_file = $temp/arin_org ]]; then
     grep -E "^(Org)?+Tech+(Name:|Phone:|Email:)" $whois_file | sed '/TechName:/i nnn' | sed '/TechName:/a ===' | cut -d ':' -f 2- |
     sed 's/^[ \t]*//;s/[ \t]*$//' | tr '[:space:]' ' ' | sed 's/nnn/\n\n/g' | sed 's/===/\n\n  /g'; echo ''
   else
-    grep -sE -m 4 "^(Org)?Abuse(Email:|Phone:)|^(Org)?Tech(Email:|Phone:)" $whois_file | sed '/AbusePhone:/i nnnAbuse~' |
-    sed '/TechPhone:/i nnnTech~' | sed '/Phone:/a __' | cut -d ':' -f 2- | sed 's/^[ \t]*//;s/[ \t]*$//' | tr '[:space:]' ' ' |
-    sed 's/nnn/\n\n  /g' | sed 's/__//' | sed 's/~/: /' | sed 's/Tech:/Tech: /'; echo ''
+    grep -sE -m 2 "^(Org)?Abuse(Email:|Phone:)" $whois_file > $temp/poc_tmp
+    grep -sE -m 2 "^(Org)?Tech(Email:|Phone:)" $whois_file >> $temp/poc_tmp
+    if [ -f $temp/poc_tmp ]; then
+      sed '/AbusePhone:/i nnnAbuse~' $temp/poc_tmp | sed '/TechPhone:/i nnnTech~' | sed '/Phone:/a __' | cut -d ':' -f 2- |
+      sed 's/^[ \t]*//;s/[ \t]*$//' | tr '[:space:]' ' ' | sed 's/nnn/\n\n  /g' | sed 's/__//' | sed 's/~/: /' | sed 's/Tech:/Tech: /'; echo ''
+      rm $temp/poc_tmp
+    fi
   fi
 elif [ $rir = "ripe" ] || [ $rir = "apnic" ] || [ $rir = "afrinic" ]; then
   [[ -f $temp/print_poc ]] && rm $temp/print_poc; [[ -f $temp/poc_input ]] && rm $temp/poc_input
@@ -1133,7 +1154,7 @@ fi
 
 f_PWHOIS_ORG(){
 $TOUT 20 $WHOIS -h whois.pwhois.org registry org-id="$1" | grep ':' > $temp/pwhois_org
-pwhois_id=$(grep -saEv "DUMY-RIPE|RIPE-NCC-HM-MNT|RIPE-NCC-LEGACY-MNT|RIPE-NCC-END-MNT|Placeholder|\+31 20 535 4444" $temp/pwhois_org |
+pwhois_id=$(grep -saEv "DUMY-RIPE|Dummy|RIPE-NCC-HM-MNT|RIPE-NCC-LEGACY-MNT|RIPE-NCC-END-MNT|Placeholder|\+31 20 535 4444" $temp/pwhois_org |
 grep -sEa "^Org-ID:|^Org-Name:|^Source:|^Street(-1)?:|^Street(-2)?:|^City:|^State:|^Postal-Code:|^Country:|^NOC-0-Handle:|^NOC-0-Phone:|^NOC-0-Email:|^ABUSE5232-ARIN|^Abuse-0-Name:|Abuse-0-Phone:|Abuse-0-Email:" | sed '/Org-ID:/i nnn' | sed '/Org-Name:/i nnn' | sed '/Source:/a )' |
 sed '/Source:/i (' | sed '/Street-1/i nnn' | sed '/Street:/i nnn' | sed '/Country/i |' | sed '/NOC-0-Handle:/i nnn NOC~' |
 sed '/Abuse-0-Name:/i nnn ABUSE~' | sed '/City:/i |' | sed '/Abuse-0-Name:/d' | cut -d ':' -f 2- | sed 's/^[ \t]*//;s/[ \t]*$//' |
@@ -1165,7 +1186,7 @@ f_netBLOCKS(){
 v4_blocks=$($WHOIS -h whois.pwhois.org "netblock org-id=$1" | grep '|' | cut -d '|' -f 1,2,8 | sed '/Net-Range/{x;p;x;G}')
 if [ -n "$v4_blocks" ]; then
   f_HEADLINE3 "[PWHOIS]   $1   NETBLOCKS   -  $file_date"
-  [[ $domain_enum = "true" ]] && echo '' && f_PWHOIS_ORG "$1" && echo ''
+  f_PWHOIS_ORG "$1" && echo ''
   echo -e "\n$v4_blocks\n"
   blockranges=$(echo "$v4_blocks" | grep '*>' | awk '{print $2 $3 $4}')
   if [[ $(f_countW "$blockranges") -lt 500 ]]; then
@@ -1184,7 +1205,7 @@ f_WHOIS_TABLE(){
 f_EXTRACT_IP4 "$1" >> $temp/addr.list; echo 'end' >> $temp/addr.list
 $NCAT whois.pwhois.org 43 < $temp/addr.list > $temp/pwhois_response
 sed '/Bulk mode; one IP/d' $temp/pwhois_response > $temp/whois_table.txt
-cut -s -d '|' -f -5 $temp/whois_table.txt | sed '/NET NAME/{x;p;x;}'
+cut -s -d '|' -f -5 $temp/whois_table.txt
 if [ $target_type != "dnsrec" ] && [ $target_type != "domain" ] && [ -f $temp/whois_table.txt ]; then
   grep 'ORG NAME' $temp/whois_table.txt | cut -s -d '|' -f 1,6 | sed '/AS ORG NAME/{x;p;x;}' > $temp/as_table
   grep -Ev "^Bulk mode|ORG NAME" $temp/whois_table.txt | cut -s -d '|' -f 1,6 | sort -ug -t '|' -k 1 >> $temp/as_table
@@ -2013,12 +2034,12 @@ fi
 prefixes=$(grep -s '/' $temp/pfx.list)
 if [ -n "$prefixes" ]; then
   for p in $prefixes; do
-    pfx_allocation=$(grep -sw "$p" $temp/pfx46.list | cut -d '|' -f 3,4,5 | sed 's/^[ \t]*//;s/[\t]*$//' | tr [:lower:] [:upper:])
-    pfx_asn=$(grep -sw "$p" $temp/pfx46.list | cut -d '|' -f 1 | tr -d ' '); pfx_asname=$(f_getASNAME "$pfx_asn")
+    pfx_allocation=$(grep -sw -m 1 "$p" $temp/pfx46.list | cut -d '|' -f 3,4,5 | sed 's/^[ \t]*//;s/[\t]*$//' | tr [:lower:] [:upper:])
+    pfx_asn=$(grep -sw -m 1 "$p" $temp/pfx46.list | cut -d '|' -f 1 | tr -d ' '); pfx_asname=$(f_getASNAME "$pfx_asn")
     pfx_roa=$($CURL -s -m 5 --location --request GET "https://stat.ripe.net/data/rpki-validation/data.json?resource=$pfx_asn&prefix=$p" |
     $JQ '.data.status')
     spamhaus_listed=$(grep -sw "$p" ${file_date}.ip_drop.txt)
-    echo -e "\n*> $pfx  (ROA: $pfx_roa)"; echo -e "\n   $pfx_allocation | $pfx_asname\n"
+    echo -e "\n*> $p  (ROA: $pfx_roa)"; echo -e "\n   $pfx_allocation | $pfx_asname\n"
     [[ -n "$spamhaus_listed" ]] && echo -e " ! Prefix listed in Spamhaus DON'T ROUTE OR PEER !\n"
   done
 fi
@@ -2178,8 +2199,8 @@ if [ -f $temp/leaf.pem ]; then
         else
           cert_status="$response_status"
         fi
-      fi 
-      if [ -n "$stapling_false" ]; then 
+      fi
+      if [ -n "$stapling_false" ]; then
         stapling="false"; ocsp_uri=$(f_getX509 "ocsp_uri")
         if [ -f $temp/issuer.pem ]; then
           $TOUT 15 $OPENSSL ocsp -issuer $temp/issuer.pem -cert $temp/leaf.pem -url "$ocsp_uri" 2>/dev/null > $temp/ocsp
@@ -2188,7 +2209,7 @@ if [ -f $temp/leaf.pem ]; then
           cert_status=$(f_VALUE ":" "$(grep -E "leaf.pem:" $temp/ocsp)")
           [[ -n "$cert_status" ]] && ocsp_resp="$(f_toUPPER "$cert_status") (stapling: $stapling)" || ocsp_resp="Error retrieving data"
         fi
-      elif  [ -n "$stapling_true" ]; then 
+      elif  [ -n "$stapling_true" ]; then
         ocsp_resp="$stapling_true"
       else
         ocsp_resp="Error retrieving data"
@@ -2332,7 +2353,7 @@ if [ -f $temp/leaf.pem ]; then
   [[ $quiet_dump = "false" ]] && cat $temp/ssl
   if [ $ssl_diag = "true" ]; then
     [[ $option_starttls = "0" ]] && target_port="$tls_port" || target_port="$stls_port"
-    $NMAP $s -sT -Pn -p $target_port -R --resolve-all --open -script=sslv2,ssl-heartbleed,ssl-dh-params,ssl-enum-ciphers 2>/dev/null |
+    $NMAP $s -sT -Pn -p $target_port -R --resolve-all --open -script=http-date,http-server-header,ssl-date,sslv2,ssl-heartbleed,ssl-dh-params,ssl-enum-ciphers,tls-nextprotoneg 2>/dev/null |
     tr -d '|' | sed 's/^[ \t]*//;s/[ \t]*$//' | sed 's/^_ //' > $temp/nmap_ssl
   fi
   [[ -f $temp/nmap_ssl ]] && f_printNMAP_SSL | tee -a $temp/ssl
@@ -2405,7 +2426,7 @@ f_Long2; f_EXTRACT_CERT "$(cat $temp/ossl)"
 f_SSL_SHORT(){
 if [ -f $temp/leaf.pem ]; then
   if ! [ -f $temp/ssl_ips ]; then
-    f_RESOLVE_ALL "$1" | head -12 > $temp/ssl_ips
+    wf_RESOLVE_ALL "$1" | head -12 > $temp/ssl_ips
   fi
   tlsv=$(f_VALUE ":" "$(grep -E '^Protocol version:' $temp/brief)")
   verify=$(f_VALUE ":" "$(grep -sE '^Verification:' $temp/brief)")
@@ -2461,7 +2482,7 @@ fi
 }
 
 f_NET_HEADER(){
-echo ''; f_Long; echo -e "[NET]  $1   $nh $file_date"; f_Long
+f_HEADLINE3 "[NET]  $1  $nh  ($file_date)"; echo ''
 if [ $bogon = "TRUE" ]; then
   f_BOGON_INFO "$1"; f_Long
 else
@@ -2471,12 +2492,22 @@ else
     if [ $rir != "lacnic" ]; then
       if [ $rir = "arin" ]; then
         netname=$($JQ '.data.records[]? | .[] | select (.key=="NetName") | .value' $temp/whois.json | tail -1)
+        netpoc=$($JQ '.data.records[0]? | .[] | select (.key=="organization") | .value' $temp/whois.json | grep -v 'ARIN' | head -1)
       else
         netname=$($JQ '.data.records[0]? | .[] | select (.key=="netname") | .value' $temp/whois.json)
+        netcc=$($JQ '.data.records[0]? | .[] | select (.key=="country") | .value' $temp/whois.json | head -1)
+        netpoc=$($JQ '.data.records[0]? | .[] | select (.key=="org") | .value' $temp/whois.json | head -1)
+        [[ -n "$netpoc" ]] || netpoc=$($JQ '.data.records[0]? | .[] | select (.key=="admin-c") | .value' $temp/whois.json | head -1)
       fi
-      [[ -n "$netname" ]] && print_netname="($netname)"
+      [[ -n "$netname" ]] && print_netname="$netname"
     fi
-    echo -e "\n$netaddr  $print_netname\n"
+    if [ -n "$netcc" ]; then
+      echo -e "\n$netaddr | $print_netname | $netcc | $(f_toUPPER "$rir") | $netpoc\n"
+    else
+      echo -e "\n$netaddr | $print_netname | $(f_toUPPER "$rir") | $netpoc\n"
+    fi
+    [[ -f $temp/irr_records ]] && echo -e "\nROUTE\n" && cat $temp/irr_records
+    [[ $netop = "1" ]] && f_NET_DETAILS "$1"
   fi
 fi
 }
@@ -2532,7 +2563,8 @@ else
   [[ -n "$print_org" ]] || [[ -n "$descr" ]] || [[ -n "$parent" ]] && echo ''
 fi
 [[ -n "$net_geo" ]] && echo -e "\nCountry:      $net_geo"
-[[ -n "$descr" ]] && echo -e "\nDescr:         $descr"
+[[ -n "$descr" ]] && echo -e "\nDescr:        $descr"
+[[ -n "$descr" ]] && [[ -n "$parent_org" ]] && echo ''
 [[ -n "$print_org" ]] && echo -e "\nOrg:          $print_org"
 [[ -n "$parent" ]] && echo -e "\nParent:       $parent"
 [[ -n "$parent_org" ]] && echo -e "\nParent Org:   $parent_org"
@@ -2830,7 +2862,11 @@ f_EXTRACT_EMAIL "$temp/all_sources_tmp" >> $temp/all_sources
 
 f_DEAGGREGATE(){
 if [[ $(grep -sEc "$IP4_ALT" $temp/netlist_tmp) -lt 500 ]]; then
-  cut -s -d '|' -f -1 $temp/netlist_tmp | grep -sE "$IP4_ALT" | tr -d ' ' > $temp/v4ranges_tmp
+  if [ $target_type = "arin_iwhois" ]; then
+     grep -sE "$IP4_ALT" $temp/netlist_tmp | tr -d ' ' > $temp/v4ranges_tmp
+  else
+    cut -s -d '|' -f -1 $temp/netlist_tmp | grep -sE "$IP4_ALT" | tr -d ' ' > $temp/v4ranges_tmp
+  fi
   for r in $(cat $temp/v4ranges_tmp); do
     ip_calc=$($IPCALC -r $r); calc_count=$(echo "$ip_calc" | grep -sEo "$IP4_NET_ALT" | wc -w)
     if [[ $calc_count -gt 0 ]]; then
@@ -2936,7 +2972,8 @@ if [ $rir = "arin" ]; then
       for o in $net_orgs; do
         grep -w "$o" $temp/tmp4 > $temp/netlist_tmp; inums=$(f_DEAGGREGATE)
         if [ -n "$inums" ]; then
-          f_Medium; [[ $net_org_count -gt 1 ]] && echo -e "\n  Owner: $o\n"; echo -e "$inums\n"
+         f_Medium
+          [[ $net_org_count -gt 1 ]] && echo -e "\n  Owner: $o\n"; echo -e "$inums\n"
         fi
        done > $temp/print4
     fi
@@ -2945,7 +2982,8 @@ if [ $rir = "arin" ]; then
       for o in $net_orgs; do
         grep -w "$o" $temp/tmp > $temp/org_nets; inums6=$(grep -sEo "$REGEX_NET6" $temp/org_nets)
         if [ -n "$inums6" ]; then
-          f_Medium; [[ $net_org_count -gt 1 ]] && echo -e "\n  Owner: $o\n"
+          f_Medium
+          [[ $net_org_count -gt 1 ]] && echo -e "\n  Owner: $o\n"
           echo -e "\n$inums6" | tr '[:space:]' ' ' | sed 's/ /  /g' | fmt -w 60; echo ''
         fi
       done > $temp/print6
@@ -3004,13 +3042,8 @@ else
          if [ -f $temp/netlist_tmp ]; then
            [[ -f $temp/netlist_tmp ]] && inums=$(f_DEAGGREGATE)
            if [ -n "$inums" ]; then
-             if [[ $cc_count -gt 1 ]]; then
-               net4_cc=$(cut -d '|' -f 2,3 $temp/netlist_tmp | grep -sEo "\b[A-Z]{2,3}\b" | sort -u | tr '[:space:]' ' ' ; echo '')
-               print_cc4="; Countries: $net4_cc"
-             else
-               print_cc4=''
-             fi
-             f_Medium; echo -e "\n  Responsible: $ac${print_cc4}\n"; echo -e "$inums\n"; inums=""
+             f_Medium
+             echo -e "\n  Responsible: $ac\n"; echo -e "$inums\n"; inums=""
             fi
          fi
         done > $temp/print4
@@ -3023,14 +3056,8 @@ else
           if [ -f $temp/netlist_tmp ]; then
             inums6=$(grep -sEo "$REGEX_NET6" $temp/netlist_tmp)
             if [ -n "$inums6" ]; then
-              [[ $netcount4 -gt 40 ]] || [[ $netcount -gt 30 ]] && f_Medium && echo ''
-              if [[ $cc_count -gt 1 ]]; then
-                net6_cc=$(cut -d '|' -f 2,3 $temp/netlist_tmp | grep -sEo "\b[A-Z]{2,3}\b" | sort -u | tr '[:space:]' ' ' ; echo '')
-                print_cc6="; countries: $net6_cc"
-              else
-                print_cc6=''
-              fi
-              f_Medium; echo -e "\n  Responsible: $ac${print_cc6}\n"
+              f_Medium
+              echo -e "\n  Responsible: $ac\n"
               echo -e "\n$inums6" | tr '[:space:]' ' ' | sed 's/ /  /g' | fmt -w 60; inums6=""
             fi
           fi
@@ -3071,18 +3098,22 @@ local s="$*"
 $TOUT 20 $WHOIS -h whois.$rir.net -- "--no-personal -M $s" > $temp/m_specifics
 netcount=$(grep -sEac "^netname:" $temp/m_specifics)
 if [[ $netcount -gt 0 ]]; then
-  f_NET_OUTPUT "$temp/m_specifics" > $temp/tmp
+  sed -e '/./{H;$!d;}' -e 'x;/netname:/!d' $temp/m_specifics | grep -sEa -A 1 "^inetnum:|^netname:|^country:|^admin-c:|^status:|^mnt-by:|^source:" |
+  sed '/--/d' | grep -sEav "^created:|^abuse-c:|^tech-c:|^remarks:" | sed '/source:/G' | grep -v 'source:' | sed '/inetnum:/i ==' |
+  sed '/netname:/i <' | sed '/country:/i |' | sed '/descr:/i |' | sed '/admin-c:/i |' | sed '/status:/i |' |
+  sed '/mnt-by:/i |' | cut -d ':' -f 2- | sed 's/^[ \t]*//;s/[ \t]*$//' | tr '[:space:]' ' ' | sed 's/== /\n\n/g' > $temp/msp_tmp
+  echo '' >> $temp/msp_tmp
   if [ $option_filter = "y" ]; then
     for f in $(cat $temp/filters); do
       f_HEADLINE2 "MORE SPECIFICS, FILTER: $f\n"
-      grep -sEai "${f}.*|*.${f}.*" $temp/tmp > $temp/whois_nets
-      [[ -f $temp/whois_nets ]] && count_filtered=$(grep -sEac '|' $temp/whois_nets) || count_filtered=0
+      grep -sEai "${f}.*|*.${f}.*" $temp/msp_tmp > $temp/tmp
+      [[ -f $temp/whois_nets ]] && count_filtered=$(grep -sEac '|' $temp/tmp) || count_filtered=0
       echo -e "Networks: $count_filtered\n________\n\n"
-      [[ $count_filtered -gt 0 ]] && f_PRINT_NETS "$temp/whois_nets"
     done
   else
-    f_HEADLINE2 "MORE SPECIFICS  (NETWORKS: $netcount)\n"; f_PRINT_NETS "$temp/tmp"
+    f_HEADLINE2 "MORE SPECIFICS  (NETWORKS: $netcount)\n" ; cat $temp/msp_tmp > $temp/tmp
   fi
+  f_PRINT_NETS "$temp/tmp" | sed '/|/G'
 fi
 }
 
@@ -3317,7 +3348,7 @@ fi
 #-------------------------------  HOST DNS  -------------------------------
 
 f_DNS_TRACE(){
-f_Long; echo -e "DNS DELEGATION\n"
+f_HEADLINE2 "DNS DELEGATION\n\n"
 grep ';; Received' $temp/dns_trace | grep 'from' | awk -F'from' '{print $2}' | sed 's/\#53/ \#53 /' |
 sed 's/) in/)\n  -> /'
 [[ $host_type = "hostname" ]] && result=$(grep -sw "${1}." $temp/dns_trace | grep -sEw "A|AAAA") || result=$(grep -sw "PTR" $temp/dns_trace)
@@ -3327,22 +3358,23 @@ grep -sw "${1}." $temp/dns_trace | grep -sw "NS"; echo ''
 }
 
 f_DNS_DIAG(){
-f_Long; echo -e "FULL NAME RESOLUTION (API)\n"
+f_HEADLINE2 "$1  DNS LOOKUP   (Source: RIPEstst Data API, $file_date)\n"
 $CURL -s -m 15 --location --request GET "https://stat.ripe.net/data/dns-chain/data.json?resource=$1" > $temp/dns.json
 status_ok=$($JQ '.status?' $temp/dns.json | grep -sEoi "^ok")
 [[ -n "$status_ok" ]] && host_ns=$(f_HOST_AUTHNS)
 if [ -n "$host_ns" ]; then
   jq -r '.data.forward_nodes' $temp/dns.json | tr -d '{},"' | sed 's/\[/\n/g' | sed 's/\]//'
-  jq -r '.data.reverse_nodes' $temp/dns.json | tr -d '{},"' | sed 's/\[/\n/g' | sed 's/\]//'
-  echo -e "\nAuth NS:\n\n$host_ns\n"
+  echo -e "\nAUTH NS\n\n$host_ns\n"
 fi
-f_Long; echo -e "FULL NAME RESOLUTION (DEFAULT NS)\n"
+f_HEADLINE2 "FORWARD CONFIRMED RDNS  (Nameserver: System default)"
 if [ $option_connect != "0" ]; then
   if [ $host_type = "ip" ]; then
     testPTR=$(/usr/bin/dig +short $1)
     if [ -n "$testPTR" ]; then
       $NMAP -Pn -sn -R --resolve-all --script=fcrdns $1 2>/dev/null > $temp/fcrdns
-      echo ''; f_printFCRDNS; echo ''
+      echo ''; f_printFCRDNS
+    else
+      echo -e "\n$1 has no PTR record"
     fi
     /usr/bin/dig +noall +answer +noclass +trace +nodnssec -x $1 > $temp/dns_trace
     f_DNS_TRACE "$1"
@@ -3351,11 +3383,11 @@ if [ $option_connect != "0" ]; then
     testAAAA=$(/usr/bin/dig aaaa +short $1); [[ -n "$testAAAA" ]] && hasAAAA=$(f_EXTRACT_IP6 "$testAAAA")
     if [ -n "$hasA" ]; then
       $NMAP -Pn -sn -R --resolve-all --script=fcrdns $1 2>/dev/null > $temp/fcrdns
-      echo ''; f_printFCRDNS; echo ''
+      echo ''; f_printFCRDNS
     fi
     if [ -n "$hasAAAA" ]; then
       $NMAP -6 -Pn -sn -R --resolve-all --script=fcrdns $1 2>/dev/null > $temp/fcrdns
-      echo ''; f_printFCRDNS; echo ''
+      echo ''; f_printFCRDNS
     fi
     if [ -n "$hasA" ]; then
       /usr/bin/dig -t a +noall +answer +noclass +trace +nodnssec $1 > $temp/dns_trace
@@ -3582,47 +3614,39 @@ $CURL -s -m 20 https://api.hackertarget.com/zonetransfer/?q=${1}${api_key_ht} > 
 f_EXTRACT_IP4 "$temp/zone.txt" >> $temp/ips.list; echo '' >> $temp/zone.txt; cat $temp/zone.txt
 }
 
+f_DNS_CAA(){
+dns_caa=$($DIG +short caa $1 | grep -sEi "issue|issuewild")
+if [ -n "$dns_caa" ]; then
+  [[ $domain_enum = "false" ]] && echo ''; echo -e "\nDNS CAA\n\n$dns_caa"
+else
+  [[ $domain_enum = "true" ]] && echo -e "\nDNS CAA: No CAA record found" || echo -e "\n\nDNS CAA\n\nNo CAA record found"
+fi
+}
 
 f_DNS_RR(){
-vers_bind=""; vers_bind_fail=""
-[[ -f $temp/dhostv4 ]] && rm $temp/dhostv4; [[ -f $temp/dhostv6 ]] && rm $temp/dhostv6
+[[ -f $temp/d4 ]] && rm $temp/d4; [[ -f $temp/d6 ]] && rm $temp/d6
 f_HEADLINE3 "[DNS]  $x  -  $file_date"
-cat $temp/whois_status && f_Long
+cat $temp/whois_status && echo '' && f_Long
 domain_ns=$(f_NS "$x")
 if [ -f $temp/ns_servers ] && [[ $(wc -w < $temp/ns_servers) -gt 0 ]]; then
   echo -e "\nDOMAIN HOST\t\t$x\n\n"
   $DIG "${dig_array[@]}" "$x" | grep -w 'A' | tee $temp/hostsA.list | awk '{print $2"\t\t\t"$4}'
   $DIG aaaa "${dig_array[@]}" "$x" | grep -w 'AAAA' | tee $temp/hostsAAAA.list | awk '{print $2"\t\t\t"$4}'
   hostA=$(f_EXTRACT_IP4 "$temp/hostsA.list"); hostAAAA=$(f_EXTRACT_IP6 "$temp/hostsAAAA.list")
-  [[ -n "$hostA" ]] && echo "$hostA" | tee -a $temp/dns4 > $temp/dhostv4
-  [[ -n "$hostAAAA" ]] && echo "$hostAAAA" | tee -a $temp/dns6 > $temp/dhostv6
+  [[ -n "$hostA" ]] && echo "$hostA" | tee -a $temp/dns4 > $temp/d4
+  [[ -n "$hostAAAA" ]] && echo "$hostAAAA" | tee -a $temp/dns6 > $temp/d6
   f_MX "$x"; echo -e "$domain_ns"; f_SOA "$x"
   cat $temp/ns_ipv4.list | tee -a $temp/dns4 > $temp/ns1; [[ -f $temp/ns_ipv6.list ]] && cat $temp/ns_ipv6.list | tee -a $temp/dns6 >> $temp/ns1
-  if [ $option_connect != "0" ]; then
-    f_HEADLINE2 "VERSION.BIND\n"
-    for n in $(cat $temp/ns_servers); do
-      bind_query=$($TOUT 7 /usr/bin/dig @${n} -r version.bind txt chaos +norecurse +noedns +short | tr -d '"' | sed 's/^ *//' |
-      sed 's/;; connection timed out; no servers could be reached/timeout/g' | grep -E -v "^;|^;;" | sed '/^$/d')
-      if [[ $(f_countW "$vers_bind_query") -eq 0 ]]; then
-        vers_bind_fail="NA"
-      elif [[ "$vers_bind_query" = "timeout" ]]; then
-        vers_bind_fail="timeout"
-      else
-        vers_bind="$vers_bind_query"
-      fi
-      [[ -n "$vers_bind_fail" ]] && echo -e "\n$n: $vers_bind_fail" || echo -e "\n$n\n\n  vers.bind: $vers_bind"
-    done
-    [[ $rfc1912 = "true" ]] && f_RFC1912 "$x"
-  fi
+  [[ $rfc1912 = "true" ]] && f_RFC1912 "$x"
   txt_rec=$($DIG +short txt $x); f_EXTRACT_IP4 "$txt_rec" > $temp/txt+srv
   f_EXTRACT_IP4_ALL "$txt_rec" | cut -d '/' -f 1 >> $temp/dns4.list
   [[ $option_connect = "0" ]] || srv_rec=$(f_SRV_REC "$x"); [[ -n "$srv_rec" ]] && echo -e "$srv_rec"
   [[ -n "$txt_rec" ]] && f_HEADLINE2 "TXT RECORDS\n" && echo "$txt_rec" | sed '/\"/{x;p;x;}' | fmt -s -w 90
-  f_DNSSEC "$x"; dns_caa=$($DIG +short caa "$x" | grep -sEi "issue|issuewild"); echo -e "\n\nDNS CAA\n"
-  [[ -n "$dns_caa" ]] && echo "$dns_caa" || echo "No CAA record found"
+  f_DNSSEC "$x"; f_DNS_CAA "$x"
   [[ $option_connect != "0" ]] && [[ -z "$srv_rec" ]] && echo -e "\n\nSRV\n\nNo SRV record found"
   echo ''; f_Long; f_WHOIS_TABLE "$temp/dns4" | sed '/ORG NAME/G'
   if [ $option_connect != "0" ] ; then
+    f_VERSION_BIND
     f_HEADLINE2 "Checking name server response via SOA record query ...\n\n"
     $DIG +short +nssearch $x > $temp/nssearch
     serials=$(grep 'SOA' $temp/nssearch | awk '{print $4}' | tr -d ' ' | sort -u)
@@ -3651,13 +3675,13 @@ if [ -f $temp/ns_servers ] && [[ $(wc -w < $temp/ns_servers) -gt 0 ]]; then
     [[ $option_connect != "0" ]] && [[ $ssl_diag = "false" ]] && f_MX_SSL
   fi
   if [ $option_connect != "0" ]; then
-    if [ -f $temp/dhostv4 ] ||  [ -f $temp/dhostv6 ]; then
+    if [ -f $temp/d4 ] ||  [ -f $temp/d6 ]; then
       [[ $ssl_diag = "false" ]] && f_DOMAIN_HOST_SSL "$x"
     fi
     f_DOMAIN_HOSTS; [[ $send_ping = "true" ]] && f_PING_SRV
   fi
     f_FCRDNS; echo ''; f_TTL_ALT
-  f_Long; echo -e "\nPREFIXES\n\n"; f_DNS_PREFIXES
+  f_Long; echo -e "\nPREFIXES\n"; f_DNS_PREFIXES
 else
   echo -e "\nERROR retrieving results\n"
 fi
@@ -3760,7 +3784,8 @@ fi
 [[ -f $temp/t+s ]] && cat $temp/t+s >> $temp/dns4
 cat $temp/dns4 | tee -a $temp/dns_ips >> $temp/ips.list
 [[ -f $temp/dns6 ]] && cat $temp/dns6 >> $temp/dns_ips
-echo ''; f_Long; f_WHOIS_TABLE "$temp/dns4"
+echo ''; f_Long; f_WHOIS_TABLE "$temp/dns4" | sed '/ORG NAME/G'
+[[ $option_connect != "0" ]] && f_Long && f_DNS_CAA "$1" && f_VERSION_BIND
 if [[ $mx_count -gt 0 ]]; then
   if [ $option_connect != "0" ]; then
     f_Long
@@ -3843,12 +3868,6 @@ fi
 [[ -f $temp/lookup2 ]] && echo '' && f_Long && f_WHOIS_TABLE "$temp/lookup2"
 }
 
-f_GOOGLE_RDNS(){
-local s="$*"; rev=$(f_REVERSE "$s")
-curl -s -m 15 "https://dns.google/resolve?name=${rev}.in-addr.arpa&type=ptr&do=1" > $temp/ptr.json
-[[ -f $temp/ptr.json ]] && echo -e "\n$s - $($JQ '.Answer[].data?' $temp/ptr.json)"
-}
-
 f_printHOSTNAMES(){
 rr_hostnames=$(f_getHOSTNAMES); [[ -n "$rr_hostnames" ]] && echo -e "\n$1\n\n$rr_hostnames\n"
 }
@@ -3916,6 +3935,7 @@ else
   [[ -f $temp/x_ips ]] && cat $temp/x_ips > $temp/ips_all && f_HEADLINE2 "DOMAIN HOSTS PING"
 fi
 if [ -f $temp/ips_all ] && [ $send_ping = "true" ]; then
+   [[ $webpresence = "true" ]] && echo -e "PING\n"
   for web_ip in $(f_EXTRACT_IP_ALL "$temp/x_ips"); do echo -e "\n$web_ip "; f_PING "$web_ip"; echo ''; done
 fi
 }
@@ -4016,7 +4036,7 @@ if [[ $(grep -c "Verification:" $temp/brief) -eq 0 ]]; then
     stls_port=587
   fi
  cat $temp/brief
-  export stls_port
+  export stls_port; export stls_pro="smtp"
   verify_error=$(f_VALUE "=" "$(grep 'verify error:num' $temp/brief)")
   [[ -n "$verify_error" ]] && self_signed=$(echo "$verify_error" | grep -o '18')
 fi
@@ -4027,6 +4047,19 @@ fi
     fi
     [[ -f $temp/x509 ]] && $OPENSSL x509 -in $temp/x509 -outform PEM -out $temp/leaf.pem
     [[ -f $temp/leaf.pem ]] && f_SSL_SHORT "$m"
+    if [[ $(wc -w < $temp/ssl_ips) -gt 1 ]]; then
+      for i in $(cat $temp/ssl_ips); do
+        echo | timeout 3 $OPENSSL s_client -starttls smtp -connect [$i]:$stls_port -servername $m 2>/dev/null |
+        $OPENSSL x509 -nocert -nameopt multiline -subject -fingerprint -sha256 | sed '/subject=/{x;p;x;}' > $temp/sha256
+        c_name=$(sed -e '/./{H;$!d;}' -e 'x;/subject=/!d'  $temp/sha256 | grep -i 'commonName' | cut -d '=' -f 2- | sed 's/^ *//')
+        echo "$i | $c_name | $cert_sha"
+      done > $temp/sha256_compare
+      sha_diff=$(sort -t '|' -k 3 -u $temp/sha256_compare)
+      if [[ $(f_countL "$sha_diff" ) -gt 1 ]]; then
+        echo -e "\n  DIFFERENT SHA256 FINGERPRINTS FOUND FOR HOST CERTIFICATES:\n"
+        sed '/|/G' $temp/sha256_compare
+      fi
+    fi
   fi
 done
 }
@@ -4074,6 +4107,29 @@ grep -E "; serial|; refresh|; retry|; expire|; minimum" $temp/soa.txt | awk '{pr
 sed 's/serial:/serial: /' | sed 's/retry:/retry:  /' | sed 's/expire:/expire: /' | sed '/serial:/{x;p;x;G}'
 }
 
+f_VERSION_BIND(){
+vers_bind=''; vers_bind_fail=''
+if [ $option_connect != "0" ]; then
+  [[ $domain_enum = "true" ]] && echo -e "\nVERSION.BIND\n" || f_HEADLINE2 "VERSION.BIND\n"
+  for n in $(cat $temp/ns_servers); do
+    bind_query=$($TOUT 7 /usr/bin/dig @${n} -r version.bind txt chaos +norecurse +noedns +short | tr -d '"' | sed 's/^ *//' |
+    sed 's/;; connection timed out; no servers could be reached/timeout/g' | grep -E -v "^;|^;;" | sed '/^$/d')
+    if [[ $(f_countW "$vers_bind_query") -eq 0 ]]; then
+      vers_bind_fail="NA"
+    elif [[ "$vers_bind_query" = "timeout" ]]; then
+      vers_bind_fail="timeout"
+    else
+      vers_bind="$vers_bind_query"
+    fi
+    if [ -n "$vers_bind_fail" ]; then
+      [[ $domain_enum = "true" ]] && echo -e "$n: $vers_bind_fail" || echo -e "\n$n: $vers_bind_fail"
+    else
+      echo -e "\n$n\n\n  vers.bind: $vers_bind"
+    fi
+  done
+fi
+}
+
 # --------------------------------   SRV RECORDS  -------------------------------------
 
 f_SRV_REC(){
@@ -4098,7 +4154,7 @@ fi
 
 f_PING_SRV(){
 if [ -f $temp/services ]; then
-  f_HEADLINE2 "SRV RECORDS PING\n"
+  f_HEADLINE2 "SRV RECORDS PING"
   for s_host in $(cut -s -d ';' -f 2 $temp/services | tr -d ' ' | sort -uV); do
     for s_a in $(f_RESOLVE_v4 "$s_host"); do echo -e "\n\n$s_host ($s_a)\n"; f_PING "$s_a"; done
     for s_z in $(f_RESOLVE_v6 "$s_host"); do echo -e "$\n\n$s_host ($s_z)\n"; f_PING "$s_z"; done
@@ -4307,7 +4363,8 @@ cms=""; cms_comment=""; meta_gen=""; powered_by=""
 if [ -f $temp/ww ]; then
   pow_by=$(sed 's/X-Powered-By//' $temp/ww | grep -soP 'Powered-By\[\K.*?(?=\])' | sort -bifu)
   meta_gen=$(f_getWW_ITEM "MetaGenerator" | sort -bifu)
-  cms=$(grep -sEaoi -m 1 "1024-CMS|bitrix|contao|drupal|joomla|librecms|liferay|pluck-cms|pragmamx|typo3|wordpress" $temp/ww | tr [:lower:] [:upper:])
+  cms=$(grep -sEaoi -m 1 "1024-CMS|bitrix|contao|drupal|joomla|librecms|liferay|pluck-cms|pragmamx|typo3|wordpress" $temp/ww |
+  tr [:lower:] [:upper:] | sort -uV | tail -1)
 else
   if [ $option_connect != "0" ]; then
     [[ $ww = "false" ]] && cms_comment="(enable source 'WhatWeb' to improve detection)"
@@ -4316,9 +4373,9 @@ else
       sed 's/^[ \t]*//;s/[ \t]*$//' | sort -bfiu | tr '[:space:]' ' '; echo '')
     fi
     if [ -f $temp/cms_source ]; then
-      cms=$(grep -sEoi "api\.w\.org|advagg_|contao|drupal|liferay-portal|typolight\.css|typo3|wp-(admin|content|includes|plugins)|wordpress" $temp/cms_source  | tr [:upper:] [:lower:] | sed 's/advagg_/drupal/g' | sed 's/typolight.css/contao/g' | sed 's/liferay-portal/liferay/' |
-      sed 's/api.w.org/wordpress/' | sed 's/wp-admin/wordpress/g' | sed 's/wp-content/wordpress/g' | sed 's/wp-includes/wordpress/g' |
-      sed 's/wp-plugins/wordpress/' | sort -uV | tail -1 | tr [:lower:] [:upper:])
+      cms=$(grep -sEoi "api\.w\.org|advagg_|contao|drupal|liferay-portal|jimdo|joomla|/skin/frontend/|typolight\.css|typo3|wp-(admin|content|includes|plugins)|wordpress" $temp/cms_source  | tr [:upper:] [:lower:] | sed 's/advagg_/drupal/g' | sed 's/typolight.css/contao/g' | sed 's/liferay-portal/liferay/g' |
+      sed 's/skin\/frontend\//magento/g' | sed 's/api.w.org/wordpress/g' | sed 's/wp-admin/wordpress/g' | sed 's/wp-content/wordpress/g' |
+      sed 's/wp-includes/wordpress/g' | sed 's/wp-plugins/wordpress/'| tr [:lower:] [:upper:] | sort -uV | tail -1)
     fi
   fi
 fi
@@ -4582,8 +4639,7 @@ f_LINK_DUMP(){
 [[ -f $temp/print_ld ]] && rm $temp/print_ld; [[ -f $temp/urls ]] && rm $temp/urls
 [[ -f $temp/link_urls ]] && rm $temp/link_urls; [[ -f $temp/src_urls ]] && rm $temp/src_urls
 if [ -f $temp/ldump_raw ]; then
-  grep -E -v "*.cc.ukansas|*.cc.ukans*|*.cc.ku.edu*|lynx.invisible-island.net|lynx-dev|lynx_help|NCSAMosaicHome.html|www.w3.org/People" $temp/ldump_raw |
-  sed '/javascript:void(0)/d' | sed '/[Vv]isible [Ll]inks:/d' | sed '/[Hh]idden [Ll]inks:/d' |
+  grep -E -v "*.cc.ukansas|*.cc.ukans*|*.cc.ku.edu*|invisible-island.net|lynx.invisible-island.net|lynx-dev|lynx_help|NCSAMosaicHome.html|www.w3.org/People" $temp/ldump_raw | sed '/javascript:void(0)/d' | sed '/[Vv]isible [Ll]inks:/d' | sed '/[Hh]idden [Ll]inks:/d' |
   sed '/Sichtbare Links:/d' | sed '/Versteckte Links:/d' | sort -f -u  > $temp/ldump
   grep -sEi "http:|https:" $temp/ldump > $temp/urls
   echo '' > $temp/linkdump; f_HEADLINE3 "[WEBSITE]  $target   LINK DUMP   $file_date" >> $temp/linkdump
@@ -5059,12 +5115,6 @@ grep -siow -m 1 "permissions-policy" ${s} >> $temp/deprecated
 [[ -n "$x_copt" ]] && echo -e "X-Content-Type-Options:     $x_copt"
 [[ -n "$x_frame" ]] && echo -e "X-Frame-Options:            $x_frame  (consider replacement with CSP directives)"
 [[ -n "$headers_other" ]] && [[ $(f_countW "$headers_other") -lt 3 ]] && echo -e "Other:                      $headers_other"
-if [ -f $temp/missing ] && [[ $(wc -w < $temp/missing) -gt 0 ]]; then
-  [[ $(wc -w < $temp/missing) -lt 7 ]] && echo ''
-  echo -e "Not Set:\n"
-  print_missing=$(sed 's/^/,/' $temp/missing | tr '[:space:]' ' ' | tr -d ' ' | sed 's/^,//' | sed 's/,/, /g'; echo '')
-  echo -e "$print_missing" | fmt -w 60
-fi
 [[ -n "$cpol_objects" ]] && echo -e "\n\nContent-Security-Policy Objects:\n\n$cpol_objects"
 [[ -n "$rep_objects" ]] && echo -e "\n\nContent-Security-Policy-REPORT-ONLY Obj:\n\n$rep_objects"
 [[ -n "$access_origin" ]] && echo -e "\nAccess-Control-Allow-Origin:\n\n$access_origin" && aco_count=$(f_countW "$access_origin")
@@ -5072,6 +5122,12 @@ fi
 [[ -n "$p3p" ]] && echo -e "\n\nP3P:\n$p3p"
 [[ -n "$headers_other" ]] && [[ $(f_countW "$headers_other") -gt 2 ]] && echo -e "\n\nOther:\n\n$headers_other"
 [[ -f $temp/deprecated ]] && [[ $(wc -w < $temp/deprecated) -gt 0 ]] && echo -e "\n\nDeprecated:\n" && cat $temp/deprecated
+if [ -f $temp/missing ] && [[ $(wc -w < $temp/missing) -gt 0 ]]; then
+  [[ $(wc -w < $temp/missing) -lt 7 ]] && echo ''
+  echo -e "\n\nNot set:\n\n"
+  print_missing=$(sed 's/^/,/' $temp/missing | tr '[:space:]' ' ' | tr -d ' ' | sed 's/^,//' | sed 's/,/, /g'; echo '')
+  echo -e "$print_missing" | fmt -w 60
+fi
 if [ -f $temp/ww ]; then
   uncomm=$(f_getUNCOMMON_HEADERS); [[ -n "$uncomm" ]] && echo -e "\n\nUncommon Headers:\n\n$uncomm\n"
 fi
@@ -5246,7 +5302,8 @@ if [ -n "$whois_server" ]; then
       [[ -n "$pers" ]] && echo "Person:      $pers"; [[ -n "$holder" ]] && echo "Holder:      $holder"
       [[ -n "$responsible" ]] && echo "Responsible: $responsible"; [[ -n "$admin_c" ]] && echo "Admin:       $admin_c"
       [[ -n "$role_c" ]] && echo "Role:        $role_c"; [[ -n "$registrar" ]] && echo "Registrar:   $registrar"
-      echo "Source:      $whois_server ($nic_org)  $registrar_server"
+      echo "Source:      $whois_server ($nic_org)"
+      [[ -n "$registrar_server" ]] && echo "Server:      $registrar_server"
       contacts_count=$(f_countW "$whois_contact")
       if [ $target_type != "web" ] && [ $target_type != "whois_target" ]; then 
         print_ns=$(echo "$whois_ns" | tr '[:space:]' ' '; echo '')
@@ -5263,9 +5320,14 @@ if [ -n "$whois_server" ]; then
         echo -e "\n\nCONTACT\n" && echo -e "$whois_contact" | sed 's/ /  /g' | sed G | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
       fi
       if [[ $(grep -Eoc "^Domain Status:" $temp/domain) -gt 1 ]]; then
-        echo -e "\n\nDOMAIN STATUS\n"; grep -E "^Domain Status:" $temp/domain | cut -d ':' -f 2- |
-        sed 's/^[ \t]*//;s/[ \t]*$//' | awk '{print $1}' | sort -u | tr '[:space:]' ' ' | sed 's/ /  /g' | sed 's/^ *//' | fmt -s -w 75 |
-        sed G | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
+        echo -e "\n\nDOMAIN STATUS\n"
+        domain_status=$(grep -E "^Domain Status:" $temp/domain | cut -d ':' -f 2- | sed 's/^[ \t]*//;s/[ \t]*$//' | awk '{print $1}' | sort -u |
+        tr '[:space:]' ' ' | sed 's/ /  /g' | sed 's/^ *//' | fmt -s -w 75)
+        if [ $target_type = "whois_target" ]; then
+          echo "$domain_status" | sed G | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
+        else
+          echo -e "$domain_status\n"
+        fi
       fi
       if [ $target_type = "whois_target" ]; then
         echo -e "\n\nNAME SERVERS\n"
@@ -5470,12 +5532,12 @@ pfx4_data=$(echo "$pfx_data" | grep -sE "$IP4_NET_ALT"); pfx6_data=$(echo "$pfx_
 v4_all_count=$(echo "$pfx4_data" | grep -c '/'); v6_all_count=$(echo "$pfx6_data" | grep -c '/')
 v4_whois_true=$(echo "$pfx4_data" | grep -sc 'WHOIS: true'); v6_whois_true=$(echo "$pfx6_data" | grep -sc 'WHOIS: true')
 v4_rirs=$(echo "$pfx4_data" | grep -sEo "AFRINIC|APNIC|ARIN|LACNIC|RIPE" | sort -u | tr '[:space:]' ' '; echo '')
-v4_high_count=$(echo "$pfx4_data" | grep -sc 'RIS: true'); v6_high_count=$(echo "$pfx6_data" | grep -sc 'RIS: true')
+v4_bgp_count=$(echo "$pfx4_data" | grep -sc 'RIS: true'); v6_bgp_count=$(echo "$pfx6_data" | grep -sc 'RIS: true')
 v4_low_count=$(echo "$pfx4_data" | grep -sc 'RIS: false'); v6_low_count=$(echo "$pfx6_data" | grep -sc 'RIS: false')
 v4_bgp=$(echo "$pfx4_data" | grep -s 'RIS: true' | awk '{print $1}' | tr -d ' ')
 v6_bgp=$(echo "$pfx6_data" | grep -s 'RIS: true' | awk '{print $1}' | tr -d ' ')
-v4_low_vis=$(f_EXTRACT_NET4 "$(echo "$pfx4_data" | grep -s 'RIS: false')")
-v6_low_vis=$(f_EXTRACT_NET6 "$(echo "$pfx6_data" | grep -s 'RIS: false')")
+v4_low_vis=$(echo "$pfx4_data" | grep -s 'RIS: false' | awk '{print $1}' | tr -d ' ')
+v6_low_vis=$(echo "$pfx6_data" | grep -s 'RIS: false' | awk '{print $1}' | tr -d ' ')
 nbc_uniq=$($JQ '.data.neighbour_counts.unique' $temp/nb.json); nbc_left=$($JQ '.data.neighbour_counts.left' $temp/nb.json)
 nbc_right=$($JQ '.data.neighbour_counts.right' $temp/nb.json); nbc_unc=$($JQ '.data.neighbour_counts.uncertain' $temp/nb.json)
 nb_right=$($JQ '.data.neighbours[] | select(.type == "right") | .asn' $temp/nb.json | sort -g)
@@ -5533,7 +5595,7 @@ if [ -n "$spamhaus_listed" ]; then
   echo -e "\nSpamhaus:         ! $spamhaus_comment listed DON'T ROOT OR PEER!"
 fi
 if [ $peering_db_results = "false" ]; then
-  echo -e "\nStatus:           $as_status | $as_cc, $alloc_date | $(f_toUPPER "$rir")\n"; f_Long
+  echo -e "\nStatus:           $as_status | $as_cc, $alloc_date | $(f_toUPPER "$rir")\n"
 else
   if [ -n "$as_aka" ] && [[ $(f_countW "$as_aka") -le 5 ]]; then
     echo -e "\nAka:              $as_aka"
@@ -5579,8 +5641,8 @@ fi
 f_Long; echo -e "\nPREFIXES\n\n"
 [[ $v4_low_count -gt 0 ]] && print_low4="(not announced: $v4_low_count)" || print_low4=''
 [[ $v6_low_count -gt 0 ]] && print_low6="(not announced: $v6_low_count)" || print_low6=''
-echo -e "IPv4  -  Whois: $v4_whois_true;  BGP: $v4_high_count  $print_low4\n"
-echo -e "IPv6  -  Whois: $v6_whois_true;  BGP: $v6_high_count  $print_low6\n"
+echo -e "IPv4  -  Whois: $v4_whois_true;  BGP: $v4_bgp_count  $print_low4\n"
+echo -e "IPv6  -  Whois: $v6_whois_true;  BGP: $v6_bgp_count  $print_low6\n"
 f_HEADLINE2 "CONTACT\n"; f_POC "$temp/whois" | fmt -s -w 100
 if [ $as_status = "Active" ]; then
     [[ -n "$irr_as_set" ]] && f_AS_SET "$(echo "$irr_as_set" | awk -F'::' '{print $NF}')"
@@ -5644,6 +5706,18 @@ if [ -n "$nb_left" ] || [ -n "$nb_right" ]; then
 fi
 }
 
+f_AS_PFX(){
+if [ -f $temp/as_pfx.json ]; then
+  print_p4=$($JQ '.data.prefixes.v4.originating[]' $temp/as_pfx.json | sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n -u |
+  tr '[:space:]' ' ' | sed 's/ /  /g' | sed 's/^ *//' | fmt -s -w 55; echo '')
+  print_p6=$($JQ '.data.prefixes.v6.originating[]' $temp/as_pfx.json | tr '[:space:]' ' ' | sed 's/ /  /g' | sed 's/^ *//' | fmt -s -w 55; echo '')
+  if [ -n "$print_p4" ] || [ -n "$print_p6" ]; then
+    echo -e "\nPREFIXES\n"; [[ -n "$print_p4" ]] && echo -e "$print_p4\n"
+    [[ -n "$print_p6" ]] && echo -e "$print_p6\n"
+  fi
+fi
+
+}
 f_AS_SET(){
 $WHOIS -h whois.radb.net -- "$1" > $temp/as_set
 [[ -f $temp/as_set ]] && as_set=$(grep -E "^as-set:" $temp/as_set | awk '{print $NF}' | tr -d ' ')
@@ -5678,8 +5752,8 @@ $CURL -s -m 15 --location --request GET "https://stat.ripe.net/data/as-overview/
 as_sum=$($DIG +short as${1}.asn.cymru.com TXT | tr -d '"' | sed 's/^[ \t]*//;s/[ \t]*$//' | sed 's/ripencc/ripe/')
 [[ -z "$announced" ]] && announced="no data"
 if [[ $announced = "true" ]]; then
-  $CURL -s -m 15 --location --request GET "https://stat.ripe.net/data/ris-prefixes/data.json?resource=${1}&list_prefixes=false&types=o" > $temp/origin.json
-  origin_v4=$($JQ '.data.counts.v4.originating' $temp/origin.json); origin_v6=$($JQ '.data.counts.v6.originating' $temp/origin.json)
+  $CURL -s -m 15 --location --request GET "https://stat.ripe.net/data/ris-prefixes/data.json?resource=${1}&list_prefixes=true&types=o" > $temp/as_pfx.json
+  origin_v4=$($JQ '.data.counts.v4.originating' $temp/as_pfx.json); origin_v6=$($JQ '.data.counts.v6.originating' $temp/as_pfx.json)
 fi
 spamhaus_listed=$(grep -sw "$1" ${file_date}.asndrop.list)
 [[ -n "$spamhaus_listed" ]] && spamhaus_comment=$(grep -w "$1" ${file_date}.asndrop.txt)
@@ -5709,12 +5783,19 @@ else
 fi
 [[ -n "$as_org" ]] && echo -e "\n$as_name - $as_org, $as_cc\n" || echo -e "\n$as_name, $as_cc\n"
 if [[ $announced = "true" ]]; then
-  echo -e "$alloc | Active: $announced | Prefixes: $origin_v4 (v4) $origin_v6 (v6) | $as_abuse\n"
+  echo -e "$alloc | Active: $announced | Prefixes: $origin_v4 (v4) $origin_v6 (v6) | $as_abuse\n" > $temp/as_short1
 else
-  echo -e "$alloc | Active: $announced | $as_abuse\n"
+  echo -e "$alloc | Active: $announced | $as_abuse\n" > $temp/as_short1
 fi
-[[ -n "$spamhaus_listed" ]] && echo -e "\n  ! $spamhaus_comment  listed in Spamhaus DON'T ROOT OR PEER ! \n"
-[[ $domain_enum = "true" ]] && [[ $as_rir = "lacnic" ]] && echo $s >> $temp/lacnic_asns
+[[ -n "$spamhaus_listed" ]] && echo -e "\n  ! $spamhaus_comment  listed in Spamhaus DON'T ROOT OR PEER ! \n" >> $temp/as_short1
+[[ -f $temp/as_short1 ]] && cat $temp/as_short1 | tee ${outdir}/AS${1}_BGP_PREFIXES.txt && rm $temp/as_short1
+f_AS_PFX | tee -a ${outdir}/AS${1}_BGP_PREFIXES.txt > $temp/as_short2
+if [ $domain_enum = "true" ]; then
+ [[ $as_rir = "lacnic" ]] && echo $1 >> $temp/lacnic_asns
+elif [ $target_type = "as" ]; then
+  cat $temp/as_short2
+fi
+[[ -f $temp/as_short2 ]] && rm $temp/as_short2
 }
 
 f_getASNAME(){
@@ -5860,18 +5941,29 @@ fi
 }
 
 f_ROUTE_CONS(){
-local s="$*"
-$CURL -s -m 7 --location --request GET "https://stat.ripe.net/data/prefix-routing-consistency/data.json?resource=${s}" > $temp/cons.json
+$CURL -s -m 7 --location --request GET "https://stat.ripe.net/data/prefix-routing-consistency/data.json?resource=${1}" > $temp/cons.json
 if [ -f $temp/cons.json ]; then
-  f_HEADLINE2 "BGP/RIS - WHOIS CONSISTENCY\n\n"
   $JQ '.data.routes[] | {PFX: .prefix, RIS: .in_bgp, WHOIS: .in_whois, ASNUM: .origin, ASNAME: .asn_name}' $temp/cons.json |
   tr -d '{",}' | sed 's/^[ \t]*//;s/[ \t]*$//' | sed '/^$/d'| tr '[:space:]' ' ' | sed 's/PFX: /\n/g' |
-  sed 's/RIS:/| RIS:/' | sed 's/WHOIS:/| WHOIS:/' | sed 's/ASNUM:/| AS/' | sed 's/ASNAME:/-/' | grep '|' > $temp/cons
-  grep -sEw "RIS: true \| WHOIS: true" $temp/cons > $temp/cons_sorted
-  grep -sEw "RIS: false \| WHOIS: true" $temp/cons >> $temp/cons_sorted
-  grep -sEw "RIS: true \| WHOIS: false" $temp/cons >> $temp/cons_sorted
-  grep -sEw "RIS: false \| WHOIS: false" $temp/cons >> $temp/cons_sorted
-  cat $temp/cons_sorted | sed '/^$/d' | sed 's/| /\n\n/' | sed '/|/G' | sed 's/false/false !/g'
+  sed 's/RIS:/| RIS:/' | sed 's/WHOIS:/| WHOIS:/' | sed 's/ASNUM:/| AS/' | sed 's/ ASNAME:/,/' | grep '|' > $temp/cons
+  all_true=$(grep -sEw "RIS: true \| WHOIS: true" $temp/cons)
+  ris_false=$(grep -sEw "RIS: false \| WHOIS: true" $temp/cons)
+  whois_false=$(grep -sEw "RIS: false \| WHOIS: false" $temp/cons)
+  [[ -n "$all_true" ]] && echo "$all_true" > $temp/cons_sorted
+  if [ -n "$ris_false" ]; then
+    [[ -n "$all_true" ]] && echo '' >> $temp/cons_sorted; echo "$ris_false" >> $temp/cons_sorted
+  fi
+  if [ -n "$whois_false" ]; then
+    [[ -n "$all_true" ]] || [[ -n "$ris_false" ]] && echo '' >> $temp/cons_sorted; echo "$whois_false" >> $temp/cons_sorted
+  fi
+  if [[ $(grep -c '|' $temp/cons_sorted) -gt 1 ]] || [ -n "$ris_false" ] || [ -n "$whois_false" ]; then
+    f_HEADLINE2 "BGP/RIS - WHOIS CONSISTENCY\n\n"
+    if [[ $(grep -c '|' $temp/cons_sorted) -gt 1 ]]; then
+      cut -d '-' -f 1 $temp/cons_sorted; echo ''; cut -s -d '|' -f 4 $temp/cons_sorted | sed 's/^[ \t]*//;s/[ \t]*$//' | sort -u
+    else
+      grep '|' $temp/cons_sorted  | sed 's/| /\n\n/' | sed '/|/G'; echo ''
+    fi
+  fi
 fi
 }
 
@@ -5924,17 +6016,33 @@ if [ -n "$is_admin" ] && ! [[ $1 =~ $REGEX_IP6 ]]; then
 fi
 }
 
+f_getMTU(){
+if [ -f $temp/tpath ]; then
+  pmtu=$(grep 'Resume' $temp/tpath | awk -F'pmtu' '{print $2}' | awk '{print $1}')
+  hops=$(grep 'Resume' $temp/tpath | awk -F'hops' '{print $2}' | awk '{print $1}')
+  echo -e "\n$1  ->  MTU: $pmtu;  Hops: $hops\n"
+  rm $temp/tpath
+fi
+}
+
 f_PATH_MTU_ALT(){
 echo -e "\n$1\n"
 if type tracepath &> /dev/null; then
-  $TPATH ${trace_array[@]} -m 25 $1 | sed 's/^ *//' > $temp/tpath
-  new_mtu=$(grep -v 'Resume' $temp/tpath | grep -c 'pmtu')
-  [[ $new_mtu -gt 1 ]] && echo '' && grep -v 'Resume' $temp/tpath | grep 'pmtu' && echo ''
-  pmtu=$(grep 'Resume' $temp/tpath | awk -F'pmtu' '{print $2}' | awk '{print $1}')
-  hops=$(grep 'Resume' $temp/tpath | awk -F'hops' '{print $2}' | awk '{print $1}')
-  echo -e "\nPMTU:  $pmtu  |  Hops:  $hops\n"
-else
-  echo "Please install tracepath"
+  f_HEADLINE2 "$1  PATH MTU  ($file_date)\n"
+  if [ $target_cat = "hostname" ]; then
+    has_ip4=$(f_RESOLVE_v4 "$1")
+    has_ipv6=$(f_RESOLVE_v6 "$1")
+    if [ -n "$has_ip4" ]; then
+      for a in $has_ip4; do $TPATH -n -4 $a | sed 's/^ *//' > $temp/tpath; f_getMTU "$a"; done
+    fi
+    if [ -n "$has_ip6" ]; then
+      for z in $has_ip6; do $TPATH -n -6 $z | sed 's/^ *//' > $temp/tpath; f_getMTU "$z"; done
+    fi
+  elif [ $target_cat = "host4" ]; then
+    $TPATH -n -4 -m 25 $1 | sed 's/^ *//' > $temp/tpath; f_getMTU "$1"
+  elif [ $target_cat = "host6" ]; then
+    $TPATH -n -6 -m 25 $1 | sed 's/^ *//' > $temp/tpath; f_getMTU "$1"
+  fi
 fi
 }
 
@@ -5985,22 +6093,26 @@ done
 
 #-------------------------------  BANNERS, NMAP  -------------------------------
 
+
 f_BANNERS(){
-local s="$*" ; $CURL -s https://api.hackertarget.com/bannerlookup/?q=${s}${api_key_ht} > $temp/banners.json
+$CURL -s -m 30 https://api.hackertarget.com/bannerlookup/?q=${1}${api_key_ht} > $temp/banners.json
 if [ -f $temp/banners.json ]; then
-f_HEADLINE2 "$s BANNERS (SOURCE: HACKERTARGET:COM)\n"
-$JQ '{IP: .ip, FTP: .ftp, SSH: .ssh, Telnet: .telnet,  RDP: .rdp, http_Server: .http.server, http_Title: .http.title, https443_Server: .https443.server, https443_Title: .https443.title, https443_CN: .https443.cn, https443_Org: .https443.o, http9090_Server: .http8080.server, http9090_Title: .http8080.title, https8553_Server: .https8443.server, https8553_Title: .https8443.title, https8553_CN: .https8443.cn}' $temp/banners.json | tr -d '{,"}' | sed 's/http_Server: null/http_Server: none\/unknown/g' | sed '/null/d' |
-sed '/^$/d' | sed 's/^ *//' | sed '/^IP:/i nnnn' | tr '[:space:]' ' ' | sed 's/http_Title:/\n80\/HTTP Title:/g' |
-sed 's/https443_Title:/\n443\/HTTPS Title:/g' | sed 's/https443_CN:/| CN:/g' | sed 's/https443_Org:/| Org:/g' |
-sed 's/http9090_Title:/\nHTTP\/8080 Title:/g' | sed 's/https8553_Title:/\nHTTPS\/8443Title:/g' | sed 's/https85533_CN:/| CN:/g' |
-sed 's/IP:/\n>IP:/g' | sed 's/FTP:/\nFTP:/g' | sed 's/SSH:/\nSSH:/g' | sed 's/Telnet:/\nTelnet:/g' | sed 's/RDP:/\nRDP:/g' |
-sed 's/http9090_Server:/\n8080\/HTTP Server:/g' | sed 's/https443_Server:/\n443\/HTTPS Server:/g' |
-sed 's/https85533_Server:/\n8443\/HTTPS\ Server:/g' | sed 's/http_Server:/\n80\/HTTP Server:/g' | sed 's/server: //g' |
-sed 's/nnnn/\n/g' | sed 's/^ *//' > $temp/banners;
-if [[ $(wc -w < $temp/banners) -gt 2 ]]; then
-sed '/>IP:/G' $temp/banners | sed 's/>IP:/\n>/g' > $temp/netbanners
-sed '/./,$!d' $temp/netbanners | sed 's/^/  /' | sed 's/  >/>/'; else
-echo "No results (Source: hackertarget.com API)"; fi; fi
+f_HEADLINE2 "$1 BANNERS (SOURCE: HACKERTARGET:COM)\n"
+$JQ '{IP: .ip, FTP: .ftp, SSH: .ssh, Telnet: .telnet,  RDP: .rdp, http_Server: .http.server, http_Title: .http.title, https_Server: .https.server, https_Title: .https.title, https_CN: .https.cn, https_Org: .https.o, https_Redir: .https.redirect_location, https0_Apps: .https.apps[0], https_Apps: .https.apps[1], https443_Server: .https443.server, https443_Title: .https443.title, https443_CN: .https443.cn, https443_Org: .https443.o, https443_Redir: .https443.redirect_location, http9090_Server: .http8080.server, http9090_Title: .http8080.title, https8553_Server: .https8443.server, https8553_Title: .https8443.title, https8553_CN: .https8443.cn, https8553_Redir: .https8443.redirect_location}?' $temp/banners.json | tr -d '{,"}' |
+sed 's/http_Server: null/http_Server: none\/unknown/g' | sed '/null/d' |
+sed '/^$/d' | sed 's/^ *//' | sed '/^IP:/i nnnn' | tr '[:space:]' ' ' | sed 's/http_Title:/| Title:/g' |
+sed 's/https_Title:/\nHTTPS Title:/g' | sed 's/https_CN:/\nHTTPS CN:/g' | sed 's/https_Org:/| Org:/g' |
+sed 's/https_Redir:/\nRedirect:/g' | sed 's/https0_Apps:/\nApp:/g' | sed 's/https_Apps:/\nApp:/g' |
+sed 's/https443_Title:/\n443\/HTTPS Title:/g' | sed 's/https443_CN:/\n443\/HTTPS CN:/g' | sed 's/https443_Org:/| Org:/g' |
+sed 's/https443_Redir:/\nRedirect:/g' | sed 's/https4430_Apps:/\nApp:/g' | sed 's/https443_Apps:/\nApp:/g' |
+sed 's/http9090_Title:/\nHTTP\/8080 Title:/g' | sed 's/https8553_Title:/\nHTTPS\/8443Title:/g' |
+sed 's/https85533_CN:/HTTPS\/8443 CN:/g' | sed 's/https8553_Redir:/\nRedirect:/g' | sed 's/IP:/\n>IP:/g' | sed 's/FTP:/\nFTP:/g' |
+sed 's/SSH:/\nSSH:/g' | sed 's/Telnet:/\nTelnet:/g' | sed 's/RDP:/\nRDP:/g' | sed 's/http9090_Server:/\n8080\/HTTP Server:/g' |
+sed 's/https443_Server:/\n443\/HTTPS Server:/g' | sed 's/https_Server:/\nHTTPS Server:/g' |
+sed 's/https85533_Server:/\n8443\/HTTPS\ Server:/g' | sed 's/http_Server:/\nHTTP Server:/g' | sed 's/server: //g' |
+sed 's/nnnn/\n/g' | sed 's/^ *//' > $temp/banners
+sed '/>IP:/G' $temp/banners | sed 's/>IP:/\n>/g' | sed '/./,$!d' | sed 's/^/  /' | sed 's/  >/>/'
+fi
 }
 
 f_NMAP_BCAST(){
@@ -6058,7 +6170,7 @@ if [ -f $temp/nmap ]; then
   sed 's/^|_//' | sed 's/^|//' | sed 's/address-info:/\naddress-info:/' | sed 's/fingerprint-strings:/\nfingerprint-strings:\n/' |
   sed 's/ftp-anon:/\n! ftp-anon:\n/' | sed 's/http-affiliate-id:/\nhttp-affiliate-id:/' | sed 's/http-auth:/\nhttp-auth:\n/' |
   sed 's/http-auth-finder:/\nhttp-auth-finder:\n/' | sed 's/http-aspnet-debug:/\naspnet-debug:/' |
-  sed 's/http-cookie-flags:/\n\nhttp-cookie-flags:/' | sed 's/http-cors:/\nhttp-cors:\n/' |
+  sed 's/http-cookie-flags:/\n\nhttp-cookie-flags:/' | sed 's/http-cors:/\nhttp-cors:\n/' | sed 's/http-date:/\nhttp-date:/' |
   sed 's/http-cross-domain-policy:/\nhttp-cross-domain-policy:\n/' | sed 's/http-csrf:/\n! http-csrf:\n/' |
   sed 's/http-dombased-xss:/\n! http-dombased-xss:\n/' | sed 's/http-enum:/\nhttp-enum:/' |
   sed 's/http-jsonp-detection:/\nhttp-jsonp-detection:\n/' | sed 's/http-malware-host:/\nhttp-malware-host:/' |
@@ -6067,11 +6179,11 @@ if [ -f $temp/nmap ]; then
   sed 's/http-phpmyadmin-dir-traversal:/\nphpmyadmin-dir-traversal:/' | sed 's/http-referer-checker:/\nhttp-referer-checker:/' |
   sed 's/http-server-header:/\nhttp-server-header:/' | sed 's/http-slowloris-check:/\n! http-slowloris-check:\n/' |
   sed 's/http-stored-xss:/\n! http-stored-xss:\n/' | sed 's/http-title:/\ntitle:/' | sed 's/http-trace:/\nhttp-trace/' |
-  sed 's/http-unsafe-output-escaping:/\n! http-unsafe-output-escaping:\n/' | sed 's/http-webdav-scan:/\nhttp-webdav-scan:\n/' |
-  sed 's/irc-botnet-channels:/\n! irc-botnet-channels:\n/' | sed 's/memcached-info:/\nmemcached-info:\n/' | 
-  sed 's/mysql-empty-password:/\n! mysql-empty-password:\n/' | sed 's/nbstat:/\nnbstat:\n\n/' |
-  sed 's/nfs-ls:/\nnfs-ls:\n/' | sed 's/proxy-open-http:/\n! proxy-open-http:\n/' |
-  sed 's/http-qnap-nas-info:/\nhttp-qnap-nas-info:\n/' | sed 's/smb-double-pulsar-backdoor:/\n! smb-double-pulsar-backdoor:\n/' |
+  sed 's/http-traceroute:/\nhttp-traceroute:/' | sed 's/http-unsafe-output-escaping:/\n! http-unsafe-output-escaping:\n/' |
+  sed 's/http-webdav-scan:/\nhttp-webdav-scan:\n/' | sed 's/irc-botnet-channels:/\n! irc-botnet-channels:\n/' |
+  sed 's/memcached-info:/\nmemcached-info:\n/' | sed 's/mysql-empty-password:/\n! mysql-empty-password:\n/' | sed 's/nbstat:/\nnbstat:\n\n/' |
+  sed 's/nfs-ls:/\nnfs-ls:\n/' | sed 's/proxy-open-http:/\n! proxy-open-http:\n/' | sed 's/http-qnap-nas-info:/\nhttp-qnap-nas-info:\n/' |
+  sed 's/ssl-date:/\nssl-date:/' | sed 's/smb-double-pulsar-backdoor:/\n! smb-double-pulsar-backdoor:\n/' |
   sed 's/sip-methods:/\nsip-methods:\n/' | sed 's/smb-ls:/\nsmb-ls:\n/' | sed 's/smb-vuln-ms17-010:/\n! smb-vuln-ms17-010:\n/' |
   sed 's/ssl-known-key:/\n! ssl-known-key:/' | sed 's/rmi-vuln-classloader:/\n! rmi-vuln-classloader:\n/' |
   sed 's/smtp-strangeport:/\n! smtp-strangeport:\n/' | sed 's/ssh-hostkey:/\nssh-hostkey:\n/' |
@@ -6095,7 +6207,7 @@ if [ -f $temp/nmap ]; then
   sed '/\/tcp/i \\n-------------------------------------------------------------------------------\n' |
   sed 's/cpe:\/o:/\ncpe:\/o:/' | sed 's/Aggressive OS guesses:/\nAggressive OS guesses:\n/'
    > $temp/nmap_tmp
-  if [ $target_type = "web" ] || [ $target_type = "domain" ]; then
+  if [ $target_type = "web" ] || [ $target_type = "other" ]; then
     sed 's/Nmap scan report for/\n* NMAP: /g' $temp/nmap_tmp | sed '/Nmap done/d' | fmt -s -w 120 | tee $temp/nmap_output
   else
     sed 's/Nmap scan report for/\n*/g' $temp/nmap_tmp | sed '/Nmap done/d' | fmt -s -w 120 | tee $temp/nmap_output
@@ -6106,12 +6218,13 @@ fi
 
 f_printNMAP_SSL(){
 if [ -f $temp/nmap_ssl ]; then
-  grep -E -A 1 "^Nmap scan report|^ssl-enum-ciphers:|^ssl-heartbleed:|ssl-dh-params:|^sslv2:|^ciphers:|VULNERABLE:|TLSv1(\.[0-3])|^TLS_|^SSL2_|Anonymous|cipher|deprecated by|lower strength|message integrity|least strength:|compressors:|warnings:|^SSLv2 supported|^Check results:|Cipher Suite:|Modulus Source:|Generator Length:" $temp/nmap_ssl |
+  grep -E -A 1 "^Nmap scan report|^ssl-enum-ciphers:|^ssl-heartbleed:|ssl-dh-params:|^sslv2:|^ciphers:|^tls-nextprotoneg:|VULNERABLE:|TLSv1(\.[0-3])|^TLS_|^SSL2_|Anonymous|cipher|deprecated by|lower strength|message integrity|least strength:|compressors:|warnings:|^SSLv2 supported|^Check results:|Cipher Suite:|Modulus Source:|Generator Length:|ssl-date:|spdy|http" $temp/nmap_ssl |
   sed '/Nmap scan report/i \_______________________________________________________________________________\n' |
   sed '/Host is up/d' | sed 's/(/ (/' |
-  sed '/NMAP scan report/a Scripts:   ssl-dh-params.nse, ssl-enum-ciphers.nse, ssl-heartbleed.nse, sslv2.nse' |
+  sed '/NMAP scan report/a Scripts:   ssl-date, ssl-dh-params.nse, ssl-enum-ciphers.nse, ssl-heartbleed.nse, sslv2.nse, tls-nextprotoneg' |
   sed 's/Nmap scan report for/NMAP SSL:  /' | sed 's/^ssl-enum-ciphers:/\nOFFERED CIPHERS:/' | sed 's/TLSv/\nTLSv/' |
-  sed 's/sslv2:/\n\nSSLv2:\n/' | sed 's/ssl-dh-params:/\n\nDH PARAMS:\n/' | sed 's/ssl-heartbleed:/\n\nHEARTBLEED:\n/' |
+  sed 's/sslv2:/\n\nSSLv2:\n/' | sed 's/ssl-date:/\n\nSSL-DATE: /' | sed 's/tls-nextprotoneg:/\n\nTLS NEXTPROTONEG:\n/' |
+  sed 's/ssl-dh-params:/\n\nDH PARAMS:\n/' | sed 's/ssl-heartbleed:/\n\nHEARTBLEED:\n/' |
   sed '/^State:/{x;p;x;}' | sed '/Check results:/{x;p;x;}' | sed 's/^ciphers://' | sed '/compressors:/{x;p;x;}' |
   sed '/least strength:/i \\n__________________\n' | sed '/least strength:/a \__________________\n' | sed 's/^ *//' | sed 's/^--//'
 fi
@@ -6126,10 +6239,10 @@ else
   [[ $target_type != "web" ]] && option_ipv="v4" && opt_v6=''
 fi
 $run_as_sudo $proxych $NMAP "$custom_inf" "$opt_v6" "${nmap_array[@]}" "$ports" "$scan_target" "$scripts" "$script_args" 2>/dev/null > $temp/nmap
-if [ $target_type = "net" ]; then
-  [[ $addr_type = "private" ]] && f_printNMAP2 || f_printNMAP1
-else
+if [ $target_type = "web" ] || [ $target_type = "other" ]; then
   f_printNMAP2
+else
+  f_printNMAP1
 fi
 }
 
@@ -6188,8 +6301,24 @@ $IP route | grep -Ev "169\.254\.0\.0/16|default" | awk '{print $1}' | tr '[:spac
 
 f_SYSINFO(){
 echo ''; f_Long
-echo -e "\nHostname: $(/usr/bin/uname -n)"; echo -e "Nserver:  $(f_getDEFAULT_NS)\n"
-f_getDEFAULT_ROUTES | sed 's/Default:/Default: /'; f_IP_LINK; f_printIF_ADDRESSES; f_printROUTES
+if [[ $(/usr/bin/uname -o) =~ "Android" ]]; then
+  echo -e "\nHostname: $(/usr/bin/uname -n)\n"
+else
+  echo -e "\nHostname: $(/usr/bin/uname -n) $(/usr/bin/hostname -I | cut -d ' ' -f -2 | sed 's/ /  /')"
+  echo -e "Nserver:  $(f_getDEFAULT_NS)\n"
+  f_getDEFAULT_ROUTES | sed 's/Default:/Default: /'; f_Long
+fi
+echo -e "\nINTERFACES\n"
+$IP -s addr show up | sed '/state/{x;p;x;}' | sed -e '/./{H;$!d;}' -e 'x;/lo:/d' | sed -e '/./{H;$!d;}' -e 'x;/UNKNOWN/d' |
+sed -e '/./{H;$!d;}' -e 'x;/dummy/d' | sed -e '/./{H;$!d;}' -e 'x;/DOWN/d' | grep -E -A 1 "MULTICAST|inet|inet6|RX|TX" |
+sed '/--/d' | sed '/valid_lft/d' | sed '/ether/{x;p;x;G}' | sed '/group/{x;p;x;}' | sed '/RX/{x;p;x;}' | sed '/TX/{x;p;x;}' |
+awk -F'brd' '{print $1}' | sed 's/link\/ether/mac  /' | sed 's/scope/ scope/'
+f_HEADLINE2 "ROUTES\n\n"
+if [[ $(/usr/bin/uname -o) =~ "Android" ]]; then
+  $IP -4 route | sed 's/dev/ dev/'; echo ''; $IP -6 route | sed 's/dev/ dev/'
+else
+  $NMAP -iflist | sed -n '/METRIC/,$p' | grep -v lo | sed '/METRIC/G'
+fi
 }
 
 #-------------------------------  CLEAN UP  -------------------------------
@@ -6282,7 +6411,7 @@ echo -e "${B} [3] ${C}Nmap${B}  >${D}  Forward confirmed rDNS / rDNS mismatches 
 }
 
 f_optionsSSL(){
-echo -e "\n   ${B}OPTIONS  >  ${C} SSL\n"
+echo -e "\n   ${B}OPTIONS  >  ${C}ssl)  SSL\n"
 echo -e "   ${B}[1]${D}  SSL Status & Certificates"
 echo -e "   ${B}[2]${D}  SSL Status & Certificates (STARTTLS)"
 echo -e "   ${B}[3]${D}  Quiet Cert Dump"
@@ -6295,7 +6424,7 @@ f_optionsTOOLS(){
 echo -e "\n   ${B}OPTIONS  >  ${C}t)  TOOLS\n"
 echo -e "   ${B}[1]${D}  Abuse Contact Finder"
 echo -e "   ${B}[2]${D}  Reverse Google Analytics Search"
-echo -e "   ${B}[3]${D}  Shodan Geo Ping    (no IPv6 support)"
+echo -e "   ${B}[3]${D}  Shodan Geo Ping     ${B}(IPv4 only)"
 echo -e "   ${B}[4]${D}  Path MTU Discovery  $denied"
 echo -e "   ${B}[5]${D}  Run name resolution tests  $denied"
 echo -e "   ${B}[6]${D}  DHCP & IPv6 Configs: Send DHCP Discovery Broadcast & RS Multicast"
@@ -6306,7 +6435,7 @@ echo -e "\n   ${B}[0]${D}  Back to the Global ${C}Options Menu${D}"
 }
 
 f_optionsTRACE() {
-echo -e "\n   ${B}OPTIONS  >  ${C}t)  TRACEROUTING & FIREWALK${D}  ${R}$denied\n"
+echo -e "\n   ${B}OPTIONS  >  ${C}tr)  TRACEROUTING & FIREWALK${D}  ${R}$denied\n"
 echo -e "   ${B}[1]${C}  MTR${D}              RT-Times, Packet Loss, Jitter; TCP,UDP,ICMP"
 echo -e "   ${B}[2]${C}  Tracepath${D}        ICMP traceroute, MTUs (non-root)"
 echo -e "   ${B}[3]${C}  Dublin Tracert.${D}  NAT-aware, multipath ICMP tracerouting ${B}(IPv4 only)"
@@ -6329,6 +6458,7 @@ echo -e "   ${B}[1]${D}  ${bold}Web Server Health Check${D}  ${R}$denied"
 echo -e "   ${B}[2]${C}  API/cURL${D} Dump HTTP Headers"
 echo -e "\n   ${B}[0]${D}  Back to the Global Options ${C}Menu${D}"
 }
+
 f_getDROPLISTS
 echo ''; f_Menu
 while true
@@ -6340,11 +6470,154 @@ case $choice in
 #-------------------------------  RETURN TO MAIN MENU  -------------------------------
 0) echo ''; f_Menu ;;
 #-------------------------------  TOGGLE CONNECT/NON-CONNECT-MODES  -------------------------------
+a)
+echo ''; f_makeNewDir; f_Long; echo ''; denied=" (target-connect-mode only)"
+f_optionsDNS | grep -v "\[0\]" > $temp/show_all
+#echo '' >> $temp/show_all
+f_optionsTHREAT_INFO | grep -v "\[0\]" >> $temp/show_all
+#echo '' >> $temp/show_all
+f_optionsNET | grep -v "\[0\]" >> $temp/show_all
+#echo '' >> $temp/show_all
+f_optionsSSL | grep -v "\[0\]" >> $temp/show_all
+#echo '' >> $temp/show_all
+f_optionsTOOLS | grep -v "\[0\]" >> $temp/show_all
+#echo '' >> $temp/show_all
+f_optionsTRACE | grep -v "\[0\]" >> $temp/show_all
+#echo '' >> $temp/show_all
+f_optionsWHOIS | grep -v "\[0\]" >> $temp/show_all
+#echo '' >> $temp/show_all
+f_optionsWWW | grep -v "\[0\]" >> $temp/show_all
+cat $temp/show_all; denied=''; echo ''; f_removeDir; f_Menu
+;;
 c|con|connect) echo '' ; f_Long; f_targetCONNECT; echo ''; f_Menu ;;
 #-------------------------------  CLEAR SCREEN  -------------------------------
 cc|clear) clear; f_Menu ;;
 #-------------------------------  ADD Permanent Output Directory  -------------------------------
 s | r) f_makeNewDir; f_Long; f_REPORT; echo ''; f_targetCONNECT; f_Menu ;;
+h)
+f_showHELP
+echo -e "${B}"; f_Long; echo -e "${C}MAIN MENU\n"
+echo -e "\n  ${B}Directory      >${D}${bold}  $output_folder${D}"
+echo -e "\n  ${B}TargetConnect  >  ${G}$conn\n\n"
+echo -e "${B}    x)   ${D}${bold}General Target Summaries/Details (All Sources)\n"
+echo -e "${C}         ASNs|AS-Sets|Hostnames|IPs|Network Addresses & Names|OrgIDs|MAC Addr."
+echo -e "\n${B}  Target-specific Information Gathering & Diagnostics:\n"
+echo -e "${B}    b)   ${D}${bold}BGP${D} (Prefix Status, Looking Glass)"
+echo -e "${B}    d)   ${D}${bold}Domain Recon${D}"
+echo -e "${B}  dns)   ${D}${bold}DNS${D}"
+echo -e "${B}    i)   ${D}${bold}IPv4 & Domain Threat- & Vulnerability Data"
+echo -e "${B}    n)   ${D}${bold}Networks${D}"
+echo -e "${B}    t)   ${D}${bold}Tools${D}"
+echo -e "${B}  ssl)   ${D}${bold}SSL${D}"
+echo -e "${B}   tr)   ${D}${bold}Tracerouting, Firewalk ${D}"
+echo -e "${B}    w)   ${D}${bold}Whois${D}  (inverse, PoC & bulk lookups)"
+echo -e "${B}  www)   ${D}${bold}Web Servers${D}"
+echo -e "\n${B}    a)   Show ALL"
+echo -e "${C}    c)   Toggle TARGET - CONNECT / NON-CONNECT Mode ${B}"
+echo -e "   cc)   Clear the Screen"
+echo -e "    h)   Help"
+echo -e "${C}    s)   Save Results ${B}"
+echo -e "    q)   Quit\n"
+f_Long; echo -e "${C}MAIN MENU HEADER\n"
+echo -e "${B}Directory      >${D}  not saving results\n${B}Directory      >${D}  PATH/TO/DIR\n"
+echo -e "${B}TargetConnect  >  ${G}true${D}\n${B}TargetConnect  >  ${R}false${D}\n"
+echo -e "The ${G}Directory >${D} - field shows the location, any script output is written to."
+echo -e "\nTo save script output, chose option s) and enter directory name and path."
+echo -e "\nThe ${G}TargetConnect >${D} - field indicates if packets are send from your IP-address to target systems."
+echo -e "If set to false, only third party resources are queried."
+echo -e "\nUse option ${B}c)${D} to toggle ${B}TARGET - CONNECT ${D} or ${B} NON-CONNECT ${D}${bold}MODES${D}"
+#echo -e "${B}"; f_Long; echo -e "\nDRWHO.SH  VERS. 4.0  (NOV, 2023)\n"; f_Long
+echo -e "${B}"; f_Long;
+echo -e "${C}\nUSE CASES\n\n"
+echo -e " 1. Information Gathering${D}\n"
+echo -e "\n${B}  1.1 Dokument an organization's IT infrastructure & service provider relationships:${D}"
+echo -e "\n      1. Domains: d) Domain Recon"
+echo -e "\n      2. ASNs: Select option x) & choose [2] details"
+echo -e "\n\n${B}  1.2 DNS, Whois & Geolocation Data for Hosts & Networks${D}"
+echo -e "\n      - General information (networks, IP addresses & hostnames): -> Option x)"
+echo -e "\n      - Detailed network reports: -> Option n) -> [1]"
+echo -e "\n\n${B}  1.3 Threat Intelligence & Reputation Data for Hosts${D}"
+echo -e "\n      -> Option i)"
+echo -e "\n\n${B}  1.4 Domain Whois & DNS Records${D}"
+echo -e "\n      -> Option dns) -> [1] (Whois & detailed DNS resource record information)"
+echo -e "\n      -> Option dns) -> [2] Domains sharing a given name server"
+echo -e "\n      -> Option w) -> [4] Domain Whois records"
+echo -e "\n\n${B}  1.5 Discover IP Address Ranges${D}"
+echo -e "\n      - Suballocations & Assignments within less specific network resources"
+echo -e "\n        ARIN & RIPE: -> Option n) -> [1] Network Report -> [1]"
+echo -e "\n        RIPE, APNIC & AFRINIC: -> Option n) -> [4]"
+echo -e "\n      - Global search by network name:"
+echo -e "\n        -> Option x)"
+echo -e "\n        Searches AFRINIC, APNIC, ARIN & RIPE databases"
+echo -e "\n        Provides context information to help assess network ownership"
+echo -e "\n      - Inverse Whois search:"
+echo -e "\n        -> Option w) -> [w1]"
+echo -e "\n        Returns all network resources associsted with a given Org/Abuse/Admin/Tech/Maintainer object"
+echo -e "\n        Expected input for RIPE, APNIC & AFRINIC searches: Type of nic-hdl object + ; + object handle (ID)"
+echo -e "\n        Expected input for ARIN searches: Org- or Customer ID"
+echo -e "\n\n${B}  1.6 Autonomous System Report${D}"
+echo -e "\n        -> Option x) -> [1] Details"
+echo -e "\n        AS status, organization & contact, statistics, peering policies, IX presences, AS sets, announced prefixes & peers"
+echo -e "\n\n${C}2. DIAGNOSTICS${D}\n"
+echo -e "\n${C}  2.1 DOMAIN DNS RESOURCE RECORDS${D}\n"
+echo "    - Queries all common types of DNS records,"
+echo "    - TTL in milliseconds and readable time units"
+echo "    - Domain Whois in standard format, IP Whois information in tabular overview"
+echo -e "\n${B}  RFC 1912 Best Practices Check${D}\n"
+echo "    - Forward-confirmed Reverse DNS"
+echo "    - CNAME records for NS & MX (not ok)"
+echo "    - SOA: RFC 1912 recommendations for refresh, retry & expire"
+echo "    - NS: Checks for the possibility of recursive lookups"
+echo "    - NS: Match zone serials on all servers"
+echo "    - MX: Warning for missing PTR records for MX servers"
+echo -e "\n${B}  Availability${D}\n"
+echo "    - MX: SMTP banner (netcat), TCP & ICMP ping if no response"
+echo "    - NS: Determination of response time (dig +nssearch), TCP & ICMP ping if no response"
+echo "    - SRV: TCP & ICMP ping"
+echo "    - Hosts: HTTP response time (redirects & total), ICMP ping"
+echo "    - All: Routing status of prefixes"
+echo -e "\n${B}  Integrity & Security${D}\n"
+echo "    - SSL status of domain hosts & MX servers"
+echo "    - DNSSec signature"
+echo "    - CAA records & SPF"
+echo "    - MX records SPAM blocklist check"
+echo "    - Prefixes ROA status"
+echo "    - Information disclosure vulnerabilities:"
+echo "    - Unnecessary DNS records such as hinfo & version.bind"
+echo "    - Optional: Zone transfer"
+echo "    - Optional: Evaluation of ciphersuites & DH parameters for domain hosts & MX records"
+echo "    - Optional: Service banners & CVEs for all DNS records (shodan.io)"
+echo -e "\n${C}  2.2 CONNECTIVITY & ROUTING ISSUES${D}\n"
+echo "    Common suspects for connection problems in public networks include:"
+echo "    DNS, BGP, congestion and bottlenecks, and, occasionally, MTU settings"
+echo -e "\n${B}    2.2.1 DNS name resolution${D}\n"
+echo -e "    - Full name resolution (forward-confirmed RDNS) via API AND system default\n     nameservers, tracing of the DNS lookup process and authoritative name servers"
+echo -e "\n${B}    2.2.2 BGP & Tracerouting${D}\n"
+echo -e "    - Tracerouting (MTR and/or Tracepath) with additional information for all hops:\n"
+echo "     Prefix Visibility & ROA Status, Hop DNS & Geolocation, AS Organization & Abuse Contact,"
+echo "     detection of bogon addresses, internet nodes (IX) & tor nodes (inspired by nitefood's fancy 'asn' project)"
+echo "     -> Option tr) [1], [2]"
+echo -e "\n${B}    2.2.3 Other Routing Protocols & DHCP${D}\n"
+echo -e "\n    - Local routing and DHCP configurations can be checked by sending RIP2, OSPF and DHCP discover broadcasts,"
+echo "      Router Solicitation multicasts, and by listing routing tables, interface statistics & public IP addresses"
+echo "     -> Option t) -> [6] - [9]"
+echo -e "\n${B}    2.2.3 MTU Discovery${D}\n"
+echo "     -> Option t) -> [4]"
+echo -e "\n${B}    2.2.4 Ping Sweep${D}\n"
+echo "     -> Option n) ->  [2] for public and [12] for local networks"
+echo -e "\n${C}  2.3 WEBSERVER HEALTH CHECK${D}"
+echo "     -> Option www) ->  [1]"
+echo -e "${B}"; f_Long; echo -e "${C}\nSOURCES${D}\n\n"
+echo -e "${B}APIs${D}\n"
+echo -e "abusix.com, certspotter.com, greynoise.io, hackertarget.com, ip-api.com, SANS Internet Storm Center (isc.sans.edu)"
+echo -e "otx.alienvault.com, peeringdb.com, projecthoneypot.org, rapiddns.io,"
+echo -e "ripeSTAT Data API (https://stat.ripe.net), shodan.io, stopforumspam.org, urlscan.io\n"
+echo -e "\n${B}Threat Feeds & DNS Blocklists${D}\n"
+echo -e "Amnesty Tech Spyware Domains (raw.githubusercontent.com/AmnestyTech), barracudacentral.org, blocklist.de,\ncinsscore.com/list/ci-badguys.txt, dronebl.org, feodotracker.abuse.ch, fullbogons.cymru.com, \ngithub.com/rblaine95/monero-banlist, ix.dnsbl.manitu.net, kundenserver.de,\nmsrbl.net, openphish.com/feed.txt, phishing.army, s5h.net, reputation.alienvault.com, rescure.me, \nsorbs.net, spamcop.net, spamrats.com, Spamhaus Don't Route Or Peer DROP (spamhaus.org/drop), \ntalosintelligence.com, tor.dan.me.uk, tornevall.org, urlhaus malware domains (malware-filter.gitlab.io), zonefiles.io\n"
+echo -e "\n${B}Whois Servers${D}\n"
+echo -e "whois.cymru.com, whois.pwhois.org \nRIR whois Servers (whois.afrinic.net, whois.apnic.net, whois.arin.net, whois.lacnic.net, whois.ripe.net)"
+echo ''; f_Menu
+;;
 b|bgp)
 f_makeNewDir; domain_enum="false"; f_Long; target_type="prefix"; rir=""; x=""
 echo -e "${B}\nBGP STATUS  -  ${C} Expected input:${D}${bold} IPv4|v6 Address or Prefix ${D}"
@@ -6473,7 +6746,7 @@ if ! [ $option_dns = "0" ]; then
   declare -a dig_array=()
   #************** DOMAIN DNS RECORDS *******************
   if [ $option_dns = "1" ]; then
-    option_starttls="0"; tls_port="443"; ssl_details="false"
+    option_starttls="0"; tls_port="443"; ssl_details="false"; f_getTHREAT_FEEDS_IP
     echo -e -n "\n${B}Target  >  [1]${D}  Set Target  ${B}|  [2]${D}  Read from file  ${B}?${D}  " ; read -r option_target
     f_setTARGET
     dig_array+=(+noall +answer +noclass +ttlid)
@@ -6664,11 +6937,11 @@ if [ $option_target != "0" ]; then
   # validate input
   if [ -n "$domain_input" ]; then
     domain_enum="true"; x=$(f_EXTRACT_HOSTN "$domain_input")
-    [[ -n "$x" ]] && f_WHOIS_STATUS "$x" > $temp/whois_status && target_cat="hostname"
+   [[ -n "$x" ]] && f_WHOIS_STATUS "$x" > $temp/whois_status && f_getTYPE "$x"
   fi
 fi
 if [ -f $temp/whois_status ] && [[ $(grep -c "^Domain:" $temp/whois_status) -gt 0 ]]; then
-  send_ping="false"; option_detail="1"
+  send_ping="false"; option_detail="1"; target_cat="hostname"
   dig_array+=(+noall +answer +noclass +nottlid); echo $x > $temp/hosts
   out="${outdir}/DOMAIN_${x}.${file_date}.txt"; option_whois="y"
   echo -e "\n${B}Options  ${C}>  Subdomain Hosts, Service Provider Contacts\n"
@@ -6734,11 +7007,9 @@ if [ -f $temp/whois_status ] && [[ $(grep -c "^Domain:" $temp/whois_status) -gt 
   f_DOMAIN_STATUS "$x" | tee -a ${out}
   [[ -f $temp/ips_all ]]  && cat $temp/ips_all >> $temp/ips.list
   if [ $webpresence = "true" ]; then
-    f_Long | tee -a ${out}; for a in $(f_EXTRACT_IP4 "$temp/ips_all"); do f_HOST_SHORT "$a"; done | tee -a ${out}
+    for a in $(f_EXTRACT_IP4 "$temp/ips_all"); do f_HOST_SHORT "$a"; done | tee -a ${out}
     [[ -f $temp/webdom_whois ]] && webdomain=$(grep -sE "^Domain:" $temp/webdom_whois | awk '{print $NF}' | tr -d ' ')
-    domain_webhost=$(f_printWEBHOST); f_Long
-    f_DOMAIN_HOST_SSL "$x" | tee -a ${out}
-    [[ "$domain_webhost" != "$x" ]] && f_DOMAIN_HOST_SSL "$domain_webhost" | tee -a ${out}
+    domain_webhost=$(f_printWEBHOST)
     [[ $webdata = "true" ]] && f_PAGE "$x" | tee -a ${out}
     if [ -n "$webdomain" ]; then
       echo -e -n "\n${B}Option   >  ${C}WEBDOMAIN  ${B}>${D}  Include $webdomain in enumerations ${B}[y] | [n] ?${D}  " ; read -r option_webdomain
@@ -6751,17 +7022,20 @@ if [ -f $temp/whois_status ] && [[ $(grep -c "^Domain:" $temp/whois_status) -gt 
   echo '' | tee -a ${out}; target_type="dnsrec"
   f_DOMAIN_DNS "$x" | tee -a ${out}
   [[ $option_webdomain = "y" ]] && f_DOMAIN_DNS "$webdomain" | tee -a ${out}
-  for mxa in $(f_EXTRACT_IP4 "$temp/m4"); do f_HOST_SHORT "$mxa"; done | tee -a ${out}
-  #**************  ZONE TRANSFER (OPTIONAL) **************
-  [[ $option_axfr = "y" ]] && f_AXFR "$x" | tee -a ${out}
-  [[ $option_axfr = "y" ]] && [[ $option_webdomain = "y" ]] && f_AXFR "$webdomain" | tee -a ${out}
+  for mxa in $(f_EXTRACT_IP4 "$temp/m4"); do echo ''; f_HOST_SHORT "$mxa"; done | tee -a ${out}
   #************** SSL **************
   if [ $option_connect != "0" ]; then
-    f_CERT_INFO "$x" | tee -a ${out}
+    option_starttls="0"; tls_port="443"; quiet_dump="false"; ssl_diag="false"
+    declare ssl_array1; ssl_array1+=(-servername $x -verify_hostname $x)
+    f_CERT_INFO "$x" | tee -a ${out}; unset ssl_array1
+    declare ssl_array1; ssl_array1+=(-servername $webdomain -verify_hostname $webdomain)
     [[ $option_webdomain = "y" ]] && f_CERT_INFO "$webdomain" | tee -a ${out}
   else
     include_subs="false"; f_CERT_SPOTTER "$x" | tee -a ${out}
   fi
+  #**************  ZONE TRANSFER (OPTIONAL) **************
+  [[ $option_axfr = "y" ]] && f_AXFR "$x" | tee -a ${out}
+  [[ $option_axfr = "y" ]] && [[ $option_webdomain = "y" ]] && f_AXFR "$webdomain" | tee -a ${out}
   #************** Subdomains / ASNs **************
   target_type="subdomain"
   include_subs="true"; f_CERT_SPOTTER "$x" > ${outdir}/DOMAIN_CRT_ISSUANCES.${x}.txt
@@ -6817,25 +7091,26 @@ if [ -f $temp/whois_status ] && [[ $(grep -c "^Domain:" $temp/whois_status) -gt 
           f_HEADLINE3 "[ARIN]   NET:  $netname"  >> $temp/domain_nets
           echo -e "[@] $abuse_mail\n___\n\n" >> $temp/domain_nets
           cidr=$(f_VALUE ":" "$(grep -s -m 1 'CIDR:' $temp/nhandle)"); cidr_count=$(f_countW "$cidr")
-          echo -e "$netname (ARIN)\n" >> $temp/nets_overview
           if [ -n "$cidr" ] && [[ $cidr_count -lt 5 ]]; then
-            echo -e " $cidr" | tee -a $temp/nets_overview >> $temp/domain_nets
+            print_netaddr="$cidr"
           else
-            f_VALUE ":" "$(grep -s -m 1 'NetRange:' $temp/nhandle)" | sed 's/^/ /' | tee -a $temp/nets_overview  >> $temp/domain_nets
+            print_netaddr=$(f_VALUE ":" "$(grep -s -m 1 'NetRange:' $temp/nhandle)" | sed 's/^/ /')
           fi
-          echo '' | tee -a ${outdir}/ARIN_NETS_OVERVIEW_$x.txt >> $temp/domain_nets
+          echo -e "$print_netaddr\n" | tee -a ${outdir}/ARIN_NETS_OVERVIEW_$x.txt >> $temp/domain_nets
           f_VALUE ":" "$(grep -s -m 1 'Organization:' $temp/nhandle)" | sed 's/^/  /' | tee -a ${outdir}/ARIN_NETS_OVERVIEW_$x.txt >> $temp/domain_nets
           cust_id=$($JQ '.data.records[]? | .[] | select (.key=="Customer") | .value' $temp/whois.json | grep -sEo "C+[0-9]{8,10}")
-          if [ -n "$cust_id" ]; then
-          $JQ '.data.records[]? | .[] | select (.key=="Customer") | .value' $temp/whois.json | sed 's/^/  /' | tee -a ${outdir}/ARIN_NETS_OVERVIEW_$x.txt >> $temp/domain_nets
-          fi
+          [[ -n "$cust_id" ]] && customer=$($JQ '.data.records[]? | .[] | select (.key=="Customer") | .value' $temp/whois.json | sed 's/^/  /')
+          [[ -n "$customer" ]] && echo -e "$customer" | tee -a ${outdir}/ARIN_NETS_OVERVIEW_$x.txt >> $temp/domain_nets
           f_VALUE ":" "$(grep -s -m 1 'OrgId:' $temp/nhandle)" >> $temp/arin_contacts
           if [ $is_hosting = "false" ]; then
             whois -h whois.ripe.net -- "--no-personal -a $netname" | sed -e '/./{H;$!d;}' -e 'x;/IANA-BLK/d' | sed 's/-GRS//' |
             sed 's/# Filtered//' | grep -saEv "DUMY-RIPE" | sed '/source:/G' | sed -e '/./{H;$!d;}' -e 'x;/ARIN/!d' > $temp/arin_nets
             f_VALUE ":" "$(grep -s -m 1 'OrgId:' $temp/nhandle)" >> $temp/orgs_non_hosting
           fi
-            echo '' >> $temp/domain_nets; f_Medium >> $temp/nets_overview
+          echo '' >> $temp/domain_nets
+          echo -e "\n\n$netname (ARIN)  $print_netaddr\n" >> $temp/nets_overview
+          f_VALUE ":" "$(grep -s -m 1 'Organization:' $temp/nhandle)" | sed 's/^/  /' >> $temp/nets_overview
+          [[ -n "$customer" ]] && echo -e "$customer" >> $temp/nets_overview; echo '' >> $temp/nets_overview
         else
           # RIPE, APNIC, AFRINIC
           net_addr=$($JQ '.data.records[]? | .[] | select (.key=="inetnum") | .value' $temp/whois.json | tr -d ' ')
@@ -6853,32 +7128,32 @@ if [ -f $temp/whois_status ] && [[ $(grep -c "^Domain:" $temp/whois_status) -gt 
           [[ $netname_table = "NA" ]] && print_netname="$netname" || print_netname="$netname_table"
           f_HEADLINE3 "[$(f_toUPPER "$rir")]   NET:   $netname"  >> $temp/domain_nets
           echo -e "[@] $abuse_mail\n___\n\n" >> $temp/domain_nets
-          echo -e "$netname ($(f_toUPPER "$rir"))\n" >> $temp/nets_overview
-          $JQ '.data.records[]? | .[] | select (.key=="inetnum") | .value' $temp/whois.json | sed 's/^/ /' |
-          sed 's/-/ - /' | tee -a $temp/nets_overview | tee -a $temp/nets_overview >> $temp/domain_nets
-          echo '' | tee -a $temp/nets_overview  >> $temp/domain_nets
+          print_netaddr=$($JQ '.data.records[]? | .[] | select (.key=="inetnum") | .value' $temp/whois.json | sed 's/-/ - /')
+          echo -e "  $print_netaddr\n" >> $temp/domain_nets
           isp_admins=$(grep -E "^admin-c:" $temp/whois | head -3 | sort -u | awk '{print $NF}' | sed 's/^/,/' | tr -d ' ' | tr '[:space:]' ' ' |
           sed 's/^\,//' | sed 's/ ,/, /g'; echo ''); net_orgs=$(f_ORG_SHORT "$temp/whois")
           grep -E "^admin-c:" $temp/whois | awk '{print $NF}' | tr -d ' ' | head -2 >> $temp/${rir}_admins
           if [ -n "$net_orgs" ]; then
             grep -sEa -m 1 "^org:|^organisation:" $temp/whois | awk '{print $NF}' | tr -d ' ' >> $temp/${rir}_orgs
-            echo -e "  $net_orgs" | tee -a $temp/nets_overview >> $temp/domain_nets
+            echo -e "  $net_orgs" >> $temp/domain_nets
           else
             descr=$(sed -e '/./{H;$!d;}' -e 'x;/route:/d' $temp/whois | grep -sEa -m 1 "^descr:" | cut -d ':' -f 2- |
             sed 's/^[ \t]*//;s/[ \t]*$//')
-            [[ -n "$descr" ]] && echo -e "  $descr $print_isp_admins" | tee -a $temp/nets_overview >> $temp/domain_nets
+            [[ -n "$descr" ]] && echo -e "  $descr" >> $temp/domain_nets
           fi
           sed -e '/./{H;$!d;}' -e 'x;/netname:/!d' $temp/whois | grep -sEoa "^mnt-by:|^country:" > $temp/mnt_cc
           net_ctry=$(f_VALUE ":" "$(grep -sa -m 1 'country:' $temp/whois)")
           mntner=$(f_VALUE ":" "$(grep -sa -m 1 'mnt-by:' $temp/whois)")
-          echo -e "\n  Mntner: $mntner | $net_ctry | Admins: $isp_admins\n" | tee -a $temp/nets_overview  >> $temp/domain_nets
-          f_Medium >> $temp/nets_overview
+          echo -e "\n  Mntner: $mntner | $net_ctry | Admins: $isp_admins\n" >> $temp/domain_nets
           grep -E "^admin-c:" $temp/whois | awk '{print $NF}' | tr -d ' ' | head -2 >> $temp/${rir}_admins
           if [ $is_hosting = "false" ]; then
             $TOUT 15 $WHOIS -h whois.$rir.net -- "--no-personal $netname" > $temp/netname_query
             if [ -f $temp/netname_query ]; then
               [[ $rir = "ripe" ]] && grep -v '^abuse-c:'  $temp/netname_query > $temp/nets || cat $temp/netname_query > $temp/nets
             fi
+            echo -e "\n\n$netname ($(f_toUPPER "$rir"))  $print_netaddr\n" >> $temp/nets_overview
+            [[ -n "$net_orgs" ]] && echo -e " $net_orgs\n" >> $temp/nets_overview
+            echo -e " Mntner: $mntner | $net_ctry | Admins: $isp_admins\n" >> $temp/nets_overview
           fi
         fi # Which RIR?
         # -- ALL PREFIXES WITH SAME NAME USED WITHIN TARGET DOMAIN  (source: pwhois.org) *
@@ -6886,11 +7161,12 @@ if [ -f $temp/whois_status ] && [[ $(grep -c "^Domain:" $temp/whois_status) -gt 
           networks=$(grep -w "$netname_table" $temp/net_table | cut -d '|' -f 2 | sed 's/^[ \t]*//;s/[ \t]*$//' |
           sort -u | sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n | tr '[:space:]' ' ' | sed 's/ /  /g' | sed 's/^ *//' | fmt -w 80)
           prefix_count=$(f_countW "$networks")
-          echo -e "\n'$netname_table' Prefixes in target domain: $prefix_count\n\n  $networks\n" >> $temp/domain_nets
+          echo -e "\n'$netname_table' Prefixes in target domain: $prefix_count\n" >> $temp/domain_nets
+           echo -e "$networks\n" | sed 's/^/  /' >> $temp/domain_nets
         fi
         # GET ALL RESOURCES FOR GIVEN NETWORK NAME FROM GIVEN RIR
         if [ $is_hosting = "true" ]; then
-          echo -e "\n'$netname' Networks (global): \n\n    HOSTING provider network, skipping search for global network resources" >> $temp/domain_nets
+          echo -e "\n'$netname' Networks (global): \n\n  HOSTING provider network, skipping search for global network resources" >> $temp/domain_nets
         else
           [[ -f $temp/nets ]] && count_net_instances=$(grep -c 'netname:' $temp/nets) || count_net_instances=0
           if [[ $count_net_instances -gt 1 ]]; then
@@ -6926,27 +7202,27 @@ if [ -f $temp/whois_status ] && [[ $(grep -c "^Domain:" $temp/whois_status) -gt 
     if [ -f $temp/ripe_orgs ]; then
       f_HEADLINE3 "[PROVIDERS]  ORGANIZATIONS  (RIPE)" | tee -a ${out}
       for hdl in $(cat $temp/ripe_orgs | sort -u); do
-        rir="ripe"; echo -e "\n\n* $hdl\n\n"; $TOUT 30 $WHOIS -h whois.ripe.net -- "-B $hdl" > $temp/ripe_org_tmp
+        rir="ripe"; echo -e "\n"; $TOUT 30 $WHOIS -h whois.ripe.net -- "-B $hdl" > $temp/ripe_org_tmp
         sed -e '/./{H;$!d;}' -e 'x;/org-name:/!d' $temp/ripe_org_tmp > $temp/ripe_org
-        f_POC "$temp/ripe_org" | sed '/./,$!d' | sed 's/^/  /'; echo ''
+        f_POC "$temp/ripe_org" | sed '/./,$!d' | sed 's/^/  /' | sed 's/  ORG:/\n*/'; echo ''
       done | tee -a ${out}; unset hdl; unset rir
     fi
     # APNIC ORGs
     if [ -f $temp/apnic_orgs ]; then
       f_HEADLINE3 "[APNIC]  SERVICE PROVIDER ORGANIZATIONS" | tee -a ${out}
       for hdl in $(cat $temp/apnic_orgs | sort -u); do
-        rir="apnic"; echo -e "\n\n* $hdl\n\n"; $TOUT 30 $WHOIS -h whois.apnic.net -- "-B $hdl" > $temp/apnic_org_tmp
+        rir="apnic"; echo -e "\n"; $TOUT 30 $WHOIS -h whois.apnic.net -- "-B $hdl" > $temp/apnic_org_tmp
         sed -e '/./{H;$!d;}' -e 'x;/org-name:/!d' $temp/apnic_org_tmp > $temp/apnic_org
-        f_POC "$temp/apnic_org" | sed '/./,$!d' | sed 's/^/  /'; echo ''
+        f_POC "$temp/apnic_org" | sed '/./,$!d' | sed 's/^/  /' | sed 's/  ORG:/\n*/'; echo ''
       done | tee -a ${out}; unset hdl; unset rir
     fi
     # AFRINIC ORGs
     if [ -f $temp/afrinic_orgs ]; then
       f_HEADLINE3 "[AFRINIC]  SERVICE PROVIDER ORGANIZATIONS" | tee -a ${out}
       for hdl in $(cat $temp/afrinic_orgs | sort -u); do
-        rir="afrinic"; echo -e "\n\n* $hdl\n\n"; $TOUT 30 $WHOIS -h whois.afrinic.net -- "-B $hdl" > $temp/afrinic_org_tmp
+        rir="afrinic"; echo -e "\n"; $TOUT 30 $WHOIS -h whois.afrinic.net -- "-B $hdl" > $temp/afrinic_org_tmp
         sed -e '/./{H;$!d;}' -e 'x;/org-name:/!d' $temp/afrinic_org_tmp > $temp/afrinic_org
-        f_POC "$temp/afrinic_org" | sed '/./,$!d' | sed 's/^/  /'; echo ''
+        f_POC "$temp/afrinic_org" | sed '/./,$!d' | sed 's/^/  /' | sed 's/  ORG:/\n*/'; echo ''
       done | tee -a ${out}; unset hdl; unset rir
     fi
     # RIPE ADMINS
@@ -6983,7 +7259,6 @@ if [ -f $temp/whois_status ] && [[ $(grep -c "^Domain:" $temp/whois_status) -gt 
   echo -e "\n Reminder:  Network names are not considered unique identifiers.\n" | tee -a ${out}
   echo -e " Watch out for false positives within the 'Resources for' sections.\n" | tee -a ${out}
   cat $temp/domain_nets | tee -a ${out}
-  #************** Print full list of subdomains **************
   if [ -f $temp/orgs_non_hosting ]; then
     for o in $(sort -bifu $temp/orgs_non_hosting); do
       f_netBLOCKS "$o" > $temp/netblock_tmp; netblock_count=$(wc -w < $temp/blockranges)
@@ -6997,7 +7272,11 @@ if [ -f $temp/whois_status ] && [[ $(grep -c "^Domain:" $temp/whois_status) -gt 
       [[ -f $temp/netblock_tmp ]] && rm $temp/netblock_tmp
     done
   fi
-  f_PWHOIS_ORG_NAME "$(echo $x | cut -d '.' -f 1)" | tee -a ${out}
+  #************** pwhois.org org-name search  **************
+  domain_org=$(echo "$x" | cut -d '.' -f 1)
+  f_HEADLINE3 "[PWHOIS]   ORG-NAME SEARCH:  $domain_org" > ${outdir}/PWHOIS_${domain_org}.txt
+  f_PWHOIS_ORG_NAME "$domain_org" >> ${outdir}/PWHOIS_${domain_org}.txt
+  #************** Print full list of subdomains **************
   if [ -f $temp/subdomains_$x ]; then
     f_HEADLINE3 "[SUBDOMAINS]  $x" | tee -a ${out}
     if [[ $(wc -l < $temp/subdomains_$x) -lt 601 ]] || [[ $report = "false" ]]; then
@@ -7025,6 +7304,14 @@ if [ -f $temp/whois_status ] && [[ $(grep -c "^Domain:" $temp/whois_status) -gt 
       target_type="subdomain"
     fi
   fi
+  if [ $report = "true" ]; then
+    f_Long | tee -a ${out}; echo -e "\nSee output directory for additional files, e.g.\n" | tee -a ${out}
+    echo -e "RIR whois database objects searchable in option [w1] (inverse whois)" | tee -a ${out}
+    echo -e "network address ranges" | tee -a ${out}
+    echo -e "announced prefixes for any AS found," | tee -a ${out}
+    echo -e "results of pwhois.org org-name search for $domain_org," | tee -a ${out}
+   [[ $webdata = "true" ]] && echo -e "HTTP headers and website link dump" | tee -a ${out}
+  fi
 fi
 target_type=""; x=""; echo ''; f_removeDir; f_Menu
 ;;
@@ -7032,14 +7319,19 @@ target_type=""; x=""; echo ''; f_removeDir; f_Menu
 i|ip|ipv4|blocklist|blocklists|blacklists|cve|cves)
 f_makeNewDir; unset rir; f_Long; f_optionsTHREAT_INFO; echo -e -n "\n${B}    ?${D}   "  ; read opt1
 if [ $opt1 != "0" ]; then
-  domain_enum="false"; option_connect="0"
-  [[ $opt1 = "4" ]] && target_type="other"
+  domain_enum="false"
+  if [ $opt1 = "6" ]; then
+    [[ $option_connect = "0" ]] && f_targetCONNECT
+  else
+    option_connect="0"
+  fi
+  [[ $opt1 = "4" ]] || [[ $opt1 = "6" ]] && target_type="other"
   if [ $opt1 = "6" ]; then
     if [ -n "$is_admin" ]; then
       echo -e "\n\n${B}Options  > ${C}Nmap Target Ports\n"
       echo -e "${B} [1]${D}  Ports found via Shodan (if applicable)"
-      echo -e "${B} [2]${D}  Common Services (~ 140 TCP & UDP Ports) & Ports found via Shodan (if applicable)"
-      echo -e "${B} [3]${D}  Common Services (~ 140 TCP & UDP Ports), SKIP Shodan API request"
+      echo -e "${B} [2]${D}  Common Services (~ 250 TCP & UDP Ports) & Ports found via Shodan (if applicable)"
+      echo -e "${B} [3]${D}  Common Services (~ 250 TCP & UDP Ports), SKIP Shodan API request"
       echo -e "${B} [4]${D}  All TCP ports"
       echo -e "${B} [5]${D}  Customize ports (TCP)"
       echo -e "${B} [6]${D}  Customize ports (TCP/UDP)"; echo -e -n "\n${B}  ? ${D}  " ; read -r option_ports
@@ -7056,14 +7348,14 @@ if [ $opt1 != "0" ]; then
       echo -e "${B} [2]${D}  Aggressive"
       echo -e -n "\n${B}  ?${D}   " ; read option_scripts
       if [ $option_scripts = "1" ]; then
-        script_choice="${nse_vulners1}"
+        script_choice="$nse1"
       if [ $option_ports = "1" ] || [ $option_ports = "4" ] || [ $option_ports = "5" ]; then
         nmap_array+=(-T4 -sS -sV -O --osscan-limit --version-intensity 7 -Pn -R --resolve-all --open)
       else
         nmap_array+=(-T4 -sS -sU -sV -O --osscan-limit --version-intensity 7 -Pn -R --resolve-all --open)
       fi
       elif [ $option_scripts = "2" ]; then
-        script_choice="${nse_vulners1},${nse_vulners2}" && script_args="--script-args=http-methods.test-all"
+        script_choice="${nse1},${nse2}" && script_args="--script-args=http-methods.test-all"
         if [ $option_ports = "1" ] || [ $option_ports = "4" ] || [ $option_ports = "5" ]; then
           nmap_array+=(-T4 -sS -sV -O --version-intensity 9 -Pn -R --resolve-all --open)
         else
@@ -7204,14 +7496,15 @@ if [ $netop != "0" ] ; then
         echo -e "\n${B}Options  > ${C}DETAILS I > Network whois\n"
         echo -e "${B} [1]${D} Network Whois ${bold}Overview${D}"
         echo -e "${B} [2]${D} Network ${bold}Contact Details${D}"
+        echo -e "${B} [3]${D} Brief summary only${D}"
         echo -e -n "\n${B}  ? ${D}  " ; read -r net_report1
-        [[ $net_report1 = "1" ]] && option_detail="3"; [[ $net_report1 = "2" ]] && option_detail="2"
+        [[ $net_report1 = "1" ]] && option_detail="3"; [[ $net_report1 = "2" ]] && option_detail="2";  [[ $net_report1 = "3" ]] && option_detail="0"
         echo -e "\n${B}Options  > ${C}DETAILS II\n"
         echo -e "${B} [1]${D} Subnets, related prefixes & geographic distribution"
         if [ $option_type = "1" ]; then
           echo -e "${B} [2]${D} Ping Sweep (Nmap)  $denied"
           echo -e "${B} [3]${D} BOTH"
-        fi 
+        fi
         echo -e "${R} [0]${D} SKIP"; echo -e -n "\n${B}  ? ${D}  " ; read -r net_report2
         if [ $option_type = "1" ]; then
           [[ $net_report2 = "2" ]] || [[ $net_report2 = "3" ]] && psweep="true" || psweep="false"
@@ -7316,10 +7609,9 @@ if [ $netop != "0" ] ; then
           if [ $option_connect != "0" ] && [ -n "$is_admin" ]; then
             [[ $option_banners = "5" ]] && proxych="proxychains" || proxych=''
             nmap_array+=(-PE -PP -PS25,80,443 -PA80,443,3389 -PU:53,40125 -sS -sU -sV -O --osscan-limit --version-intensity 5 -T4 -R)
-            scripts="--script=http-title,https-redirect,ssl-cert,ssl-known-key,irc-botnet-channels,nbstat,smb-ls,nfs-ls,vulners"
-            ports="-p $ports_net"; script_args=''
+            scripts="--script=$nse1"; ports="-p $top80"; script_args=''
           fi
-        fi  
+        fi
       fi
       #**************  LAN NMAP CONFIG **************
       if [ $netop =  "13" ]; then
@@ -7338,7 +7630,7 @@ if [ $netop != "0" ] ; then
           else
             nmap_array+=(-sS -sV -O --osscan-limit --version-intensity 6 -T4 --system-dns -R --open); ports="-p-"
           fi
-          scripts="--script=$net_scripts2"; script_args="--script-args=http-methods.test-all"
+          scripts="--script=${nse1},${nse2}"; script_args="--script-args=http-methods.test-all"
         else
           echo -e "\nSorry, this option requires elevated privileges\n"
         fi
@@ -7366,7 +7658,7 @@ if [ $netop != "0" ] ; then
             f_NET_HEADER "$x"; echo ''
           else
             [[ $custom_file = "false" ]] && out="${outdir}/NET_Report.${file_date}_${file_name}.txt"
-            f_WHOIS_NET "${x}" | tee -a ${out}
+            [[ $option_detail = "0" ]] && f_NET_HEADER "$x" | tee -a ${out} || f_WHOIS_NET "$x" | tee -a ${out}
           fi
         fi
         # IPV4 OPTIONS
@@ -7740,109 +8032,155 @@ x=""; target_type=""; f_removeDir; f_Menu
 #-------------------------------  WHOIS OPTIONS  -------------------------------
 w) echo '' ; f_Long; f_optionsWHOIS ;;
 w1)
-f_makeNewDir; f_Long; target_type="iwhois_target" ; option_detail="1"; domain_enum="false"; orgs=''; orgs_other=''
+f_makeNewDir; f_Long; option_detail="1"; domain_enum="false"; orgs=''; orgs_other=''
 echo -e "\n${B}Options  > Sources > whois Servers >\n"
 echo -e "${B} [1]${D}  RIPE"
 echo -e "${B} [2]${D}  AFRINIC"
 echo -e "${B} [3]${D}  APNIC"
+echo -e "${B} [4]${D}  ARIN"
 echo -e "\n${B} [0]${D}  Back to the Global Options ${C}Menu${D}"
 echo -e -n "\n${B}   ?${D}  " ; read reg_choice
 if [ $reg_choice != "0" ]; then
-  if [ $reg_choice = "2" ] ; then
+  if [ $reg_choice = "1" ] ; then
+    rir="ripe"; iregistry="RIPE" ; rir_server="whois.ripe.net"
+  elif [ $reg_choice = "2" ] ; then
     rir="afrinic"; iregistry="AFRINIC" ; rir_server="whois.afrinic.net"
   elif [ $reg_choice = "3" ]; then
     rir="apnic"; iregistry="APNIC" ; rir_server="whois.apnic.net"
+  elif [ $reg_choice = "4" ]; then
+    rir="arin"; iregistry="ARIN" ; rir_server="whois.arin.net"
+  fi
+  if [ $rir = "arin" ]; then
+    target_type="arin_iwhois"
+    f_Long ; echo -e "\n${B}Expected Input${D} - ${C}Org- or Customer ID${D}\n"
+    echo -e -n "\n${C}Target  ${B}> [1]${D} Single entry ${B}| [2]${D} Read from file  ${B}?${D}  " ; read -r option_target
+    f_setTARGET
+    for x in $(cat $temp/targets_other); do
+      out=${outdir}/ARIN_IWHOIS_${x}.txt; is_customer=$(grep -sEo "C+[0-9]{8,10}" <<<$x)
+      if [ -n "$is_customer" ]; then
+        arin_poc=$(f_ARIN_CUST "$x")
+      else
+        $TOUT 30 $WHOIS -h whois.arin.net "o $x" > $temp/arin_org && arin_poc=$(f_POC "$temp/arin_org")
+      fi
+      [[ -n "$arin_poc" ]] && f_HEADLINE3 "[ARIN]  $x  ORGANIZATION" | tee -a ${out} && echo "$arin_poc" | tee -a ${out}   
+      $TOUT 30 $WHOIS -h whois.arin.net "n - $x" | grep '(' > $temp/arin_tmp
+      if [ -f $temp/arin_tmp ]; then
+        grep -E "$IP4_ALT" $temp/arin_tmp > $temp/arin4_tmp
+        grep -E "$REGEX_IP6" $temp/arin_tmp > $temp/arin6_tmp
+        [[ -f $temp/arin4_tmp ]] && netcount4=$(grep -c '(' $temp/arin4_tmp) || netcount4=0
+        [[ -f $temp/arin6_tmp ]] && netcount6=$(grep -c '(' $temp/arin6_tmp) || netcount6=0
+        if [[ $netcount4 -gt 0 ]] || [[ $netcount6 -gt 0 ]]; then
+          f_HEADLINE3 "[ARIN]  $x  NETWORKS" | tee -a ${out}
+          echo -e "\nIPv4: $netcount4;  IPv6: $netcount6\n\n" | tee -a ${out}
+          if [[ $netcount4 -gt 0 ]]; then
+            cut -d ')' -f 2- $temp/arin4_tmp | sed 's/^[ \t]*//;s/[ \t]*$//' > $temp/netlist_tmp; cat $temp/arin4_tmp | tee -a ${out}
+            echo '' | tee -a ${out}; f_DEAGGREGATE | tee -a ${out}
+          fi
+          if [[ $netcount6 -gt 0 ]]; then
+            [[ $netcount4 -gt 0 ]] && f_Long | tee -a ${out}
+            sed 's/)/)\n\n/' $temp/arin6_tmp | sed '/)/{x;p;x;}' | sed '/:/G' | tee -a ${out}
+          fi
+        fi
+      fi
+    done
   else
-    rir="ripe"; iregistry="RIPE" ; rir_server="whois.ripe.net"
-  fi
-  f_Long ; echo -e "\n${B}Expected Input${D} - ${C}ObjectType;SearchTerm${D}  -  e.g.  admin-c;JohnDoeXY-RIPE\n"
-  echo -e -n "\n${C}Target  ${B}> [1]${D} Single entry ${B}| [2]${D} Read from file  ${B}?${D}  " ; read option_target
-  if [ $option_target = "2" ] ; then
-    echo -e -n "\n${B}Target  > ${C}PATH TO FILE ${D}e.g. ./objects.list  ${B}>>${D}   " ; read input
-    cat $input > $temp/targets_tmp
-  else
-    echo -e -n "\n${B}Target  > ${C}SEARCH TERM  ${B}>>${D} " ; read input
-    echo "$input" > $temp/targets_tmp
-  fi
-  grep -sEoi "$PATTERN_IWHOIS" $temp/targets_tmp > $temp/targets
-  if [ $option_target = "2" ] && [ $report = "true" ] ; then
-    echo -e -n "\n${B}Output  > ${C}OUTPUT - FILE NAME  ${B}>>${D}  " ; read filename
-  fi
-  headl="$temp/headline"; echo -e "\n"
-  echo -e "\n" > ${headl}; f_Long | tee -a ${headl}; echo -e "[$iregistry]  OBJECT & INVERSE SEARCHES  -  $file_date)" | tee -a ${headl}
-  f_Long | tee -a ${headl}; echo -e "\nSearching...\n" | tee -a ${headl}; cat $temp/targets | tee -a ${headl}
-  echo '' | tee -a ${headl}
-  for t in $(cat $temp/targets) ; do
-    x=$(echo $t | grep -E ".*.;.*")
-    query_type=$(echo "$x" | cut -d ';' -f 1) ; obj=$(echo "$x" | cut -d ';' -f 2)
-    if [ $option_target = "1" ] ; then
-      filename=$(echo $x | cut -d ';' -f 2- | tr -d ' ')
-    fi
-    if [ $query_type = "org" ] ; then
-      echo "$obj" | tr -d ' ' >> $temp/orgs.list
-    elif [ $query_type = "admin-c" ] ; then
-      echo "$obj" | tr -d ' ' | tee -a $temp/objects.list >> $temp/admins1_raw
-    elif [ $query_type = "tech-c" ] ; then
-      echo "$obj" | tr -d ' ' | tee -a $temp/objects.list >> $temp/admins1_raw
-    elif [ $query_type = "abuse-c" ] ; then
-      echo "$obj" | tr -d ' ' | tee -a $temp/objects.list >> $temp/admins1_raw
-    elif [ $query_type = "mnt-by" ] ; then
-      echo "$obj" | tr -d ' ' | tee -a $temp/objects.list >> $temp/mntners
-    elif [ $query_type = "mnt-lower" ] ; then
-     echo "$obj" | tr -d ' ' | tee -a $temp/objects.list >> $temp/mntners
-    elif [ $query_type = "origin" ] ; then
-      echo "$obj" | tr -d ' ' | tee -a $temp/objects.list >> $temp/asns.list
+    target_type="iwhois_target"
+    f_Long ; echo -e "\n${B}Expected Input${D} - ${C}ObjectType;SearchTerm${D}  -  e.g.  admin-c;JohnDoeXY-RIPE\n"
+    echo -e -n "\n${C}Target  ${B}> [1]${D} Single entry ${B}| [2]${D} Read from file  ${B}?${D}  " ; read option_target
+    if [ $option_target = "2" ] ; then
+      echo -e -n "\n${B}Target  > ${C}PATH TO FILE ${D}e.g. ./objects.list  ${B}>>${D}   " ; read input
+      cat $input > $temp/targets_tmp
     else
-      echo "$obj" >> $temp/objects.list
+      echo -e -n "\n${B}Target  > ${C}SEARCH TERM  ${B}>>${D} " ; read input
+      echo "$input" > $temp/targets_tmp
     fi
-    $TOUT 10 $WHOIS -h ${rir_server} -- "--no-personal -i ${query_type} ${obj}" >> $temp/whois_temp
-    f_whoisFORMAT "$temp/whois_temp" >> $temp/who1
-    $TOUT 10 $WHOIS -h ${rir_server} -- "--no-personal ${obj}" >> $temp/whois_temp2
-    f_whoisFORMAT "$temp/whois_temp2" >> $temp/who2
-  done
-  [[ -f $temp/who1 ]] && cat $temp/who1 > $temp/full_output; [[ -f $temp/who2 ]] && cat $temp/who2 >> $temp/full_output
-  netcount=$(grep -sEc "^netname:" $temp/whois_temp); netcount4=$(grep -sEc "^inetnum:" $temp/whois_temp)
-  netcount6=$(grep -sEc "^inet6num:" $temp/whois_temp)
-  [[ -f $temp/admins1_raw ]] && cat $temp/admins1_raw | sort -u > $temp/admins1
-  grep -E "^abuse-c:|^admin-c:|^tech-c:" $temp/full_output | awk '{print $NF}' | sort -u > $temp/admins2
-  [[ -f $temp/admins1 ]] && diff --suppress-common-lines --ignore-all-space $temp/admins1 $temp/admins2 |
-  grep '>' | cut -d ' ' -f 2 | sed 's/^ *//' > $temp/admins_other
-  grep -E "^org:" $temp/full_output | awk '{print $NF}' > $temp/orgs.list
-  grep -E "^aut-num:|^origin:" $temp/full_output | awk '{print $NF}' | sed 's/AS//g' >> $temp/asns.list
-  asns=$(cat $temp/asns.list | sort -ug)
-  #**** NETWORKS ****
-  if [[ $netcount -gt 0 ]]; then
-    f_HEADLINE3 "[INV.WHOIS]   NETWORKS" | tee -a ${out}
-    f_NET_OUTPUT "$temp/whois_temp" > $temp/inets46; f_PRINT_NETS "$temp/inets46" | tee -a ${out}
-  fi
-  target_type="other"
-  if [ -n "$asns" ]; then
-    f_HEADLINE3 "[$iregistry]   AUTONOMOUS SYSTEMS" | tee -a ${out}
-    for a in $asns; do f_AS_SHORT "${a}"; echo ''; done | tee -a ${out}
-  fi
-  if [ -f $temp/orgs.list ]; then
-    f_HEADLINE3 "[$iregistry]   ORGANISATIONS" | tee -a ${out}
-    for oid in $(sort -u $temp/orgs.list); do
-      timeout 10 $WHOIS -h ${rir_server} -- "--no-personal $oid" > $temp/whois_org
-      echo ''; f_ORG_SHORT "$temp/whois_org"; f_getRIR_OBJECTS "$temp/whois_org"
-    done | tee -a ${out}
-    for oid in $(sort -u $temp/orgs.list); do
-      echo '' ; f_netBLOCKS "${oid}"
-    done | tee -a ${out}
-  fi
-  #**** ABUSE CONTACTS / POCs ****
-  echo '' | tee -a ${out}; f_HEADLINE3 "[$iregistry]   POINTS OF CONTACT" | tee -a ${out}
-  abuse_mb=$(grep -sEoa "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $temp/full_output | sort -u)
-  [[ -n "$abuse_mb" ]] && echo -e "\nABUSE MAIL\n\n$abuse_mb\n" | tee -a ${out}
-  if [ -f $temp/admins1 ]; then
-    [[ -n "$abuse_mb" ]] && f_Long | tee -a ${out}; echo -e "CONTACTS (QUERY)" | tee -a ${out}
-    for ac in $(cat $temp/admins1 | sort -u); do echo -e "\n\n$ac\n\n"; f_ADMIN_C "$ac"; echo ''; done | tee -a ${out}
-  fi
-  if [ -f $temp/admins_other ] && [ $(wc -w < $temp/admins_other) -gt 0 ]; then
-    echo '' | tee -a ${out}; f_Long | tee -a ${out}; echo -e "CONTACTS (OTHER)" | tee -a ${out}
-    for aco in $(sort -u $temp/admins_other | sort -u); do echo -e "\n\n$aco\n\n"; f_ADMIN_C "$aco"; echo ''; done | tee -a ${out}
-  fi
-  cat $headl >> ${outdir}/WHOIS.${filename}.txt ; cat ${out} >> ${outdir}/WHOIS.${filename}.txt
+    grep -sEoi "$PATTERN_IWHOIS" $temp/targets_tmp > $temp/targets
+    if [ $option_target = "2" ] && [ $report = "true" ] ; then
+      echo -e -n "\n${B}Output  > ${C}OUTPUT - FILE NAME  ${B}>>${D}  " ; read filename
+    fi
+    headl="$temp/headline"; echo -e "\n"
+    echo -e "\n" > ${headl}; f_Long | tee -a ${headl}; echo -e "[$iregistry]  OBJECT & INVERSE SEARCHES  -  $file_date)" | tee -a ${headl}
+    f_Long | tee -a ${headl}; echo -e "\nSearching...\n" | tee -a ${headl}; cat $temp/targets | tee -a ${headl}
+    echo '' | tee -a ${headl}
+    for t in $(cat $temp/targets); do
+      x=$(echo $t | grep -E ".*.;.*")
+      query_type=$(echo "$x" | cut -d ';' -f 1) ; obj=$(echo "$x" | cut -d ';' -f 2)
+      if [ $option_target = "1" ] ; then
+        filename=$(echo $x | cut -d ';' -f 2- | tr -d ' ')
+      fi
+      if [ $query_type = "org" ] ; then
+        echo "$obj" | tr -d ' ' >> $temp/orgs.list
+      elif [ $query_type = "admin-c" ] ; then
+        echo "$obj" | tr -d ' ' | tee -a $temp/objects.list >> $temp/admins1_raw
+      elif [ $query_type = "tech-c" ] ; then
+        echo "$obj" | tr -d ' ' | tee -a $temp/objects.list >> $temp/admins1_raw
+      elif [ $query_type = "abuse-c" ] ; then
+        echo "$obj" | tr -d ' ' | tee -a $temp/objects.list >> $temp/admins1_raw
+      elif [ $query_type = "mnt-by" ] ; then
+        echo "$obj" | tr -d ' ' | tee -a $temp/objects.list >> $temp/mntners
+      elif [ $query_type = "mnt-lower" ] ; then
+       echo "$obj" | tr -d ' ' | tee -a $temp/objects.list >> $temp/mntners
+      elif [ $query_type = "origin" ] ; then
+        echo "$obj" | tr -d ' ' | tee -a $temp/objects.list >> $temp/asns.list
+      else
+        echo "$obj" >> $temp/objects.list
+      fi
+      $TOUT 10 $WHOIS -h ${rir_server} -- "--no-personal -i ${query_type} ${obj}" >> $temp/whois_temp
+      f_whoisFORMAT "$temp/whois_temp" >> $temp/who1
+      $TOUT 10 $WHOIS -h ${rir_server} -- "--no-personal ${obj}" >> $temp/whois_temp2
+      f_whoisFORMAT "$temp/whois_temp2" >> $temp/who2
+    done
+    [[ -f $temp/who1 ]] && cat $temp/who1 > $temp/full_output; [[ -f $temp/who2 ]] && cat $temp/who2 >> $temp/full_output
+    netcount=$(grep -sEc "^netname:" $temp/whois_temp); netcount4=$(grep -sEc "^inetnum:" $temp/whois_temp)
+    netcount6=$(grep -sEc "^inet6num:" $temp/whois_temp)
+    [[ -f $temp/admins1_raw ]] && cat $temp/admins1_raw | sort -u > $temp/admins1
+    grep -E "^abuse-c:|^admin-c:|^tech-c:" $temp/full_output | awk '{print $NF}' | sort -u > $temp/admins2
+    [[ -f $temp/admins1 ]] && diff --suppress-common-lines --ignore-all-space $temp/admins1 $temp/admins2 |
+    grep '>' | cut -d ' ' -f 2 | sed 's/^ *//' > $temp/admins_other
+    grep -E "^org:" $temp/full_output | awk '{print $NF}' > $temp/orgs.list
+    grep -E "^aut-num:|^origin:" $temp/full_output | awk '{print $NF}' | sed 's/AS//g' >> $temp/asns.list
+    asns=$(cat $temp/asns.list | sort -ug)
+    #**** NETWORKS ****
+    if [[ $netcount -gt 0 ]]; then
+      sed -e '/./{H;$!d;}' -e 'x;/netname:/!d' $temp/whois_temp |
+      grep -sEa -A 1 "^inet(6)?num:|^netname:|^country:|^org:|^abuse-c:|^admin-c:|^tech-c:|^status:|^mnt-by:|^mnt-irt:|^source:" |
+      grep -sEav "RIPE-NCC-HM-MNT|RIPE-NCC-LEGACY-MNT|RIPE-NCC-END-MNT|^created:|^remarks:" | sed '/source:/G' | grep -v 'source:' |
+      sed '/--/d' | sed '/inetnum:/i ==' | sed '/inet6num:/i ==' | sed '/netname:/i <' | sed '/country:/i |' | sed '/org:/i |' |
+      sed '/descr:/i |' | sed '/admin-c:/i |' | sed '/tech-c:/i | TECH~' | sed '/abuse-c:/i | ABUSE~' | sed '/notify:/i |' |
+      sed '/upd-to:/i |' | sed '/mnt-irt:/i | MNT-IRT~' | sed '/mnt-by:/i |' | cut -d ':' -f 2- | sed 's/^[ \t]*//;s/[ \t]*$//' |
+      tr '[:space:]' ' ' | sed 's/== /\n\n/g' | sed 's/~/:/g' | sort -u > $temp/inets46
+      f_HEADLINE3 "[INV.WHOIS]   NETWORKS" | tee -a ${out}
+      f_PRINT_NETS "$temp/inets46" | tee -a ${out}
+    fi
+    target_type="other"
+    if [ -n "$asns" ]; then
+      f_HEADLINE3 "[$iregistry]   AUTONOMOUS SYSTEMS" | tee -a ${out}
+      for a in $asns; do f_AS_SHORT "${a}"; echo ''; done | tee -a ${out}
+    fi
+    if [ -f $temp/orgs.list ]; then
+      f_HEADLINE3 "[$iregistry]   ORGANISATIONS" | tee -a ${out}
+      for oid in $(sort -u $temp/orgs.list); do
+        timeout 10 $WHOIS -h ${rir_server} -- "--no-personal $oid" > $temp/whois_org
+        echo ''; f_ORG_SHORT "$temp/whois_org"; f_getRIR_OBJECTS "$temp/whois_org"
+      done | tee -a ${out}
+      for oid in $(sort -u $temp/orgs.list); do
+        echo '' ; f_netBLOCKS "${oid}"
+      done | tee -a ${out}
+    fi
+    #**** ABUSE CONTACTS / POCs ****
+    echo '' | tee -a ${out}; f_HEADLINE3 "[$iregistry]   POINTS OF CONTACT" | tee -a ${out}
+    abuse_mb=$(grep -sEoa "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" $temp/full_output | sort -u)
+    [[ -n "$abuse_mb" ]] && echo -e "\nABUSE MAIL\n\n$abuse_mb\n" | tee -a ${out}
+    if [ -f $temp/admins1 ]; then
+      [[ -n "$abuse_mb" ]] && f_Long | tee -a ${out}; echo -e "CONTACTS (QUERY)" | tee -a ${out}
+      for ac in $(cat $temp/admins1 | sort -u); do echo -e "\n\n$ac\n\n"; f_ADMIN_C "$ac"; echo ''; done | tee -a ${out}
+    fi
+    if [ -f $temp/admins_other ] && [ $(wc -w < $temp/admins_other) -gt 0 ]; then
+      echo '' | tee -a ${out}; f_Long | tee -a ${out}; echo -e "CONTACTS (OTHER)" | tee -a ${out}
+      for aco in $(sort -u $temp/admins_other | sort -u); do echo -e "\n\n$aco\n\n"; f_ADMIN_C "$aco"; echo ''; done | tee -a ${out}
+    fi
+    cat $headl >> ${outdir}/WHOIS.${filename}.txt ; cat ${out} >> ${outdir}/WHOIS.${filename}.txt
+  fi # rir != arin
 fi # $reg_choice != "0"
 echo ''; unset target_type; unset x; f_Menu
 ;;
@@ -7853,21 +8191,17 @@ echo -e "${B}\nWHOIS POC SEARCH > ${C} Expected input:${D}\n"
 echo -e "${bold}Org-IDs, NIC-HDLs, name servers, person-/role-/org names${D}\n"
 echo -e "Use option ${C}x)${D} to search for network names\n"; f_Long
 echo -e "\n${B}Options  > Sources > RIR whois Servers >\n"
-echo -e "${B} [1]${D}  RIPE"; echo -e "${B} [2]${D}  AFRINIC"; echo -e "${B} [3]${D}  APNIC"
+echo -e "${B} [1]${D}  RIPE"; echo -e "${B} [2]${D}  AFRINIC"; echo -e "${B} [3]${D}  APNIC"; echo -e "${B} [4]${D}  ARIN"
 echo -e -n "\n${B}   ?${D}  "; read option_rir
 [[ $option_rir = "1" ]] && rir="ripe"; [[ $option_rir = "2" ]] && rir="afrinic"; [[ $option_rir = "3" ]] && rir="apnic"
  [[ $option_rir = "4" ]] && rir="arin"
 if [ -n "$rir" ]; then
   echo -e -n "\n${B}Target  >  [1]${D}  Set Target  ${B}|  [2]${D}  Read from file  ${B}?${D}  " ; read -r option_target
   f_setTARGET
-  if [ $rir = "arin" ]; then
-    option_poc="2" 
-  else
-    echo -e "\n${B}Options  > ${C}PoC Details\n\n${R}(CAUTION: Excessive queries for personal details may result in blocked access to RIR databases)\n"
-    echo -e "${B} [1]${D} Limit results for personal data"
-    echo -e "${B} [2]${D} Look up Full Contact Details (not recommended if searching for names rather than handles)"
-    echo -e -n "\n${B}   ?${D}  " ; read option_poc
-  fi
+  echo -e "\n${B}Options  > ${C}PoC Details\n\n${R}(CAUTION: Excessive queries for personal details may result in blocked access to RIR databases)\n"
+  echo -e "${B} [1]${D} Limit results for personal data"
+  echo -e "${B} [2]${D} Look up Full Contact Details (not recommended if searching for names rather than handles)"
+  echo -e -n "\n${B}   ?${D}  " ; read option_poc
   if [ $report = "true" ]; then
     echo -e "\n${B}Options  > ${C}Output File\n"
     echo -e "${B} [1]${D} Set custom  name for output file"
@@ -7880,9 +8214,35 @@ if [ -n "$rir" ]; then
   fi
   if [ -f  $temp/targets_other ]; then
     for x in $(cat $temp/targets.list); do
-    if [ $rir = "arin" ]; then
-      $TOUT 15 $WHOIS -h whois.$rir.net "z + $x" > $temp/whois
-      f_POC "$temp/whois" | tee -a ${out}
+      if [ $rir = "arin" ]; then
+        option_detail="2"; is_customer=$(grep -sEo "C+[0-9]{8,10}" <<<$x)
+        if [ -n "$is_customer" ]; then
+          arin_poc=$(f_ARIN_CUST "$x")
+        else
+          $TOUT 30 $WHOIS -h whois.arin.net "e + $x" > $temp/arin_org
+          if [[ $(grep -sc "Company:" $temp/arin_org) -gt 0 ]]; then
+            arin_poc=$(grep -E "^Name:|^Handle:|^Company:|^Address:|^City:|^StateProv:|^PostalCode:|^Country:|^RegDate:|^Phone:|^Email:" $temp/arin_org |
+            sed '/Name:/i ==' | sed '/Handle:/i (' | sed '/Handle:/a )nnn' | sed '/Company:/a nnn' | sed '/^City:/i,' | sed '/^City:/a __' |
+            sed '/RegDate:/i nnn RegDate~' | sed '/RegDate:/a |' | cut -d ':' -f 2- | sed 's/^[ \t]*//;s/[ \t]*$//' | tr '[:space:]' ' ' |
+            sed 's/== /\n\n/g' | sed 's/nnn/\n\n/g' | sed 's/__//' | sed 's/ ,/,/' | sed 's/( / (/' | sed 's/ )/)/' | sed 's/~/:/'; echo '')
+          else
+            arin_poc=$(f_POC "$temp/arin_org")
+          fi
+        fi
+        if [ -n "$arin_poc" ]; then
+          f_HEADLINE3 "[ARIN]  Poc:  $x" | tee -a ${out} && echo "$arin_poc" | tee -a ${out}    
+           arin_mail=$(grep -E -m 1 "AbuseEmail:|^Email:" $temp/arin_org)
+           [[ $option_poc = "2" ]] && mail_domain=$(f_EXTRACT_EMAIL "$arin_mail" | cut -d '@' -f 2) || mail_domain=''
+          if [ -n "$mail_domain" ]; then
+            $TOUT 20 $WHOIS -h whois.arin.net "p $mail_domain" > $temp/poc_additional
+            poc_add=$(grep -s '(' $temp/poc_additional)
+            if [ -n "$poc_add" ]; then
+              f_Medium | tee -a ${out}; echo -e "\nADDITIONAL CONTACTS\n" | tee -a ${out}
+              echo "$poc_add" | sort -u -t ')' -k 2 $temp/poc_additional | sort -t '(' -k 1 | sed 's/(/\n\n (/' | sed '/(/G' |
+              sed '/)/G' | sed 's/+/ +/' | tee -a ${out}
+            fi
+          fi
+        fi
     else
       timeout 10 $WHOIS -h whois.$rir.net -- "-F -r ${x}"  | tr -d '*' | sed 's/^ *//' | sed '/RIPE-NCC-LEGACY-MNT/d' |
       sed '/RIPE-NCC-HM-MNT/d' > $temp/whois_temp
@@ -8126,10 +8486,10 @@ if [ $option_target != "0" ]; then
   if [ -f $temp/targets_asn ]; then
     target_input=$(cat $temp/targets_asn)
     target_type="as"; [[ $lod = "1" ]] &&  out="${outdir}/ASN_SUMS.file_date.txt"
-    f_printTARGET_TYPE "ASNs";
+    f_printTARGET_TYPE "ASNs"
     for x in $(cat $temp/targets_asn); do
       if [ $lod = "1" ]; then
-        echo '' | tee -a ${out} && f_AS_SHORT "$x" | tee -a ${out}
+        echo '' | tee -a ${out}; f_AS_SHORT "$x" | tee -a ${out}
       else
         out="${outdir}/AS_DETAILS.${file_date}_AS${x}.txt"; f_AS_INFO "$x" | tee -a ${out}
       fi
