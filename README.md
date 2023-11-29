@@ -26,4 +26,4 @@ curl, dnsutils (installs dig, delv & host), jq, ipcalc, lynx, nc/ncat, nmap, npi
 
 Dependencies (recommended): 
 
-dublin-traceroute, locate/mlocate, mtr, testssl.sh, tracepath ('iputils-tracepath' in Debian/Ubuntu, 'tracepath' in Termux), thc-atk6, whatweb"
+dublin-traceroute, locate/mlocate, mtr, proxychains, tracepath ('iputils-tracepath' in Debian/Ubuntu, 'tracepath' in Termux), thc-atk6, whatweb"
