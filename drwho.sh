@@ -6231,8 +6231,8 @@ if [ -f $temp/nmap_ssl ]; then
   sed '/NMAP scan report/a Scripts:   ssl-date, ssl-dh-params.nse, ssl-enum-ciphers.nse, ssl-heartbleed.nse, sslv2.nse, tls-nextprotoneg' |
   sed 's/Nmap scan report for/NMAP SSL:  /' | sed 's/^ssl-enum-ciphers:/\nOFFERED CIPHERS:/' | sed 's/TLSv/\nTLSv/' |
   sed 's/sslv2:/\n\nSSLv2:\n/' | sed 's/ssl-date:/\n\nSSL-DATE: /' | sed 's/tls-nextprotoneg:/\n\nTLS NEXTPROTONEG:\n/' |
-  sed 's/ssl-dh-params:/\n\nDH PARAMS:\n/' | sed 's/ssl-heartbleed:/\n\nHEARTBLEED:\n/' |
-  sed '/^State:/{x;p;x;}' | sed '/Check results:/{x;p;x;}' | sed 's/^ciphers://' | sed '/compressors:/{x;p;x;}' |
+  sed 's/ssl-dh-params:/\n\nDH PARAMS:\n/' | sed 's/ssl-heartbleed:/\n\nHEARTBLEED:\n/' | sed 's/http-server-header:/\nSERVER HEADER:/' |
+  sed 's/http-date:/\nHTTP-DATE:/' | sed '/^State:/{x;p;x;}' | sed '/Check results:/{x;p;x;}' | sed 's/^ciphers://' | sed '/compressors:/{x;p;x;}' |
   sed '/least strength:/i \\n__________________\n' | sed '/least strength:/a \__________________\n' | sed 's/^ *//' | sed 's/^--//'
 fi
 }
